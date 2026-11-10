@@ -472,7 +472,7 @@ bool DbUpdater::complexUpdate_36()
         });
     };
 
-    const auto recreateTableWithForeignKeys = [this](const TableDescription &table) -> QPair<bool, QSqlQuery> {
+    const auto recreateTableWithForeignKeys = [this](const TableDescription &table) -> std::pair<bool, QSqlQuery> {
         qCDebug(AKONADISERVER_LOG) << "Updating foreign keys in table" << table.name;
 
         QSqlQuery query(m_database);

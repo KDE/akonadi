@@ -70,7 +70,7 @@ Case::Case(const QString &column, CompareOperator op, const QVariant &value, con
 
 void Case::addCondition(const Condition &when, const QString &then)
 {
-    mWhenThen.append(qMakePair(when, then));
+    mWhenThen.append(std::make_pair(when, then));
 }
 
 void Case::addValueCondition(const QString &column, CompareOperator op, const QVariant &value, const QString &then)

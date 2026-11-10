@@ -94,7 +94,7 @@ private Q_SLOTS:
     void testAncestorPopulatedAfterReAdd();
 
 private:
-    QPair<FakeServerData *, Akonadi::EntityTreeModel *> populateModel(const QString &serverContent, const QString &mimeType = QString())
+    std::pair<FakeServerData *, Akonadi::EntityTreeModel *> populateModel(const QString &serverContent, const QString &mimeType = QString())
     {
         auto const fakeMonitor = new FakeMonitor(this);
 
@@ -112,7 +112,7 @@ private:
 
         // Give the model a chance to populate
         QTest::qWait(100);
-        return qMakePair(serverData, model);
+        return std::make_pair(serverData, model);
     }
 
 private:

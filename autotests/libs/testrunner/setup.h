@@ -10,7 +10,7 @@
 
 #include <QList>
 #include <QObject>
-#include <QPair>
+#include <utility>
 
 #include <memory>
 
@@ -42,7 +42,7 @@ public:
     void setEnvironmentVariable(const QByteArray &name, const QString &value);
 
     /// retrieve all modified environment variables, for writing the shell script
-    using EnvVar = QPair<QByteArray, QByteArray>;
+    using EnvVar = std::pair<QByteArray, QByteArray>;
     QList<EnvVar> environmentVariables() const;
 
 public Q_SLOTS:

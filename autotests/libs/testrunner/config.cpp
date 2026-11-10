@@ -10,8 +10,8 @@
 #include <QDir>
 #include <QFile>
 #include <QFileInfo>
-#include <QPair>
 #include <QXmlStreamReader>
+#include <utility>
 
 Q_GLOBAL_STATIC(Config, globalConfig) // NOLINT(readability-redundant-member-init)
 
@@ -135,10 +135,10 @@ bool Config::setDbBackend(const QString &backend)
 
 void Config::insertAgent(const QString &agent, bool sync)
 {
-    mAgents.append(qMakePair(agent, sync));
+    mAgents.append(std::make_pair(agent, sync));
 }
 
-QList<QPair<QString, bool>> Config::agents() const
+QList<std::pair<QString, bool>> Config::agents() const
 {
     return mAgents;
 }

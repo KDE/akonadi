@@ -65,7 +65,7 @@ bool DragDropManager::dropAllowed(QDragMoveEvent *event) const
                     break;
                 }
             } else { // This is an item.
-                const QList<QPair<QString, QString>> query = QUrlQuery(url).queryItems();
+                const QList<std::pair<QString, QString>> query = QUrlQuery(url).queryItems();
                 for (int i = 0; i < query.count(); ++i) {
                     if (query.at(i).first == QLatin1StringView("type")) {
                         const QString type = query.at(i).second;

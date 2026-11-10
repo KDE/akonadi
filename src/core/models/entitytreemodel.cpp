@@ -1049,7 +1049,7 @@ EntityTreeModel::CollectionFetchStrategy EntityTreeModel::collectionFetchStrateg
     return d->m_collectionFetchStrategy;
 }
 
-static QPair<QList<const QAbstractProxyModel *>, const EntityTreeModel *> proxiesAndModel(const QAbstractItemModel *model)
+static std::pair<QList<const QAbstractProxyModel *>, const EntityTreeModel *> proxiesAndModel(const QAbstractItemModel *model)
 {
     QList<const QAbstractProxyModel *> proxyChain;
     const auto *proxy = qobject_cast<const QAbstractProxyModel *>(model);
@@ -1061,7 +1061,7 @@ static QPair<QList<const QAbstractProxyModel *>, const EntityTreeModel *> proxie
     }
 
     const auto *etm = qobject_cast<const EntityTreeModel *>(_model);
-    return qMakePair(proxyChain, etm);
+    return std::make_pair(proxyChain, etm);
 }
 
 static QModelIndex proxiedIndex(const QModelIndex &idx, const QList<const QAbstractProxyModel *> &proxyChain)

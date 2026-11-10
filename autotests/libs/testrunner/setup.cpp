@@ -434,7 +434,7 @@ void SetupTest::setupFailed()
 
 void SetupTest::setEnvironmentVariable(const QByteArray &name, const QString &value)
 {
-    mEnvVars.push_back(qMakePair(name, value.toLocal8Bit()));
+    mEnvVars.push_back(std::make_pair(name, value.toLocal8Bit()));
     qputenv(name.constData(), value.toLatin1());
 }
 

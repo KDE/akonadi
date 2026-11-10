@@ -405,7 +405,7 @@ public:
 
     // clang has problem resolving the right qHash() overload for Command::Type,
     // so use its underlying integer type instead
-    QHash<std::underlying_type<Command::Type>::type, QPair<CommandFactoryFunc, ResponseFactoryFunc>> registrar;
+    QHash<std::underlying_type<Command::Type>::type, std::pair<CommandFactoryFunc, ResponseFactoryFunc>> registrar;
 
 private:
     template<typename T>
@@ -424,7 +424,7 @@ private:
     {
         CommandFactoryFunc cmdFunc = &commandFactoryFunc<CmdType>;
         ResponseFactoryFunc respFunc = &responseFactoryFunc<RespType>;
-        registrar.insert(T, qMakePair(cmdFunc, respFunc));
+        registrar.insert(T, std::make_pair(cmdFunc, respFunc));
     }
 };
 

@@ -7,10 +7,10 @@
 #pragma once
 
 #include <QList>
-#include <QPair>
 #include <QSet>
 #include <QString>
 #include <QVariant>
+#include <utility>
 
 namespace Akonadi
 {
@@ -162,7 +162,7 @@ public:
     void setElse(const QString &elseBranch);
 
 private:
-    QList<QPair<Condition, QString>> mWhenThen;
+    QList<std::pair<Condition, QString>> mWhenThen;
     QString mElse;
 };
 

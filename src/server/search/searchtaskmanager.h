@@ -35,7 +35,7 @@ public:
     QMutex sharedLock;
     QWaitCondition notifier;
 
-    QList<QPair<QString /* resource */, qint64 /* collection */>> queries;
+    QList<std::pair<QString /* resource */, qint64 /* collection */>> queries;
     QSet<qint64> pendingResults;
 };
 

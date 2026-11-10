@@ -7,8 +7,8 @@
 #pragma once
 
 #include <QList>
-#include <QPair>
 #include <QString>
+#include <utility>
 
 class ShellScript
 {
@@ -16,7 +16,7 @@ public:
     ShellScript();
     void makeShellScript(const QString &filename);
 
-    using EnvVar = QPair<QByteArray, QByteArray>;
+    using EnvVar = std::pair<QByteArray, QByteArray>;
     void setEnvironmentVariables(const QList<EnvVar> &envVars);
 
 private:

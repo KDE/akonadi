@@ -44,7 +44,7 @@ private Q_SLOTS:
     void testTagMoved();
 
 private:
-    QPair<FakeServerData *, Akonadi::TagModel *> populateModel(const QString &serverContent)
+    std::pair<FakeServerData *, Akonadi::TagModel *> populateModel(const QString &serverContent)
     {
         auto const fakeMonitor = new FakeMonitor(this);
 
@@ -61,7 +61,7 @@ private:
 
         // Give the model a chance to populate
         QTest::qWait(100);
-        return qMakePair(serverData, model);
+        return std::make_pair(serverData, model);
     }
 
 private:

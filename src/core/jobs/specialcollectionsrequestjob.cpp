@@ -52,7 +52,7 @@ public:
 
     // Output:
     QStringList mToForget;
-    QList<QPair<Collection, QByteArray>> mToRegister;
+    QList<std::pair<Collection, QByteArray>> mToRegister;
 };
 
 SpecialCollectionsRequestJobPrivate::SpecialCollectionsRequestJobPrivate(SpecialCollections *collections, SpecialCollectionsRequestJob *qq)
@@ -132,7 +132,7 @@ void SpecialCollectionsRequestJobPrivate::nextResource()
         }
 
         // Register all the collections that we fetched / created.
-        using RegisterPair = QPair<Collection, QByteArray>;
+        using RegisterPair = std::pair<Collection, QByteArray>;
         for (const RegisterPair &pair : std::as_const(mToRegister)) {
             const bool ok = mSpecialCollections->registerCollection(pair.second, pair.first);
             Q_ASSERT(ok);
@@ -200,7 +200,7 @@ void SpecialCollectionsRequestJobPrivate::createRequestedFolders(ResourceScanJob
         const QByteArray type = attr->collectionType();
 
         if (!type.isEmpty()) {
-            mToRegister.append(qMakePair(collection, type));
+            mToRegister.append(std::make_pair(collection, type));
             requestedFolders.insert(type, false);
         }
     }
@@ -247,7 +247,7 @@ void SpecialCollectionsRequestJobPrivate::collectionCreateResult(KJob *job)
     Q_ASSERT(createJob);
 
     const Collection collection = createJob->collection();
-    mToRegister.append(qMakePair(collection, createJob->property("type").toByteArray()));
+    mToRegister.append(std::make_pair(collection, createJob->property("type").toByteArray()));
 
     Q_ASSERT(mPendingCreateJobs > 0);
     mPendingCreateJobs--;

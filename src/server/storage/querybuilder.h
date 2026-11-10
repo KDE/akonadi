@@ -11,7 +11,6 @@
 
 #include <QList>
 #include <QMap>
-#include <QPair>
 #include <QSet>
 #include <QSqlQuery>
 #include <QString>
@@ -19,6 +18,7 @@
 #include <QVariant>
 #include <functional>
 #include <optional>
+#include <utility>
 
 #ifdef QUERYBUILDER_UNITTEST
 class QueryBuilderTest;
@@ -362,16 +362,16 @@ private:
     QueryType mType;
     QStringList mColumns;
     QList<QVariant> mBindValues;
-    QList<QPair<QString, Query::SortOrder>> mSortColumns;
+    QList<std::pair<QString, Query::SortOrder>> mSortColumns;
     QStringList mGroupColumns;
-    QList<QPair<QString, QVariant>> mColumnValues;
-    QList<QPair<QString, QVariant>> mColumnMultiValues;
+    QList<std::pair<QString, QVariant>> mColumnValues;
+    QList<std::pair<QString, QVariant>> mColumnMultiValues;
     QString mIdentificationColumn;
 
     // we must make sure that the tables are joined in the correct order
     // QMap sorts by key which might invalidate the queries
     QStringList mJoinedTables;
-    QMap<QString, QPair<JoinType, Query::Condition>> mJoins;
+    QMap<QString, std::pair<JoinType, Query::Condition>> mJoins;
     int mLimit;
     int mOffset;
     bool mDistinct;

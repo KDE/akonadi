@@ -239,7 +239,7 @@ public:
                     // the collection from scratch.
                     if (localCollection.isVirtual() != remoteCollection.isVirtual()) {
                         // Mark the local collection and all its children for deletion and re-creation
-                        QList<QPair<Collection /*local*/, Collection /*remote*/>> parents = {{localCollection, remoteCollection}};
+                        QList<std::pair<Collection /*local*/, Collection /*remote*/>> parents = {{localCollection, remoteCollection}};
                         while (!parents.empty()) {
                             auto parent = parents.takeFirst();
                             qCDebug(AKONADICORE_LOG) << "Local collection " << parent.first.name() << " will be recreated";
@@ -267,7 +267,7 @@ public:
                     } else if (collectionNeedsUpdate(localCollection, remoteCollection)) {
                         // We need to store both local and remote collections, so that
                         // we can copy over attributes to be preserved
-                        remoteCollectionsToUpdate.append(qMakePair(localCollection, remoteCollection));
+                        remoteCollectionsToUpdate.append(std::make_pair(localCollection, remoteCollection));
                     } else {
                         // Collections are the same, no need to update anything
                     }
@@ -533,7 +533,7 @@ public:
             return;
         }
 
-        using CollectionPair = QPair<Collection, Collection>;
+        using CollectionPair = std::pair<Collection, Collection>;
         for (const CollectionPair &pair : std::as_const(remoteCollectionsToUpdate)) {
             const Collection local = pair.first;
             const Collection remote = pair.second;
@@ -763,7 +763,7 @@ public:
 
     Collection::List localCollectionsToRemove;
     Collection::List remoteCollectionsToCreate;
-    QList<QPair<Collection /* local */, Collection /* remote */>> remoteCollectionsToUpdate;
+    QList<std::pair<Collection /* local */, Collection /* remote */>> remoteCollectionsToUpdate;
     QHash<Collection::Id, QString> uidRidMap;
 
     // HACK: To workaround Collection copy constructor being very expensive, we

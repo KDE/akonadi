@@ -17,7 +17,7 @@
 using namespace Akonadi;
 using namespace Akonadi::Server;
 
-typedef QPair<Tag, TagAttribute::List> TagTagAttributeListPair;
+typedef std::pair<Tag, TagAttribute::List> TagTagAttributeListPair;
 
 Q_DECLARE_METATYPE(Akonadi::Server::Tag::List)
 Q_DECLARE_METATYPE(Akonadi::Server::Tag)
@@ -85,7 +85,7 @@ private Q_SLOTS:
         }
 
         QTest::addColumn<TestScenario::List>("scenarios");
-        QTest::addColumn<QList<QPair<Tag, TagAttribute::List>>>("expectedTags");
+        QTest::addColumn<QList<std::pair<Tag, TagAttribute::List>>>("expectedTags");
         QTest::addColumn<Protocol::ChangeNotificationList>("expectedNotifications");
 
         {

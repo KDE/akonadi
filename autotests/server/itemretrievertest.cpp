@@ -188,8 +188,8 @@ class ItemRetrieverTest : public QObject
 {
     Q_OBJECT
 
-    using ExistingParts = QList<QPair<QByteArray /* name */, QByteArray /* data */>>;
-    using AvailableParts = QList<QPair<QByteArray /* name */, QByteArray /* data */>>;
+    using ExistingParts = QList<std::pair<QByteArray /* name */, QByteArray /* data */>>;
+    using AvailableParts = QList<std::pair<QByteArray /* name */, QByteArray /* data */>>;
 
     FakeAkonadiServer mAkonadi;
 
@@ -325,11 +325,11 @@ private Q_SLOTS:
                     continue;
                 }
 
-                auto it = std::find_if(availableParts.constBegin(), availableParts.constEnd(), [dbPart](const QPair<QByteArray, QByteArray> &p) {
+                auto it = std::find_if(availableParts.constBegin(), availableParts.constEnd(), [dbPart](const std::pair<QByteArray, QByteArray> &p) {
                     return dbPart.partType().name().toLatin1() == p.first;
                 });
                 if (it == availableParts.constEnd()) {
-                    it = std::find_if(existingParts.constBegin(), existingParts.constEnd(), [fqname](const QPair<QByteArray, QByteArray> &p) {
+                    it = std::find_if(existingParts.constBegin(), existingParts.constEnd(), [fqname](const std::pair<QByteArray, QByteArray> &p) {
                         return fqname.toLatin1() == p.first;
                     });
                     QVERIFY(it != existingParts.constEnd());

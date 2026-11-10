@@ -251,9 +251,9 @@ public:
         return it;
     }
 
-    QPair<qsizetype, typename Iterator::value_type> operator*() const
+    std::pair<qsizetype, typename Iterator::value_type> operator*() const
     {
-        return qMakePair(mCount, *this->mIter);
+        return std::make_pair(mCount, *this->mIter);
     }
 
 private:

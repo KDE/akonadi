@@ -24,7 +24,7 @@ using namespace Akonadi;
 class ErrorOverlayStatic
 {
 public:
-    QList<QPair<QPointer<QWidget>, QPointer<QWidget>>> baseWidgets;
+    QList<std::pair<QPointer<QWidget>, QPointer<QWidget>>> baseWidgets;
 };
 
 Q_GLOBAL_STATIC(ErrorOverlayStatic, sInstanceOverlay) // NOLINT(readability-redundant-member-init)
@@ -54,7 +54,8 @@ ErrorOverlay::ErrorOverlay(QWidget *baseWidget, QWidget *parent)
     mBaseWidgetIsParent = isParentOf(mBaseWidget, this);
 
     // check existing overlays to detect cascading
-    for (QList<QPair<QPointer<QWidget>, QPointer<QWidget>>>::Iterator it = sInstanceOverlay->baseWidgets.begin(); it != sInstanceOverlay->baseWidgets.end();) {
+    for (QList<std::pair<QPointer<QWidget>, QPointer<QWidget>>>::Iterator it = sInstanceOverlay->baseWidgets.begin();
+         it != sInstanceOverlay->baseWidgets.end();) {
         if ((*it).first == nullptr || (*it).second == nullptr) {
             // garbage collection
             it = sInstanceOverlay->baseWidgets.erase(it);
@@ -75,7 +76,7 @@ ErrorOverlay::ErrorOverlay(QWidget *baseWidget, QWidget *parent)
         }
         ++it;
     }
-    sInstanceOverlay->baseWidgets.append(qMakePair(mBaseWidget, QPointer<QWidget>(this)));
+    sInstanceOverlay->baseWidgets.append(std::make_pair(mBaseWidget, QPointer<QWidget>(this)));
 
     connect(baseWidget, &QObject::destroyed, this, &QObject::deleteLater);
     mPreviousState = !mBaseWidget->testAttribute(Qt::WA_ForceDisabled);

@@ -21,7 +21,7 @@ class AgentServer : public QObject
     Q_OBJECT
     Q_CLASSINFO("D-Bus Interface", "org.freedesktop.Akonadi.AgentServer")
 
-    using ConfigureInfo = QPair<QString, qlonglong>;
+    using ConfigureInfo = std::pair<QString, qlonglong>;
 
 public:
     explicit AgentServer(QObject *parent = nullptr);

@@ -115,7 +115,7 @@ void SearchTaskManager::addTask(SearchTask *task)
         } else {
             const qint64 collectionId = query.value(0).toLongLong();
             qCDebug(AKONADISERVER_SEARCH_LOG) << "Enqueued search query (" << resourceId << ", " << collectionId << ")";
-            task->queries << qMakePair(resourceId, collectionId);
+            task->queries << std::make_pair(resourceId, collectionId);
         }
     } while (query.next());
     mInstancesLock.unlock();

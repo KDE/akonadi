@@ -240,7 +240,7 @@ void QueryBuilder::addJoin(JoinType joinType, const QString &table, const Query:
         mJoins[table].first = qMin(joinType, mJoins.value(table).first);
         mJoins[table].second.addCondition(condition);
     } else {
-        mJoins[table] = qMakePair(joinType, condition);
+        mJoins[table] = std::make_pair(joinType, condition);
         mJoinedTables << table;
     }
 }
@@ -762,7 +762,7 @@ void QueryBuilder::addCondition(const Query::Condition &condition, ConditionType
 
 void QueryBuilder::addSortColumn(const QString &column, Query::SortOrder order)
 {
-    mSortColumns << qMakePair(column, order);
+    mSortColumns << std::make_pair(column, order);
 }
 
 void QueryBuilder::addGroupColumn(const QString &column)
@@ -780,7 +780,7 @@ void QueryBuilder::addGroupColumns(const QStringList &columns)
 void QueryBuilder::setColumnValue(const QString &column, const QVariant &value)
 {
     mColumnMultiValues.clear();
-    mColumnValues.push_back(qMakePair(column, value));
+    mColumnValues.push_back(std::make_pair(column, value));
 }
 
 void QueryBuilder::setColumnValues(const QString &column, const QVariant &values)
@@ -788,7 +788,7 @@ void QueryBuilder::setColumnValues(const QString &column, const QVariant &values
     Q_ASSERT(mType == Insert);
 
     mColumnValues.clear();
-    mColumnMultiValues.push_back(qMakePair(column, values));
+    mColumnMultiValues.push_back(std::make_pair(column, values));
 }
 
 void QueryBuilder::setDistinct(bool distinct)
