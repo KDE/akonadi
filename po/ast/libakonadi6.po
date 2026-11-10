@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: akonadi\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2026-11-08 02:58+0000\n"
+"POT-Creation-Date: 2026-11-10 00:58+0000\n"
 "PO-Revision-Date: 2024-03-27 21:45+0100\n"
 "Last-Translator: Enol P. <enolp@softastur.org>\n"
 "Language-Team: Asturian <alministradores@softastur.org>\n"
@@ -163,7 +163,7 @@ msgctxt "@info"
 msgid "Job canceled."
 msgstr ""
 
-#: akonadicontrol/main.cpp:48 akonadicontrol/main.cpp:50
+#: akonadicontrol/main.cpp:49 akonadicontrol/main.cpp:51
 #, kde-format
 msgid "Akonadi Control"
 msgstr ""
