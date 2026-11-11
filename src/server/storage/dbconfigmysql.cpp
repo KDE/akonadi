@@ -419,17 +419,12 @@ bool DbConfigMysql::startInternalServer()
     // otherwise we reconnect to it
     if (!QFile::exists(socketFile)) {
         // move mysql error log file out of the way
-        const QFileInfo errorLog(errorLogFile);
-        if (errorLog.exists()) {
-            QFile logFile(errorLog.absoluteFilePath());
-            QFile oldLogFile(mDataDir + QDir::separator() + QLatin1StringView("mysql.err.old"));
-            if (logFile.open(QFile::ReadOnly) && oldLogFile.open(QFile::WriteOnly)) {
-                oldLogFile.write(logFile.readAll());
-                oldLogFile.close();
-                logFile.close();
-                logFile.remove();
-            } else {
-                qCCritical(AKONADISERVER_LOG) << "Failed to open MySQL error log.";
+        if (QFile::exists(errorLogFile)) {
+            const QString oldErrorLogFile = mDataDir + QDir::separator() + QLatin1StringView("mysql.err.old");
+            if (QFile::exists(oldErrorLogFile) && !QFile::remove(oldErrorLogFile)) {
+                qCWarning(AKONADISERVER_LOG) << "Failed to remove old MySQL error log" << oldErrorLogFile;
+            } else if (!QFile::rename(errorLogFile, oldErrorLogFile)) {
+                qCWarning(AKONADISERVER_LOG) << "Failed to move existing MySQL error log" << errorLogFile << "to" << oldErrorLogFile;
             }
         }
 
