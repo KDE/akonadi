@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: akonadi\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2026-11-10 00:58+0000\n"
+"POT-Creation-Date: 2026-11-11 01:02+0000\n"
 "PO-Revision-Date: 2024-09-30 18:09+0700\n"
 "Last-Translator: Wantoyèk <wantoyek@gmail.com>\n"
 "Language-Team: https://t.me/Localizations_KDE_Indonesia\n"
@@ -1222,7 +1222,7 @@ msgstr "&Tautkan Di Sini"
 msgid "C&ancel"
 msgstr "&Batal"
 
-#: widgets/erroroverlay.cpp:224
+#: widgets/erroroverlay.cpp:225
 #, kde-format
 msgctxt "%1 is a reason why"
 msgid ""
@@ -1234,29 +1234,29 @@ msgstr ""
 "\n"
 "%1"
 
-#: widgets/erroroverlay.cpp:228
-#, kde-format
-msgctxt "@info:tooltip"
-msgid "Personal information management service is starting..."
-msgstr "Layanan menajemen informasi personal telah dimulai..."
-
 #: widgets/erroroverlay.cpp:229
 #, kde-format
+msgctxt "@info:tooltip"
 msgid "Personal information management service is starting..."
 msgstr "Layanan menajemen informasi personal telah dimulai..."
 
-#: widgets/erroroverlay.cpp:233
+#: widgets/erroroverlay.cpp:230
 #, kde-format
-msgctxt "@info:tooltip"
-msgid "Personal information management service is shutting down..."
-msgstr "Layanan menajemen informasi personal telah dimatikan..."
+msgid "Personal information management service is starting..."
+msgstr "Layanan menajemen informasi personal telah dimulai..."
 
 #: widgets/erroroverlay.cpp:234
 #, kde-format
+msgctxt "@info:tooltip"
 msgid "Personal information management service is shutting down..."
 msgstr "Layanan menajemen informasi personal telah dimatikan..."
 
-#: widgets/erroroverlay.cpp:238
+#: widgets/erroroverlay.cpp:235
+#, kde-format
+msgid "Personal information management service is shutting down..."
+msgstr "Layanan menajemen informasi personal telah dimatikan..."
+
+#: widgets/erroroverlay.cpp:239
 #, kde-format
 msgctxt "@info:tooltip"
 msgid ""
@@ -1264,7 +1264,7 @@ msgid ""
 msgstr ""
 "Layanan menajemen informasi personal telah melakukan peningkatan database."
 
-#: widgets/erroroverlay.cpp:240
+#: widgets/erroroverlay.cpp:241
 #, kde-format
 msgid ""
 "Personal information management service is performing a database upgrade.\n"

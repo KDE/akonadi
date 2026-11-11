@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: libakonadi\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2026-11-10 00:58+0000\n"
+"POT-Creation-Date: 2026-11-11 01:02+0000\n"
 "PO-Revision-Date: 2021-05-15 17:47-0700\n"
 "Last-Translator: Fumiaki Okushi <fumiaki.okushi@gmail.com>\n"
 "Language-Team: Japanese <kde-jp@kde.org>\n"
@@ -1202,7 +1202,7 @@ msgstr "ここにリンク(&L)"
 msgid "C&ancel"
 msgstr "キャンセル(&A)"
 
-#: widgets/erroroverlay.cpp:224
+#: widgets/erroroverlay.cpp:225
 #, fuzzy, kde-format
 #| msgid "Cannot connect to the Akonadi service."
 msgctxt "%1 is a reason why"
@@ -1212,39 +1212,26 @@ msgid ""
 "%1"
 msgstr "Akonadi サービスに接続できません。"
 
-#: widgets/erroroverlay.cpp:228
-#, fuzzy, kde-format
-#| msgid ""
-#| "The Akonadi personal information management framework is not "
-#| "operational.\n"
-#| "Click on \"Details...\" to obtain detailed information on this problem."
-msgctxt "@info:tooltip"
-msgid "Personal information management service is starting..."
-msgstr ""
-"Akonadi PIM フレームワークは使用できません。\n"
-"<interface>詳細...</interface>をクリックすると問題点を確認することができま"
-"す。"
-
 #: widgets/erroroverlay.cpp:229
 #, fuzzy, kde-format
 #| msgid ""
 #| "The Akonadi personal information management framework is not "
 #| "operational.\n"
 #| "Click on \"Details...\" to obtain detailed information on this problem."
+msgctxt "@info:tooltip"
 msgid "Personal information management service is starting..."
 msgstr ""
 "Akonadi PIM フレームワークは使用できません。\n"
 "<interface>詳細...</interface>をクリックすると問題点を確認することができま"
 "す。"
 
-#: widgets/erroroverlay.cpp:233
+#: widgets/erroroverlay.cpp:230
 #, fuzzy, kde-format
 #| msgid ""
 #| "The Akonadi personal information management framework is not "
 #| "operational.\n"
 #| "Click on \"Details...\" to obtain detailed information on this problem."
-msgctxt "@info:tooltip"
-msgid "Personal information management service is shutting down..."
+msgid "Personal information management service is starting..."
 msgstr ""
 "Akonadi PIM フレームワークは使用できません。\n"
 "<interface>詳細...</interface>をクリックすると問題点を確認することができま"
@@ -1256,13 +1243,26 @@ msgstr ""
 #| "The Akonadi personal information management framework is not "
 #| "operational.\n"
 #| "Click on \"Details...\" to obtain detailed information on this problem."
+msgctxt "@info:tooltip"
 msgid "Personal information management service is shutting down..."
 msgstr ""
 "Akonadi PIM フレームワークは使用できません。\n"
 "<interface>詳細...</interface>をクリックすると問題点を確認することができま"
 "す。"
 
-#: widgets/erroroverlay.cpp:238
+#: widgets/erroroverlay.cpp:235
+#, fuzzy, kde-format
+#| msgid ""
+#| "The Akonadi personal information management framework is not "
+#| "operational.\n"
+#| "Click on \"Details...\" to obtain detailed information on this problem."
+msgid "Personal information management service is shutting down..."
+msgstr ""
+"Akonadi PIM フレームワークは使用できません。\n"
+"<interface>詳細...</interface>をクリックすると問題点を確認することができま"
+"す。"
+
+#: widgets/erroroverlay.cpp:239
 #, fuzzy, kde-format
 #| msgid ""
 #| "The Akonadi personal information management framework is not "
@@ -1276,7 +1276,7 @@ msgstr ""
 "<interface>詳細...</interface>をクリックすると問題点を確認することができま"
 "す。"
 
-#: widgets/erroroverlay.cpp:240
+#: widgets/erroroverlay.cpp:241
 #, kde-format
 msgid ""
 "Personal information management service is performing a database upgrade.\n"

@@ -5,7 +5,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: libakonadi\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2026-11-10 00:58+0000\n"
+"POT-Creation-Date: 2026-11-11 01:02+0000\n"
 "PO-Revision-Date: 2014-09-23 21:56+0200\n"
 "Last-Translator: Bjørn Steensrud <bjornst@skogkatt.homelinux.org>\n"
 "Language-Team: Norwegian Bokmål <l10n-no@nuug.no>\n"
@@ -1177,7 +1177,7 @@ msgstr "&Lag lenke hit"
 msgid "C&ancel"
 msgstr "&Avbryt"
 
-#: widgets/erroroverlay.cpp:224
+#: widgets/erroroverlay.cpp:225
 #, kde-format
 msgctxt "%1 is a reason why"
 msgid ""
@@ -1186,29 +1186,29 @@ msgid ""
 "%1"
 msgstr ""
 
-#: widgets/erroroverlay.cpp:228
+#: widgets/erroroverlay.cpp:229
 #, fuzzy, kde-format
 msgctxt "@info:tooltip"
 msgid "Personal information management service is starting..."
 msgstr "Tjenesten for håndtering av personlig informasjon starter …"
 
-#: widgets/erroroverlay.cpp:229
+#: widgets/erroroverlay.cpp:230
 #, kde-format
 msgid "Personal information management service is starting..."
 msgstr "Tjenesten for håndtering av personlig informasjon starter …"
-
-#: widgets/erroroverlay.cpp:233
-#, fuzzy, kde-format
-msgctxt "@info:tooltip"
-msgid "Personal information management service is shutting down..."
-msgstr "Tjenesten for personlig informasjonsbehandling avslutter …"
 
 #: widgets/erroroverlay.cpp:234
+#, fuzzy, kde-format
+msgctxt "@info:tooltip"
+msgid "Personal information management service is shutting down..."
+msgstr "Tjenesten for personlig informasjonsbehandling avslutter …"
+
+#: widgets/erroroverlay.cpp:235
 #, kde-format
 msgid "Personal information management service is shutting down..."
 msgstr "Tjenesten for personlig informasjonsbehandling avslutter …"
 
-#: widgets/erroroverlay.cpp:238
+#: widgets/erroroverlay.cpp:239
 #, fuzzy, kde-format
 msgctxt "@info:tooltip"
 msgid ""
@@ -1217,7 +1217,7 @@ msgstr ""
 "Tjenesten for håndtering av personlig informasjon kjører en database-"
 "oppgradering."
 
-#: widgets/erroroverlay.cpp:240
+#: widgets/erroroverlay.cpp:241
 #, kde-format
 msgid ""
 "Personal information management service is performing a database upgrade.\n"

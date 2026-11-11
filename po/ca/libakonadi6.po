@@ -10,7 +10,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: akonadi\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2026-11-10 00:58+0000\n"
+"POT-Creation-Date: 2026-11-11 01:02+0000\n"
 "PO-Revision-Date: 2026-10-27 10:13+0100\n"
 "Last-Translator: Josep M. Ferrer <txemaq@gmail.com>\n"
 "Language-Team: Catalan <kde-i18n-ca@kde.org>\n"
@@ -1209,7 +1209,7 @@ msgstr "&Enllaça aquí"
 msgid "C&ancel"
 msgstr "C&ancel·la"
 
-#: widgets/erroroverlay.cpp:224
+#: widgets/erroroverlay.cpp:225
 #, kde-format
 msgctxt "%1 is a reason why"
 msgid ""
@@ -1222,29 +1222,29 @@ msgstr ""
 "\n"
 "%1"
 
-#: widgets/erroroverlay.cpp:228
-#, kde-format
-msgctxt "@info:tooltip"
-msgid "Personal information management service is starting..."
-msgstr "S'està iniciant el servei per a la gestió de la informació personal..."
-
 #: widgets/erroroverlay.cpp:229
 #, kde-format
+msgctxt "@info:tooltip"
 msgid "Personal information management service is starting..."
 msgstr "S'està iniciant el servei per a la gestió de la informació personal..."
 
-#: widgets/erroroverlay.cpp:233
+#: widgets/erroroverlay.cpp:230
 #, kde-format
-msgctxt "@info:tooltip"
-msgid "Personal information management service is shutting down..."
-msgstr "S'està aturant el servei per a la gestió de la informació personal..."
+msgid "Personal information management service is starting..."
+msgstr "S'està iniciant el servei per a la gestió de la informació personal..."
 
 #: widgets/erroroverlay.cpp:234
 #, kde-format
+msgctxt "@info:tooltip"
 msgid "Personal information management service is shutting down..."
 msgstr "S'està aturant el servei per a la gestió de la informació personal..."
 
-#: widgets/erroroverlay.cpp:238
+#: widgets/erroroverlay.cpp:235
+#, kde-format
+msgid "Personal information management service is shutting down..."
+msgstr "S'està aturant el servei per a la gestió de la informació personal..."
+
+#: widgets/erroroverlay.cpp:239
 #, kde-format
 msgctxt "@info:tooltip"
 msgid ""
@@ -1253,7 +1253,7 @@ msgstr ""
 "El servei per a la gestió de la informació personal està realitzant una "
 "actualització de la base de dades..."
 
-#: widgets/erroroverlay.cpp:240
+#: widgets/erroroverlay.cpp:241
 #, kde-format
 msgid ""
 "Personal information management service is performing a database upgrade.\n"

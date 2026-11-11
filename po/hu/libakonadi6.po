@@ -9,7 +9,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: KDE 4.3\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2026-11-10 00:58+0000\n"
+"POT-Creation-Date: 2026-11-11 01:02+0000\n"
 "PO-Revision-Date: 2026-10-31 22:31+0100\n"
 "Last-Translator: Kristof Kiszel <ulysses@fsf.hu>\n"
 "Language-Team: Hungarian <kde-l10n-hu@kde.org>\n"
@@ -1200,7 +1200,7 @@ msgstr "&Hivatkozás ide"
 msgid "C&ancel"
 msgstr "&Mégse"
 
-#: widgets/erroroverlay.cpp:224
+#: widgets/erroroverlay.cpp:225
 #, kde-format
 msgctxt "%1 is a reason why"
 msgid ""
@@ -1212,29 +1212,29 @@ msgstr ""
 "\n"
 "%1"
 
-#: widgets/erroroverlay.cpp:228
+#: widgets/erroroverlay.cpp:229
 #, kde-format
 msgctxt "@info:tooltip"
 msgid "Personal information management service is starting..."
 msgstr "A személyi információkezelő szolgáltatás indul…"
 
-#: widgets/erroroverlay.cpp:229
+#: widgets/erroroverlay.cpp:230
 #, kde-format
 msgid "Personal information management service is starting..."
 msgstr "A személyes-információ kezelő szolgáltatás indul…"
 
-#: widgets/erroroverlay.cpp:233
+#: widgets/erroroverlay.cpp:234
 #, kde-format
 msgctxt "@info:tooltip"
 msgid "Personal information management service is shutting down..."
 msgstr "A személyi információkezelő szolgáltatás leáll…"
 
-#: widgets/erroroverlay.cpp:234
+#: widgets/erroroverlay.cpp:235
 #, kde-format
 msgid "Personal information management service is shutting down..."
 msgstr "A személyes-információ kezelő szolgáltatás leáll…"
 
-#: widgets/erroroverlay.cpp:238
+#: widgets/erroroverlay.cpp:239
 #, kde-format
 msgctxt "@info:tooltip"
 msgid ""
@@ -1242,7 +1242,7 @@ msgid ""
 msgstr ""
 "A személyi információkezelő szolgáltatás adatbázis-frissítést hajt végre."
 
-#: widgets/erroroverlay.cpp:240
+#: widgets/erroroverlay.cpp:241
 #, kde-format
 msgid ""
 "Personal information management service is performing a database upgrade.\n"

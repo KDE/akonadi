@@ -10,7 +10,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: libakonadi\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2026-11-10 00:58+0000\n"
+"POT-Creation-Date: 2026-11-11 01:02+0000\n"
 "PO-Revision-Date: 2026-11-03 19:43+0900\n"
 "Last-Translator: Kisaragi Hiu <mail@kisaragi-hiu.com>\n"
 "Language-Team: Traditional Chinese <zh-l10n@lists.slat.org>\n"
@@ -1178,7 +1178,7 @@ msgstr "連結到這裡(&L)"
 msgid "C&ancel"
 msgstr "取消(&A)"
 
-#: widgets/erroroverlay.cpp:224
+#: widgets/erroroverlay.cpp:225
 #, kde-format
 msgctxt "%1 is a reason why"
 msgid ""
@@ -1190,36 +1190,36 @@ msgstr ""
 "\n"
 "%1"
 
-#: widgets/erroroverlay.cpp:228
-#, kde-format
-msgctxt "@info:tooltip"
-msgid "Personal information management service is starting..."
-msgstr "正在啟動個人資訊管理服務..."
-
 #: widgets/erroroverlay.cpp:229
 #, kde-format
+msgctxt "@info:tooltip"
 msgid "Personal information management service is starting..."
 msgstr "正在啟動個人資訊管理服務..."
 
-#: widgets/erroroverlay.cpp:233
+#: widgets/erroroverlay.cpp:230
 #, kde-format
-msgctxt "@info:tooltip"
-msgid "Personal information management service is shutting down..."
-msgstr "正在關閉個人資訊管理服務..."
+msgid "Personal information management service is starting..."
+msgstr "正在啟動個人資訊管理服務..."
 
 #: widgets/erroroverlay.cpp:234
 #, kde-format
+msgctxt "@info:tooltip"
 msgid "Personal information management service is shutting down..."
 msgstr "正在關閉個人資訊管理服務..."
 
-#: widgets/erroroverlay.cpp:238
+#: widgets/erroroverlay.cpp:235
+#, kde-format
+msgid "Personal information management service is shutting down..."
+msgstr "正在關閉個人資訊管理服務..."
+
+#: widgets/erroroverlay.cpp:239
 #, kde-format
 msgctxt "@info:tooltip"
 msgid ""
 "Personal information management service is performing a database upgrade."
 msgstr "個人資訊管理服務政在執行資料庫更新。"
 
-#: widgets/erroroverlay.cpp:240
+#: widgets/erroroverlay.cpp:241
 #, kde-format
 msgid ""
 "Personal information management service is performing a database upgrade.\n"

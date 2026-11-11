@@ -10,7 +10,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: libakonadi\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2026-11-10 00:58+0000\n"
+"POT-Creation-Date: 2026-11-11 01:02+0000\n"
 "PO-Revision-Date: 2026-10-28 10:58+0100\n"
 "Last-Translator: Vincenzo Reale <smart2128vr@gmail.com>\n"
 "Language-Team: Italian <kde-i18n-it@kde.org>\n"
@@ -1210,7 +1210,7 @@ msgstr "Co&llega qui"
 msgid "C&ancel"
 msgstr "&Annulla"
 
-#: widgets/erroroverlay.cpp:224
+#: widgets/erroroverlay.cpp:225
 #, kde-format
 msgctxt "%1 is a reason why"
 msgid ""
@@ -1223,20 +1223,20 @@ msgstr ""
 "\n"
 "%1"
 
-#: widgets/erroroverlay.cpp:228
+#: widgets/erroroverlay.cpp:229
 #, kde-format
 msgctxt "@info:tooltip"
 msgid "Personal information management service is starting..."
 msgstr ""
 "Il servizio di gestione delle informazioni personali si sta avviando..."
 
-#: widgets/erroroverlay.cpp:229
+#: widgets/erroroverlay.cpp:230
 #, kde-format
 msgid "Personal information management service is starting..."
 msgstr ""
 "Avvio del servizio per la gestione delle informazioni personali in corso..."
 
-#: widgets/erroroverlay.cpp:233
+#: widgets/erroroverlay.cpp:234
 #, kde-format
 msgctxt "@info:tooltip"
 msgid "Personal information management service is shutting down..."
@@ -1244,14 +1244,14 @@ msgstr ""
 "Il servizio di gestione delle informazioni personali sta per essere "
 "interrotto..."
 
-#: widgets/erroroverlay.cpp:234
+#: widgets/erroroverlay.cpp:235
 #, kde-format
 msgid "Personal information management service is shutting down..."
 msgstr ""
 "Chiusura del servizio per la gestione delle informazioni personali in "
 "corso..."
 
-#: widgets/erroroverlay.cpp:238
+#: widgets/erroroverlay.cpp:239
 #, kde-format
 msgctxt "@info:tooltip"
 msgid ""
@@ -1260,7 +1260,7 @@ msgstr ""
 "Il servizio di gestione delle informazioni personali sta eseguendo un "
 "aggiornamento del database."
 
-#: widgets/erroroverlay.cpp:240
+#: widgets/erroroverlay.cpp:241
 #, kde-format
 msgid ""
 "Personal information management service is performing a database upgrade.\n"

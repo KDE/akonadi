@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: libakonadi\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2026-11-10 00:58+0000\n"
+"POT-Creation-Date: 2026-11-11 01:02+0000\n"
 "PO-Revision-Date: 2021-02-13 12:56+0100\n"
 "Last-Translator: Karl Ove Hufthammer <karl@huftis.org>\n"
 "Language-Team: Norwegian Nynorsk <l10n-no@nuug.no>\n"
@@ -1168,7 +1168,7 @@ msgstr "&Lag lenkje hit"
 msgid "C&ancel"
 msgstr "&Avbryt"
 
-#: widgets/erroroverlay.cpp:224
+#: widgets/erroroverlay.cpp:225
 #, kde-format
 msgctxt "%1 is a reason why"
 msgid ""
@@ -1177,36 +1177,36 @@ msgid ""
 "%1"
 msgstr ""
 
-#: widgets/erroroverlay.cpp:228
+#: widgets/erroroverlay.cpp:229
 #, fuzzy, kde-format
 msgctxt "@info:tooltip"
 msgid "Personal information management service is starting..."
 msgstr "Akonadi-tenesta for handtering av personleg informasjon verkar ikkje."
 
-#: widgets/erroroverlay.cpp:229
+#: widgets/erroroverlay.cpp:230
 #, kde-format
 msgid "Personal information management service is starting..."
 msgstr ""
-
-#: widgets/erroroverlay.cpp:233
-#, fuzzy, kde-format
-msgctxt "@info:tooltip"
-msgid "Personal information management service is shutting down..."
-msgstr "Akonadi-tenesta for handtering av personleg informasjon verkar ikkje."
 
 #: widgets/erroroverlay.cpp:234
+#, fuzzy, kde-format
+msgctxt "@info:tooltip"
+msgid "Personal information management service is shutting down..."
+msgstr "Akonadi-tenesta for handtering av personleg informasjon verkar ikkje."
+
+#: widgets/erroroverlay.cpp:235
 #, kde-format
 msgid "Personal information management service is shutting down..."
 msgstr ""
 
-#: widgets/erroroverlay.cpp:238
+#: widgets/erroroverlay.cpp:239
 #, fuzzy, kde-format
 msgctxt "@info:tooltip"
 msgid ""
 "Personal information management service is performing a database upgrade."
 msgstr "Akonadi-tenesta for handtering av personleg informasjon verkar ikkje."
 
-#: widgets/erroroverlay.cpp:240
+#: widgets/erroroverlay.cpp:241
 #, kde-format
 msgid ""
 "Personal information management service is performing a database upgrade.\n"

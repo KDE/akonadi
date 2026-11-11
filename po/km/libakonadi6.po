@@ -9,7 +9,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: libakonadi\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2026-11-10 00:58+0000\n"
+"POT-Creation-Date: 2026-11-11 01:02+0000\n"
 "PO-Revision-Date: 2012-07-11 10:23+0700\n"
 "Last-Translator: Khoem Sokhem <khoemsokhem@khmeros.info>\n"
 "Language-Team: Khmer\n"
@@ -1228,7 +1228,7 @@ msgstr "ភ្ជាប់​នៅ​ទី​នេះ​"
 msgid "C&ancel"
 msgstr "បោះបង់​"
 
-#: widgets/erroroverlay.cpp:224
+#: widgets/erroroverlay.cpp:225
 #, fuzzy, kde-format
 #| msgid "Cannot connect to the Akonadi service."
 msgctxt "%1 is a reason why"
@@ -1238,31 +1238,31 @@ msgid ""
 "%1"
 msgstr "មិន​អាច​តភ្ជាប់​ទៅ​កាន់​សេវា Akonadi បាន​ទេ ។"
 
-#: widgets/erroroverlay.cpp:228
+#: widgets/erroroverlay.cpp:229
 #, fuzzy, kde-format
 #| msgid "Personal information management service is starting..."
 msgctxt "@info:tooltip"
 msgid "Personal information management service is starting..."
 msgstr "សេវា​គ្រប់គ្រង​ព័ត៌មាន​ផ្ទាល់ខ្លួន​កំពុង​ចាប់ផ្ដើម​​..."
 
-#: widgets/erroroverlay.cpp:229
+#: widgets/erroroverlay.cpp:230
 #, kde-format
 msgid "Personal information management service is starting..."
 msgstr "សេវា​គ្រប់គ្រង​ព័ត៌មាន​ផ្ទាល់ខ្លួន​កំពុង​ចាប់ផ្ដើម​​..."
 
-#: widgets/erroroverlay.cpp:233
+#: widgets/erroroverlay.cpp:234
 #, fuzzy, kde-format
 #| msgid "Personal information management service is shutting down..."
 msgctxt "@info:tooltip"
 msgid "Personal information management service is shutting down..."
 msgstr "សេវា​គ្រប់គ្រង​ព័ត៌មាន​ផ្ទាល់ខ្លួន​កំពុង​បិទ​​...​"
 
-#: widgets/erroroverlay.cpp:234
+#: widgets/erroroverlay.cpp:235
 #, kde-format
 msgid "Personal information management service is shutting down..."
 msgstr "សេវា​គ្រប់គ្រង​ព័ត៌មាន​ផ្ទាល់ខ្លួន​កំពុង​បិទ​​...​"
 
-#: widgets/erroroverlay.cpp:238
+#: widgets/erroroverlay.cpp:239
 #, fuzzy, kde-format
 #| msgid "Personal information management service is starting..."
 msgctxt "@info:tooltip"
@@ -1270,7 +1270,7 @@ msgid ""
 "Personal information management service is performing a database upgrade."
 msgstr "សេវា​គ្រប់គ្រង​ព័ត៌មាន​ផ្ទាល់ខ្លួន​កំពុង​ចាប់ផ្ដើម​​..."
 
-#: widgets/erroroverlay.cpp:240
+#: widgets/erroroverlay.cpp:241
 #, kde-format
 msgid ""
 "Personal information management service is performing a database upgrade.\n"
