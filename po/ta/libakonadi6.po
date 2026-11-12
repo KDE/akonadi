@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: akonadi\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2026-11-11 01:02+0000\n"
+"POT-Creation-Date: 2026-11-12 01:02+0000\n"
 "PO-Revision-Date: 2026-05-10 14:24+0530\n"
 "Last-Translator: Kishore G <kishore96@gmail.com>\n"
 "Language-Team: Tamil <kde-l10n-ta@kde.org>\n"
@@ -90,69 +90,69 @@ msgstr ""
 msgid "Akonadi Resource"
 msgstr ""
 
-#: agentbase/resourcebase.cpp:567
+#: agentbase/resourcebase.cpp:569
 #, kde-format
 msgctxt "@info"
 msgid "Invalid item retrieved"
 msgstr "செல்லுபடியாகாத உருப்படி பெறப்பட்டது"
 
-#: agentbase/resourcebase.cpp:591
+#: agentbase/resourcebase.cpp:593
 #, kde-format
 msgctxt "@info"
 msgid "Error while creating item: %1"
 msgstr "உருப்படியை உருவாக்குவதில் சிக்கல்: %1"
 
-#: agentbase/resourcebase.cpp:622
+#: agentbase/resourcebase.cpp:624
 #, kde-format
 msgctxt "@info"
 msgid "Error while updating collection: %1"
 msgstr "திரட்டை புதுப்பிப்பதில் சிக்கல்: %1"
 
-#: agentbase/resourcebase.cpp:714
+#: agentbase/resourcebase.cpp:716
 #, kde-format
 msgctxt "@info"
 msgid "Updating local collection failed: %1."
 msgstr "இக்கணினியில் உள்ள திரட்டைப் புதுப்பிப்பது தோல்வியடைந்தது: %1."
 
-#: agentbase/resourcebase.cpp:719
+#: agentbase/resourcebase.cpp:721
 #, kde-format
 msgctxt "@info"
 msgid "Updating local items failed: %1."
 msgstr "இக்கணினியிலுள்ள உருப்படிகளை புதுப்பிப்பது தோல்வியடைந்தது: %1."
 
-#: agentbase/resourcebase.cpp:745
+#: agentbase/resourcebase.cpp:747
 #, kde-format
 msgctxt "@info"
 msgid "Cannot fetch item in offline mode."
 msgstr "தொடர்பற்ற பயன்முறையிலுள்ளபோது எதையும் பதிவிறக்க முடியாது"
 
-#: agentbase/resourcebase.cpp:928
+#: agentbase/resourcebase.cpp:930
 #, kde-format
 msgctxt "@info:status"
 msgid "Syncing folder '%1'"
 msgstr "'%1' எனும் அடைவு ஒத்திசையப்படுகிறது"
 
-#: agentbase/resourcebase.cpp:949 agentbase/resourcebase.cpp:956
+#: agentbase/resourcebase.cpp:951 agentbase/resourcebase.cpp:958
 #, kde-format
 msgid "Failed to retrieve collection for sync."
 msgstr "ஒத்திசைவுக்கு திரட்டைப் பெற முடியவில்லை"
 
-#: agentbase/resourcebase.cpp:1002
+#: agentbase/resourcebase.cpp:1004
 #, kde-format
 msgid "Failed to retrieve collection for attribute sync."
 msgstr "பண்பு ஒத்திசைவுக்கு திரட்டைப் பெற முடியவில்லை"
 
-#: agentbase/resourcebase.cpp:1054
+#: agentbase/resourcebase.cpp:1056
 #, kde-format
 msgid "The requested item no longer exists"
 msgstr "கோரியது தற்போது இருப்பில் இல்லை"
 
-#: agentbase/resourcebase.cpp:1275
+#: agentbase/resourcebase.cpp:1277
 #, kde-format
 msgid "Failed to fetch collection for collection sync."
 msgstr "ஒத்திசைவுக்கு திரட்டைப் பெற முடியவில்லை"
 
-#: agentbase/resourcebase.cpp:1311
+#: agentbase/resourcebase.cpp:1313
 #, kde-format
 msgid "Failed to fetch collection for collection attributes sync."
 msgstr "பண்பு ஒத்திசைவுக்கு திரட்டைப் பெற முடியவில்லை"
@@ -2335,46 +2335,46 @@ msgctxt "@title:window"
 msgid "Paste Failed"
 msgstr ""
 
-#: widgets/standardactionmanager.cpp:776
+#: widgets/standardactionmanager.cpp:778
 #, kde-format
 msgid "We can not add \"/\" in folder name."
 msgstr ""
 
-#: widgets/standardactionmanager.cpp:776 widgets/standardactionmanager.cpp:780
+#: widgets/standardactionmanager.cpp:778 widgets/standardactionmanager.cpp:782
 #, kde-format
 msgctxt "@title:window"
 msgid "Create New Folder Error"
 msgstr ""
 
-#: widgets/standardactionmanager.cpp:780
+#: widgets/standardactionmanager.cpp:782
 #, kde-format
 msgid "We can not add \".\" at begin or end of folder name."
 msgstr ""
 
-#: widgets/standardactionmanager.cpp:1024
+#: widgets/standardactionmanager.cpp:1026
 #, kde-format
 msgid ""
 "Before syncing folder \"%1\" it is necessary to have the resource online. Do "
 "you want to make it online?"
 msgstr ""
 
-#: widgets/standardactionmanager.cpp:1025
+#: widgets/standardactionmanager.cpp:1027
 #, kde-format
 msgid "Account \"%1\" is offline"
 msgstr ""
 
-#: widgets/standardactionmanager.cpp:1026
+#: widgets/standardactionmanager.cpp:1028
 #, kde-format
 msgctxt "@action:button"
 msgid "Go Online"
 msgstr ""
 
-#: widgets/standardactionmanager.cpp:1646
+#: widgets/standardactionmanager.cpp:1648
 #, kde-format
 msgid "Move to This Folder"
 msgstr ""
 
-#: widgets/standardactionmanager.cpp:1646
+#: widgets/standardactionmanager.cpp:1648
 #, kde-format
 msgid "Copy to This Folder"
 msgstr ""

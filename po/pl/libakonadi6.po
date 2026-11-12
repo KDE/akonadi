@@ -6,8 +6,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2026-11-11 01:02+0000\n"
-"PO-Revision-Date: 2026-08-08 12:26+0200\n"
+"POT-Creation-Date: 2026-11-12 01:02+0000\n"
+"PO-Revision-Date: 2026-11-11 17:44+0100\n"
 "Last-Translator: Łukasz Wojniłowicz <lukasz.wojnilowicz@gmail.com>\n"
 "Language-Team: pl\n"
 "Language: pl\n"
@@ -16,7 +16,7 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=3; plural=(n==1 ? 0 : n%10>=2 && n%10<=4 && (n%100<10 "
 "|| n%100>=20) ? 1 : 2);\n"
-"X-Generator: Lokalize 26.04.2\n"
+"X-Generator: Lokalize 26.08.2\n"
 
 #, kde-format
 msgctxt "NAME OF TRANSLATORS"
@@ -91,69 +91,69 @@ msgstr "Identyfikator zasobu"
 msgid "Akonadi Resource"
 msgstr "Zasób Akonadi"
 
-#: agentbase/resourcebase.cpp:567
+#: agentbase/resourcebase.cpp:569
 #, kde-format
 msgctxt "@info"
 msgid "Invalid item retrieved"
 msgstr "Otrzymano nieprawidłowy element"
 
-#: agentbase/resourcebase.cpp:591
+#: agentbase/resourcebase.cpp:593
 #, kde-format
 msgctxt "@info"
 msgid "Error while creating item: %1"
 msgstr "Błąd podczas tworzenia elementu: %1"
 
-#: agentbase/resourcebase.cpp:622
+#: agentbase/resourcebase.cpp:624
 #, kde-format
 msgctxt "@info"
 msgid "Error while updating collection: %1"
 msgstr "Błąd podczas uaktualniania zbioru: %1"
 
-#: agentbase/resourcebase.cpp:714
+#: agentbase/resourcebase.cpp:716
 #, kde-format
 msgctxt "@info"
 msgid "Updating local collection failed: %1."
 msgstr "Uaktualnienie lokalnego zbioru zakończone niepowodzeniem: %1."
 
-#: agentbase/resourcebase.cpp:719
+#: agentbase/resourcebase.cpp:721
 #, kde-format
 msgctxt "@info"
 msgid "Updating local items failed: %1."
 msgstr "Uaktualnienie lokalnych elementów zakończone niepowodzeniem: %1."
 
-#: agentbase/resourcebase.cpp:745
+#: agentbase/resourcebase.cpp:747
 #, kde-format
 msgctxt "@info"
 msgid "Cannot fetch item in offline mode."
 msgstr "Nie można pobrać elementu bez połączenia sieciowego."
 
-#: agentbase/resourcebase.cpp:928
+#: agentbase/resourcebase.cpp:930
 #, kde-format
 msgctxt "@info:status"
 msgid "Syncing folder '%1'"
 msgstr "Synchronizowanie katalogu '%1'"
 
-#: agentbase/resourcebase.cpp:949 agentbase/resourcebase.cpp:956
+#: agentbase/resourcebase.cpp:951 agentbase/resourcebase.cpp:958
 #, kde-format
 msgid "Failed to retrieve collection for sync."
 msgstr "Nie udało się pobrać zbioru dla synchronizacji."
 
-#: agentbase/resourcebase.cpp:1002
+#: agentbase/resourcebase.cpp:1004
 #, kde-format
 msgid "Failed to retrieve collection for attribute sync."
 msgstr "Nie udało się pobrać zbioru dla synchronizacji atrybutów."
 
-#: agentbase/resourcebase.cpp:1054
+#: agentbase/resourcebase.cpp:1056
 #, kde-format
 msgid "The requested item no longer exists"
 msgstr "Żądany element już nie istnieje"
 
-#: agentbase/resourcebase.cpp:1275
+#: agentbase/resourcebase.cpp:1277
 #, kde-format
 msgid "Failed to fetch collection for collection sync."
 msgstr "Nie udało się pobrać zbioru do synchronizacji zbiorów."
 
-#: agentbase/resourcebase.cpp:1311
+#: agentbase/resourcebase.cpp:1313
 #, kde-format
 msgid "Failed to fetch collection for collection attributes sync."
 msgstr "Nie udało się pobrać zbioru dla synchronizacji atrybutów zbiorów."
@@ -471,7 +471,7 @@ msgstr "%1 (Domyślny)"
 #, kde-format
 msgctxt "@info:status"
 msgid "Loading..."
-msgstr "Wczytywanie..."
+msgstr "Wczytywanie…"
 
 #: core/models/entitytreemodel.cpp:497
 #, kde-format
@@ -1178,11 +1178,9 @@ msgid "Stopping Akonadi server..."
 msgstr "Zatrzymywanie serwera Akonadi…"
 
 #: widgets/dbaccess.cpp:43
-#, fuzzy, kde-format
-#| msgctxt "@info"
-#| msgid "Failed to create new tag %1: %2"
+#, kde-format
 msgid "Failed to connect to database: %1"
-msgstr "Nie udało się utworzyć nowego znacznika %1: %2"
+msgstr "Nie udało się połączyć z bazą danych: %1"
 
 #: widgets/dragdropmanager.cpp:211
 #, kde-format
@@ -2503,23 +2501,23 @@ msgctxt "@title:window"
 msgid "Paste Failed"
 msgstr "Wklejanie nieudane"
 
-#: widgets/standardactionmanager.cpp:776
+#: widgets/standardactionmanager.cpp:778
 #, kde-format
 msgid "We can not add \"/\" in folder name."
 msgstr "Nie można dodać \"/\" do nazwy katalogu."
 
-#: widgets/standardactionmanager.cpp:776 widgets/standardactionmanager.cpp:780
+#: widgets/standardactionmanager.cpp:778 widgets/standardactionmanager.cpp:782
 #, kde-format
 msgctxt "@title:window"
 msgid "Create New Folder Error"
 msgstr "Błąd tworzenia nowego katalogu"
 
-#: widgets/standardactionmanager.cpp:780
+#: widgets/standardactionmanager.cpp:782
 #, kde-format
 msgid "We can not add \".\" at begin or end of folder name."
 msgstr "Nie można dodać \".\" ani do początku ani do końca nazwy katalogu."
 
-#: widgets/standardactionmanager.cpp:1024
+#: widgets/standardactionmanager.cpp:1026
 #, kde-format
 msgid ""
 "Before syncing folder \"%1\" it is necessary to have the resource online. Do "
@@ -2528,23 +2526,23 @@ msgstr ""
 "Przed synchronizacją katalogu \"%1\" konieczne jest podłączenie go do sieci. "
 "Czy chcesz podłączyć go do sieci?"
 
-#: widgets/standardactionmanager.cpp:1025
+#: widgets/standardactionmanager.cpp:1027
 #, kde-format
 msgid "Account \"%1\" is offline"
 msgstr "Konto \"%1\" odłączono od sieci"
 
-#: widgets/standardactionmanager.cpp:1026
+#: widgets/standardactionmanager.cpp:1028
 #, kde-format
 msgctxt "@action:button"
 msgid "Go Online"
 msgstr "Przejdź do trybu z siecią"
 
-#: widgets/standardactionmanager.cpp:1646
+#: widgets/standardactionmanager.cpp:1648
 #, kde-format
 msgid "Move to This Folder"
 msgstr "Przenieś do tego katalogu"
 
-#: widgets/standardactionmanager.cpp:1646
+#: widgets/standardactionmanager.cpp:1648
 #, kde-format
 msgid "Copy to This Folder"
 msgstr "Skopiuj do tego katalogu"

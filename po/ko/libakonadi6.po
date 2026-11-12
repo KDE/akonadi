@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2026-11-11 01:02+0000\n"
+"POT-Creation-Date: 2026-11-12 01:02+0000\n"
 "PO-Revision-Date: 2026-09-21 15:02+0200\n"
 "Last-Translator: Shinjo Park <peremen@gmail.com>\n"
 "Language-Team: Korean\n"
@@ -90,69 +90,69 @@ msgstr "리소스 식별자"
 msgid "Akonadi Resource"
 msgstr "Akonadi 리소스"
 
-#: agentbase/resourcebase.cpp:567
+#: agentbase/resourcebase.cpp:569
 #, kde-format
 msgctxt "@info"
 msgid "Invalid item retrieved"
 msgstr "잘못된 항목 가져옴"
 
-#: agentbase/resourcebase.cpp:591
+#: agentbase/resourcebase.cpp:593
 #, kde-format
 msgctxt "@info"
 msgid "Error while creating item: %1"
 msgstr "항목 생성 오류: %1"
 
-#: agentbase/resourcebase.cpp:622
+#: agentbase/resourcebase.cpp:624
 #, kde-format
 msgctxt "@info"
 msgid "Error while updating collection: %1"
 msgstr "모음집 갱신 오류: %1"
 
-#: agentbase/resourcebase.cpp:714
+#: agentbase/resourcebase.cpp:716
 #, kde-format
 msgctxt "@info"
 msgid "Updating local collection failed: %1."
 msgstr "로컬 모음집 갱신 실패: %1."
 
-#: agentbase/resourcebase.cpp:719
+#: agentbase/resourcebase.cpp:721
 #, kde-format
 msgctxt "@info"
 msgid "Updating local items failed: %1."
 msgstr "로컬 항목 갱신 실패: %1."
 
-#: agentbase/resourcebase.cpp:745
+#: agentbase/resourcebase.cpp:747
 #, kde-format
 msgctxt "@info"
 msgid "Cannot fetch item in offline mode."
 msgstr "오프라인 모드에서는 항목을 가져올 수 없습니다."
 
-#: agentbase/resourcebase.cpp:928
+#: agentbase/resourcebase.cpp:930
 #, kde-format
 msgctxt "@info:status"
 msgid "Syncing folder '%1'"
 msgstr "'%1' 폴더 동기화 중"
 
-#: agentbase/resourcebase.cpp:949 agentbase/resourcebase.cpp:956
+#: agentbase/resourcebase.cpp:951 agentbase/resourcebase.cpp:958
 #, kde-format
 msgid "Failed to retrieve collection for sync."
 msgstr "동기화할 모음집을 가져올 수 없습니다."
 
-#: agentbase/resourcebase.cpp:1002
+#: agentbase/resourcebase.cpp:1004
 #, kde-format
 msgid "Failed to retrieve collection for attribute sync."
 msgstr "속성 동기화할 모음집을 가져올 수 없습니다."
 
-#: agentbase/resourcebase.cpp:1054
+#: agentbase/resourcebase.cpp:1056
 #, kde-format
 msgid "The requested item no longer exists"
 msgstr "요청한 항목이 더 이상 없음"
 
-#: agentbase/resourcebase.cpp:1275
+#: agentbase/resourcebase.cpp:1277
 #, kde-format
 msgid "Failed to fetch collection for collection sync."
 msgstr "모음집 동기화에 사용할 모음집을 가져올 수 없습니다."
 
-#: agentbase/resourcebase.cpp:1311
+#: agentbase/resourcebase.cpp:1313
 #, kde-format
 msgid "Failed to fetch collection for collection attributes sync."
 msgstr "모음집 속성 동기화에 사용할 모음집을 가져올 수 없습니다."
@@ -2407,23 +2407,23 @@ msgctxt "@title:window"
 msgid "Paste Failed"
 msgstr "붙여넣기 실패"
 
-#: widgets/standardactionmanager.cpp:776
+#: widgets/standardactionmanager.cpp:778
 #, kde-format
 msgid "We can not add \"/\" in folder name."
 msgstr "폴더 이름에 \"/\"를 추가할 수 없습니다."
 
-#: widgets/standardactionmanager.cpp:776 widgets/standardactionmanager.cpp:780
+#: widgets/standardactionmanager.cpp:778 widgets/standardactionmanager.cpp:782
 #, kde-format
 msgctxt "@title:window"
 msgid "Create New Folder Error"
 msgstr "새 폴더 만들기 오류"
 
-#: widgets/standardactionmanager.cpp:780
+#: widgets/standardactionmanager.cpp:782
 #, kde-format
 msgid "We can not add \".\" at begin or end of folder name."
 msgstr "폴더 이름의 시작이나 끝에 \".\"를 추가할 수 없습니다."
 
-#: widgets/standardactionmanager.cpp:1024
+#: widgets/standardactionmanager.cpp:1026
 #, kde-format
 msgid ""
 "Before syncing folder \"%1\" it is necessary to have the resource online. Do "
@@ -2432,23 +2432,23 @@ msgstr ""
 "폴더 \"%1\"을(를) 동기화하기 전 해당하는 리소스를 온라인으로 전환해야 합니"
 "다. 온라인으로 전환하시겠습니까?"
 
-#: widgets/standardactionmanager.cpp:1025
+#: widgets/standardactionmanager.cpp:1027
 #, kde-format
 msgid "Account \"%1\" is offline"
 msgstr "계정 \"%1\"이(가) 오프라인임"
 
-#: widgets/standardactionmanager.cpp:1026
+#: widgets/standardactionmanager.cpp:1028
 #, kde-format
 msgctxt "@action:button"
 msgid "Go Online"
 msgstr "온라인으로 전환"
 
-#: widgets/standardactionmanager.cpp:1646
+#: widgets/standardactionmanager.cpp:1648
 #, kde-format
 msgid "Move to This Folder"
 msgstr "이 폴더로 이동"
 
-#: widgets/standardactionmanager.cpp:1646
+#: widgets/standardactionmanager.cpp:1648
 #, kde-format
 msgid "Copy to This Folder"
 msgstr "이 폴더로 복사"

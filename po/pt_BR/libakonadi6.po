@@ -13,10 +13,10 @@ msgid ""
 msgstr ""
 "Project-Id-Version: libakonadi5\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2026-11-11 01:02+0000\n"
+"POT-Creation-Date: 2026-11-12 01:02+0000\n"
 "PO-Revision-Date: 2026-10-27 10:22-0300\n"
 "Last-Translator: Marcus Gama <marcus.gama@gmail.com>\n"
-"Language-Team: Portuguese <kde-i18n-pt_BR@kde.org>\n"
+"Language-Team: Brazilian Portuguese <kde-i18n-pt_BR@kde.org>\n"
 "Language: pt_BR\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -97,69 +97,69 @@ msgstr "Identificador do recurso"
 msgid "Akonadi Resource"
 msgstr "Recurso do Akonadi"
 
-#: agentbase/resourcebase.cpp:567
+#: agentbase/resourcebase.cpp:569
 #, kde-format
 msgctxt "@info"
 msgid "Invalid item retrieved"
 msgstr "Foi obtido um item inválido"
 
-#: agentbase/resourcebase.cpp:591
+#: agentbase/resourcebase.cpp:593
 #, kde-format
 msgctxt "@info"
 msgid "Error while creating item: %1"
 msgstr "Ocorreu um erro ao criar o item: %1"
 
-#: agentbase/resourcebase.cpp:622
+#: agentbase/resourcebase.cpp:624
 #, kde-format
 msgctxt "@info"
 msgid "Error while updating collection: %1"
 msgstr "Ocorreu um erro ao atualizar a coleção: %1"
 
-#: agentbase/resourcebase.cpp:714
+#: agentbase/resourcebase.cpp:716
 #, kde-format
 msgctxt "@info"
 msgid "Updating local collection failed: %1."
 msgstr "Falha na atualização da coleção local: %1."
 
-#: agentbase/resourcebase.cpp:719
+#: agentbase/resourcebase.cpp:721
 #, kde-format
 msgctxt "@info"
 msgid "Updating local items failed: %1."
 msgstr "Falha na atualização dos itens locais: %1."
 
-#: agentbase/resourcebase.cpp:745
+#: agentbase/resourcebase.cpp:747
 #, kde-format
 msgctxt "@info"
 msgid "Cannot fetch item in offline mode."
 msgstr "Não é possível obter o item no modo offline."
 
-#: agentbase/resourcebase.cpp:928
+#: agentbase/resourcebase.cpp:930
 #, kde-format
 msgctxt "@info:status"
 msgid "Syncing folder '%1'"
 msgstr "Sincronizando pasta '%1'"
 
-#: agentbase/resourcebase.cpp:949 agentbase/resourcebase.cpp:956
+#: agentbase/resourcebase.cpp:951 agentbase/resourcebase.cpp:958
 #, kde-format
 msgid "Failed to retrieve collection for sync."
 msgstr "Falha ao obter a coleção para sincronizar."
 
-#: agentbase/resourcebase.cpp:1002
+#: agentbase/resourcebase.cpp:1004
 #, kde-format
 msgid "Failed to retrieve collection for attribute sync."
 msgstr "Falha ao obter a coleção para sincronizar os atributos."
 
-#: agentbase/resourcebase.cpp:1054
+#: agentbase/resourcebase.cpp:1056
 #, kde-format
 msgid "The requested item no longer exists"
 msgstr "O item solicitado não existe mais"
 
-#: agentbase/resourcebase.cpp:1275
+#: agentbase/resourcebase.cpp:1277
 #, kde-format
 msgid "Failed to fetch collection for collection sync."
 msgstr "Falha ao buscar a coleção para sincronização da coleção."
 
-#: agentbase/resourcebase.cpp:1311
+#: agentbase/resourcebase.cpp:1313
 #, kde-format
 msgid "Failed to fetch collection for collection attributes sync."
 msgstr "Falha ao buscar a coleção para sincronização de atributos da coleção."
@@ -2493,25 +2493,25 @@ msgctxt "@title:window"
 msgid "Paste Failed"
 msgstr "Falha ao colar"
 
-#: widgets/standardactionmanager.cpp:776
+#: widgets/standardactionmanager.cpp:778
 #, kde-format
 msgid "We can not add \"/\" in folder name."
 msgstr "Não é possível adicionar o caractere \"/\" no nome da pasta."
 
-#: widgets/standardactionmanager.cpp:776 widgets/standardactionmanager.cpp:780
+#: widgets/standardactionmanager.cpp:778 widgets/standardactionmanager.cpp:782
 #, kde-format
 msgctxt "@title:window"
 msgid "Create New Folder Error"
 msgstr "Erro na criação da nova pasta"
 
-#: widgets/standardactionmanager.cpp:780
+#: widgets/standardactionmanager.cpp:782
 #, kde-format
 msgid "We can not add \".\" at begin or end of folder name."
 msgstr ""
 "Não é possível adicionar o caractere \".\" no início ou no final do nome da "
 "pasta."
 
-#: widgets/standardactionmanager.cpp:1024
+#: widgets/standardactionmanager.cpp:1026
 #, kde-format
 msgid ""
 "Before syncing folder \"%1\" it is necessary to have the resource online. Do "
@@ -2520,23 +2520,23 @@ msgstr ""
 "Antes de sincronizar a pasta \"%1\" é necessário estar conectado ao recurso. "
 "Deseja conectar-se?"
 
-#: widgets/standardactionmanager.cpp:1025
+#: widgets/standardactionmanager.cpp:1027
 #, kde-format
 msgid "Account \"%1\" is offline"
 msgstr "A conta \"%1\" está desconectada"
 
-#: widgets/standardactionmanager.cpp:1026
+#: widgets/standardactionmanager.cpp:1028
 #, kde-format
 msgctxt "@action:button"
 msgid "Go Online"
 msgstr "Conectar"
 
-#: widgets/standardactionmanager.cpp:1646
+#: widgets/standardactionmanager.cpp:1648
 #, kde-format
 msgid "Move to This Folder"
 msgstr "Mover para esta pasta"
 
-#: widgets/standardactionmanager.cpp:1646
+#: widgets/standardactionmanager.cpp:1648
 #, kde-format
 msgid "Copy to This Folder"
 msgstr "Copiar para esta pasta"

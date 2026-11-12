@@ -13,7 +13,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: libakonadi6\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2026-11-11 01:02+0000\n"
+"POT-Creation-Date: 2026-11-12 01:02+0000\n"
 "PO-Revision-Date: 2026-08-14 19:05+0200\n"
 "Last-Translator: Philipp Kiemle <l10n.daphipz@fastmail.de>\n"
 "Language-Team: German <kde-i18n-de@kde.org>\n"
@@ -97,72 +97,72 @@ msgstr "Ressourcen-Bezeichner"
 msgid "Akonadi Resource"
 msgstr "Akonadi-Ressource"
 
-#: agentbase/resourcebase.cpp:567
+#: agentbase/resourcebase.cpp:569
 #, kde-format
 msgctxt "@info"
 msgid "Invalid item retrieved"
 msgstr "Ungültigen Eintrag erhalten"
 
-#: agentbase/resourcebase.cpp:591
+#: agentbase/resourcebase.cpp:593
 #, kde-format
 msgctxt "@info"
 msgid "Error while creating item: %1"
 msgstr "Fehler beim Erstellen des Eintrags: %1"
 
-#: agentbase/resourcebase.cpp:622
+#: agentbase/resourcebase.cpp:624
 #, kde-format
 msgctxt "@info"
 msgid "Error while updating collection: %1"
 msgstr "Aktualisierung der Sammlung fehlgeschlagen: %1."
 
-#: agentbase/resourcebase.cpp:714
+#: agentbase/resourcebase.cpp:716
 #, kde-format
 msgctxt "@info"
 msgid "Updating local collection failed: %1."
 msgstr "Aktualisierung der lokalen Sammlung fehlgeschlagen: %1."
 
-#: agentbase/resourcebase.cpp:719
+#: agentbase/resourcebase.cpp:721
 #, kde-format
 msgctxt "@info"
 msgid "Updating local items failed: %1."
 msgstr "Aktualisierung des lokalen Eintrags ist fehlgeschlagen: %1."
 
-#: agentbase/resourcebase.cpp:745
+#: agentbase/resourcebase.cpp:747
 #, kde-format
 msgctxt "@info"
 msgid "Cannot fetch item in offline mode."
 msgstr "Der Eintrag kann im Offline-Modus nicht geholt werden."
 
-#: agentbase/resourcebase.cpp:928
+#: agentbase/resourcebase.cpp:930
 #, kde-format
 msgctxt "@info:status"
 msgid "Syncing folder '%1'"
 msgstr "Abgleich des Ordners „%1“"
 
-#: agentbase/resourcebase.cpp:949 agentbase/resourcebase.cpp:956
+#: agentbase/resourcebase.cpp:951 agentbase/resourcebase.cpp:958
 #, kde-format
 msgid "Failed to retrieve collection for sync."
 msgstr "Das Abholen der Sammlung zum Abgleichen ist fehlgeschlagen."
 
-#: agentbase/resourcebase.cpp:1002
+#: agentbase/resourcebase.cpp:1004
 #, kde-format
 msgid "Failed to retrieve collection for attribute sync."
 msgstr ""
 "Das Abholen der Sammlung zum Abgleich der Attribute ist fehlgeschlagen."
 
-#: agentbase/resourcebase.cpp:1054
+#: agentbase/resourcebase.cpp:1056
 #, kde-format
 msgid "The requested item no longer exists"
 msgstr "Der angefragte Eintrag ist nicht mehr vorhanden."
 
-#: agentbase/resourcebase.cpp:1275
+#: agentbase/resourcebase.cpp:1277
 #, kde-format
 msgid "Failed to fetch collection for collection sync."
 msgstr ""
 "Das Abrufen der Sammlung zur Synchronisierung der Sammlung ist "
 "fehlgeschlagen."
 
-#: agentbase/resourcebase.cpp:1311
+#: agentbase/resourcebase.cpp:1313
 #, kde-format
 msgid "Failed to fetch collection for collection attributes sync."
 msgstr ""
@@ -2511,25 +2511,25 @@ msgctxt "@title:window"
 msgid "Paste Failed"
 msgstr "Einfügen fehlgeschlagen"
 
-#: widgets/standardactionmanager.cpp:776
+#: widgets/standardactionmanager.cpp:778
 #, kde-format
 msgid "We can not add \"/\" in folder name."
 msgstr "Das „/“-Zeichen kann dem Ordnernamen nicht hinzugefügt werden."
 
-#: widgets/standardactionmanager.cpp:776 widgets/standardactionmanager.cpp:780
+#: widgets/standardactionmanager.cpp:778 widgets/standardactionmanager.cpp:782
 #, kde-format
 msgctxt "@title:window"
 msgid "Create New Folder Error"
 msgstr "Fehler beim Erstellen eines neuen Ordners"
 
-#: widgets/standardactionmanager.cpp:780
+#: widgets/standardactionmanager.cpp:782
 #, kde-format
 msgid "We can not add \".\" at begin or end of folder name."
 msgstr ""
 "Das „.“-Zeichen kann nicht am Anfang oder Ende des Ordnernamens hinzugefügt "
 "werden."
 
-#: widgets/standardactionmanager.cpp:1024
+#: widgets/standardactionmanager.cpp:1026
 #, kde-format
 msgid ""
 "Before syncing folder \"%1\" it is necessary to have the resource online. Do "
@@ -2538,23 +2538,23 @@ msgstr ""
 "Um den Ordner „%1“ abgleichen zu können, muss die Ressource online sein. "
 "Möchten Sie sie jetzt online schalten?"
 
-#: widgets/standardactionmanager.cpp:1025
+#: widgets/standardactionmanager.cpp:1027
 #, kde-format
 msgid "Account \"%1\" is offline"
 msgstr "Zugang „%1“ ist offline"
 
-#: widgets/standardactionmanager.cpp:1026
+#: widgets/standardactionmanager.cpp:1028
 #, kde-format
 msgctxt "@action:button"
 msgid "Go Online"
 msgstr "Online gehen"
 
-#: widgets/standardactionmanager.cpp:1646
+#: widgets/standardactionmanager.cpp:1648
 #, kde-format
 msgid "Move to This Folder"
 msgstr "In diesen Ordner verschieben"
 
-#: widgets/standardactionmanager.cpp:1646
+#: widgets/standardactionmanager.cpp:1648
 #, kde-format
 msgid "Copy to This Folder"
 msgstr "In diesen Ordner kopieren"
