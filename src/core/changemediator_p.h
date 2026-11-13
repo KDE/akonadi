@@ -32,7 +32,6 @@ public:
 
 protected:
     explicit ChangeMediator(QObject *parent = nullptr);
-    Q_DISABLE_COPY_MOVE(ChangeMediator)
 
     QList<const Monitor *> m_monitors;
 };

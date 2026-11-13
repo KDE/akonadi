@@ -64,7 +64,6 @@ class CollectionDialogPrivate;
 class AKONADIWIDGETS_EXPORT CollectionDialog : public QDialog
 {
     Q_OBJECT
-    Q_DISABLE_COPY(CollectionDialog)
 
 public:
     /*

@@ -347,8 +347,6 @@ protected:
     DbConfig *const m_dbConfig = nullptr;
 
 private:
-    Q_DISABLE_COPY_MOVE(DataStore)
-
     void cleanupAfterRollback();
     QString m_connectionName;
     QSqlDatabase m_database;

@@ -57,7 +57,6 @@ class CollectionRequesterPrivate;
 class AKONADIWIDGETS_EXPORT CollectionRequester : public QWidget
 {
     Q_OBJECT
-    Q_DISABLE_COPY(CollectionRequester)
 
 public:
     /*!
