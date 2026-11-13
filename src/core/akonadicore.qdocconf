@@ -12,7 +12,9 @@ sourcedirs += .
 outputformats = HTML
 
 depends += \
-    qtcore
+    qtcore \
+    akonadiagentbase \
+    akonadiwidgets
 
 navigation.landingpage = "AkonadiCore"
 
