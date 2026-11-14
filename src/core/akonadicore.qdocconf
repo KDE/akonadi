@@ -1,6 +1,7 @@
 include($KDE_DOCS/global/qt-module-defaults.qdocconf)
 
 project = AkonadiCore
+moduleheader = akonadicore_qdocmoduleheader.h
 description = PIM Storage Framework.
 
 
