@@ -15,6 +15,7 @@ class KJob;
 
 namespace Akonadi
 {
+class AgentBasePrivate;
 class RecursiveMover;
 
 /// @cond PRIVATE
@@ -79,7 +80,7 @@ public:
         }
     };
 
-    explicit ResourceScheduler(QObject *parent = nullptr);
+    explicit ResourceScheduler(AgentBasePrivate *parent);
 
     /*!
       Schedules a full synchronization.
@@ -292,6 +293,7 @@ private:
     QList<KJob *> mCurrentTaskPendingJobs;
     int mCurrentTasksQueue = -1; // queue mCurrentTask came from
     bool mOnline = false;
+    AgentBasePrivate *mResourcePrivate = nullptr;
 };
 
 QDebug operator<<(QDebug, const ResourceScheduler::Task &task);

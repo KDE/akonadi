@@ -6,6 +6,7 @@
 
 #include "resourcescheduler_p.h"
 
+#include "agentbase_p.h"
 #include "recursivemover_p.h"
 #include <QDBusConnection>
 
@@ -28,9 +29,11 @@ static QDBusAbstractInterface *s_resourcetracker = nullptr;
 
 /// @cond PRIVATE
 
-ResourceScheduler::ResourceScheduler(QObject *parent)
+ResourceScheduler::ResourceScheduler(AgentBasePrivate *parent)
     : QObject(parent)
+    , mResourcePrivate(parent)
 {
+    Q_ASSERT(mResourcePrivate);
 }
 
 void ResourceScheduler::scheduleFullSync()
@@ -472,7 +475,7 @@ void ResourceScheduler::signalTaskToTracker(const Task &task, const QByteArray &
     }
 
     if (s_resourcetracker) {
-        const QList<QVariant> argumentList = QList<QVariant>() << static_cast<AgentBase *>(parent())->identifier() // "session" (in our case resource)
+        const QList<QVariant> argumentList = QList<QVariant>() << mResourcePrivate->mId // "session" (in our case resource)
                                                                << QString::number(task.serial) // "job"
                                                                << QString() // "parent job"
                                                                << QString::fromLatin1(taskType) // "job type"
@@ -497,9 +500,11 @@ void ResourceScheduler::appendCurrentTaskPendingJob(KJob *job)
 void ResourceScheduler::clearCurrentTaskPendingJobs()
 {
     for (auto *job : std::as_const(mCurrentTaskPendingJobs)) {
-        // Disconnect this job completely and let it complete
-        // without disturbing anything else
-        disconnect(job, nullptr);
+        QObject::disconnect(job, nullptr, mResourcePrivate, nullptr);
+        if (auto *resource = mResourcePrivate->q_func()) {
+            QObject::disconnect(job, nullptr, resource, nullptr);
+        }
+        QObject::disconnect(job, nullptr, this, nullptr);
     }
 
     mCurrentTaskPendingJobs.clear();
