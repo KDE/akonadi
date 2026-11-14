@@ -9,7 +9,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: libakonadi\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2026-11-12 01:02+0000\n"
+"POT-Creation-Date: 2026-11-14 01:04+0000\n"
 "PO-Revision-Date: 2012-07-11 10:23+0700\n"
 "Last-Translator: Khoem Sokhem <khoemsokhem@khmeros.info>\n"
 "Language-Team: Khmer\n"
@@ -502,35 +502,35 @@ msgctxt "@title:column Name of a thing"
 msgid "Name"
 msgstr "ឈ្មោះ​"
 
-#: core/models/entitytreemodel_p.cpp:1374
+#: core/models/entitytreemodel_p.cpp:1375
 #, fuzzy, kde-format
 #| msgid "Could not copy item:"
 msgctxt "@info"
 msgid "Could not copy item: <message>%1</message>"
 msgstr "មិន​អាច​ចម្លង​​ធាតុ​បាន​ឡើយ​ ៖​"
 
-#: core/models/entitytreemodel_p.cpp:1376
+#: core/models/entitytreemodel_p.cpp:1377
 #, fuzzy, kde-format
 #| msgid "Could not copy collection:"
 msgctxt "@info"
 msgid "Could not copy collection: <message>%1</message>"
 msgstr "មិន​អាច​ចម្លង​សម្រាំង​បាន​ឡើយ​ ៖"
 
-#: core/models/entitytreemodel_p.cpp:1378
+#: core/models/entitytreemodel_p.cpp:1379
 #, fuzzy, kde-format
 #| msgid "Could not move item:"
 msgctxt "@info"
 msgid "Could not move item: <message>%1</message>"
 msgstr "មិន​អាច​ផ្លាស់ទី​ធាតុ​បាន​ឡើយ​ ៖"
 
-#: core/models/entitytreemodel_p.cpp:1380
+#: core/models/entitytreemodel_p.cpp:1381
 #, fuzzy, kde-format
 #| msgid "Could not move collection:"
 msgctxt "@info"
 msgid "Could not move collection: <message>%1</message>"
 msgstr "មិន​អាច​ផ្លាស់​ទី​សម្រាំង​បាន​ឡើយ​ ៖"
 
-#: core/models/entitytreemodel_p.cpp:1382
+#: core/models/entitytreemodel_p.cpp:1383
 #, fuzzy, kde-format
 #| msgid "Could not link entity:"
 msgctxt "@info"
@@ -937,7 +937,7 @@ msgctxt "@info:tooltip"
 msgid "Create a new subfolder under the currently selected folder"
 msgstr "បង្កើត​ថត​រង​ថ្មី​នៅ​ក្រោម​ថត​ដែល​បាន​ជ្រើស​បច្ចុប្បន្ន​​"
 
-#: widgets/collectiondialog.cpp:265 widgets/standardactionmanager.cpp:407
+#: widgets/collectiondialog.cpp:265 widgets/standardactionmanager.cpp:404
 #, kde-format
 msgctxt "@title:window"
 msgid "New Folder"
@@ -949,12 +949,12 @@ msgctxt "@label:textbox, name of a thing"
 msgid "Name"
 msgstr "ឈ្មោះ​"
 
-#: widgets/collectiondialog.cpp:286 widgets/standardactionmanager.cpp:409
+#: widgets/collectiondialog.cpp:286 widgets/standardactionmanager.cpp:406
 #, kde-format
 msgid "Could not create folder: %1"
 msgstr "មិន​អាច​បង្កើត​ថត ៖ %1"
 
-#: widgets/collectiondialog.cpp:286 widgets/standardactionmanager.cpp:410
+#: widgets/collectiondialog.cpp:286 widgets/standardactionmanager.cpp:407
 #, fuzzy, kde-format
 #| msgid "Folder creation failed"
 msgctxt "@title:window"
@@ -1134,49 +1134,49 @@ msgctxt "@title:window"
 msgid "Select a Collection"
 msgstr "ជ្រើស​សម្រាំង​"
 
-#: widgets/conflictresolvedialog.cpp:129
+#: widgets/conflictresolvedialog.cpp:131
 #, kde-format
 msgid "Modification Time"
 msgstr "ពេលវេលា​កំណែប្រែ​"
 
-#: widgets/conflictresolvedialog.cpp:141
+#: widgets/conflictresolvedialog.cpp:143
 #, kde-format
 msgid "Flags"
 msgstr "ទង់​"
 
-#: widgets/conflictresolvedialog.cpp:156 widgets/conflictresolvedialog.cpp:164
-#: widgets/conflictresolvedialog.cpp:174
+#: widgets/conflictresolvedialog.cpp:158 widgets/conflictresolvedialog.cpp:166
+#: widgets/conflictresolvedialog.cpp:176
 #, kde-format
 msgid "Attribute: %1"
 msgstr "គុណ​លក្ខណៈ ៖​​ %1​"
 
-#: widgets/conflictresolvedialog.cpp:186
+#: widgets/conflictresolvedialog.cpp:188
 #, kde-format
 msgctxt "@title:window"
 msgid "Conflict Resolution"
 msgstr "ប៉ះ​ទង្គិច​គុណភាព​ដោះស្រាយ​"
 
-#: widgets/conflictresolvedialog.cpp:192
+#: widgets/conflictresolvedialog.cpp:194
 #, fuzzy, kde-format
 #| msgid "Take right one"
 msgctxt "@action:button"
 msgid "Take my version"
 msgstr "យក​ពី​ស្ដាំ​មួយ​"
 
-#: widgets/conflictresolvedialog.cpp:198
+#: widgets/conflictresolvedialog.cpp:200
 #, kde-format
 msgctxt "@action:button"
 msgid "Take their version"
 msgstr ""
 
-#: widgets/conflictresolvedialog.cpp:204
+#: widgets/conflictresolvedialog.cpp:206
 #, fuzzy, kde-format
 #| msgid "Keep both"
 msgctxt "@action:button"
 msgid "Keep both versions"
 msgstr "រក្សាទុក​ទាំងពីរ​"
 
-#: widgets/conflictresolvedialog.cpp:217
+#: widgets/conflictresolvedialog.cpp:219
 #, kde-format
 msgctxt "@label:textbox"
 msgid ""
@@ -1187,7 +1187,7 @@ msgid ""
 "correct, then re-open it and modify it again to add what's missing."
 msgstr ""
 
-#: widgets/conflictresolvedialog.cpp:266
+#: widgets/conflictresolvedialog.cpp:268
 #, kde-format
 msgid "Data"
 msgstr "ទិន្នន័យ​"
@@ -2058,233 +2058,233 @@ msgstr ""
 "<p>សម្រាប់​​ព័ត៌មាន​ជំនួយ​​ដោះស្រាយ​បន្ថែម​សូម​មើល  <a href=\"http://userbase.kde.org/Akonadi"
 "\">userbase.kde.org/Akonadi</a> ។</p>"
 
-#: widgets/standardactionmanager.cpp:80
+#: widgets/standardactionmanager.cpp:77
 msgid "&New Folder..."
 msgstr "ថត​ថ្មី..."
 
-#: widgets/standardactionmanager.cpp:80
+#: widgets/standardactionmanager.cpp:77
 msgid "New"
 msgstr "ថ្មី​"
 
-#: widgets/standardactionmanager.cpp:90
+#: widgets/standardactionmanager.cpp:87
 #, fuzzy
 #| msgid "&Delete Folder"
 #| msgid_plural "&Delete %1 Folders"
 msgid "&Delete Folder"
 msgstr "លុប​ថត​​ %1"
 
-#: widgets/standardactionmanager.cpp:91
+#: widgets/standardactionmanager.cpp:88
 msgid "Delete"
 msgstr "លុប​"
 
-#: widgets/standardactionmanager.cpp:98
+#: widgets/standardactionmanager.cpp:95
 #, fuzzy
 #| msgid "&Synchronize Folder"
 #| msgid_plural "&Synchronize %1 Folders"
 msgid "&Synchronize Folder"
 msgstr "​ធ្វើ​សម​កាល​កម្ម​ថត​​ %1"
 
-#: widgets/standardactionmanager.cpp:99 widgets/standardactionmanager.cpp:208
-#: widgets/standardactionmanager.cpp:315
+#: widgets/standardactionmanager.cpp:96 widgets/standardactionmanager.cpp:205
+#: widgets/standardactionmanager.cpp:312
 msgid "Synchronize"
 msgstr "ធ្វើ​សម​កាល​កម្ម​"
 
-#: widgets/standardactionmanager.cpp:106
+#: widgets/standardactionmanager.cpp:103
 msgid "Folder &Properties"
 msgstr "លក្ខណសម្បត្តិ​ថត​"
 
-#: widgets/standardactionmanager.cpp:107 widgets/standardactionmanager.cpp:200
+#: widgets/standardactionmanager.cpp:104 widgets/standardactionmanager.cpp:197
 msgid "Properties"
 msgstr "លក្ខណសម្បត្តិ​"
 
-#: widgets/standardactionmanager.cpp:114
+#: widgets/standardactionmanager.cpp:111
 msgid "&Paste"
 msgstr "បិទភ្ជាប់"
 
-#: widgets/standardactionmanager.cpp:114
+#: widgets/standardactionmanager.cpp:111
 msgid "Paste"
 msgstr "បិទភ្ជាប់​"
 
-#: widgets/standardactionmanager.cpp:117
+#: widgets/standardactionmanager.cpp:114
 msgid "Manage Local &Subscriptions..."
 msgstr "គ្រប់​គ្រង​ការ​ជាវ​ប្រចាំ​ជា​មូលដ្ឋាន​..."
 
-#: widgets/standardactionmanager.cpp:118
+#: widgets/standardactionmanager.cpp:115
 msgid "Manage Local Subscriptions"
 msgstr "គ្រប់​គ្រង​ការ​ជាវ​ប្រចាំ​ជា​​មូលដ្ឋាន​​..."
 
-#: widgets/standardactionmanager.cpp:125
+#: widgets/standardactionmanager.cpp:122
 msgid "Add to Favorite Folders"
 msgstr "បន្ថែម​ទៅ​ថត​សំណព្វ​"
 
-#: widgets/standardactionmanager.cpp:126
+#: widgets/standardactionmanager.cpp:123
 msgid "Add to Favorite"
 msgstr "បន្ថែម​ទៅកាន់​សំណព្វ​"
 
-#: widgets/standardactionmanager.cpp:133
+#: widgets/standardactionmanager.cpp:130
 msgid "Remove from Favorite Folders"
 msgstr "យក​ចេញ​ពី​ថត​សំណព្វ​"
 
-#: widgets/standardactionmanager.cpp:134
+#: widgets/standardactionmanager.cpp:131
 msgid "Remove from Favorite"
 msgstr "យក​ចេញ​ពី​​សំណព្វ"
 
-#: widgets/standardactionmanager.cpp:141
+#: widgets/standardactionmanager.cpp:138
 msgid "Rename Favorite..."
 msgstr "ប្ដូរ​ឈ្មោះ​សំណព្វ..."
 
-#: widgets/standardactionmanager.cpp:142
+#: widgets/standardactionmanager.cpp:139
 msgid "Rename"
 msgstr "ប្ដូរ​ឈ្មោះ​"
 
-#: widgets/standardactionmanager.cpp:149 widgets/standardactionmanager.cpp:223
+#: widgets/standardactionmanager.cpp:146 widgets/standardactionmanager.cpp:220
 msgid "Copy Folder To..."
 msgstr "ចម្លង​ថត​ទៅ...​"
 
-#: widgets/standardactionmanager.cpp:150 widgets/standardactionmanager.cpp:158
-#: widgets/standardactionmanager.cpp:224 widgets/standardactionmanager.cpp:238
+#: widgets/standardactionmanager.cpp:147 widgets/standardactionmanager.cpp:155
+#: widgets/standardactionmanager.cpp:221 widgets/standardactionmanager.cpp:235
 msgid "Copy To"
 msgstr "ចម្លង​ទៅកាន់​"
 
-#: widgets/standardactionmanager.cpp:157 widgets/standardactionmanager.cpp:238
+#: widgets/standardactionmanager.cpp:154 widgets/standardactionmanager.cpp:235
 msgid "Copy Item To..."
 msgstr "ចម្លង​ធាតុ​ទៅ...​"
 
-#: widgets/standardactionmanager.cpp:165 widgets/standardactionmanager.cpp:239
+#: widgets/standardactionmanager.cpp:162 widgets/standardactionmanager.cpp:236
 msgid "Move Item To..."
 msgstr "ផ្លាស់​ទី​ធាតុ​ទៅ...​"
 
-#: widgets/standardactionmanager.cpp:166 widgets/standardactionmanager.cpp:174
-#: widgets/standardactionmanager.cpp:232 widgets/standardactionmanager.cpp:239
+#: widgets/standardactionmanager.cpp:163 widgets/standardactionmanager.cpp:171
+#: widgets/standardactionmanager.cpp:229 widgets/standardactionmanager.cpp:236
 msgid "Move To"
 msgstr "ផ្លាស់ទី​ទៅកាន់​"
 
-#: widgets/standardactionmanager.cpp:173 widgets/standardactionmanager.cpp:231
+#: widgets/standardactionmanager.cpp:170 widgets/standardactionmanager.cpp:228
 msgid "Move Folder To..."
 msgstr "ផ្លាស់​ទី​ថត​ទៅ...​"
 
-#: widgets/standardactionmanager.cpp:180
+#: widgets/standardactionmanager.cpp:177
 #, fuzzy
 #| msgid "&Cut Item"
 #| msgid_plural "&Cut %1 Items"
 msgid "&Cut Item"
 msgstr "កាត់​ធាតុ %1 ​"
 
-#: widgets/standardactionmanager.cpp:180 widgets/standardactionmanager.cpp:181
+#: widgets/standardactionmanager.cpp:177 widgets/standardactionmanager.cpp:178
 msgid "Cut"
 msgstr "កាត់​"
 
-#: widgets/standardactionmanager.cpp:181
+#: widgets/standardactionmanager.cpp:178
 #, fuzzy
 #| msgid "&Cut Folder"
 #| msgid_plural "&Cut %1 Folders"
 msgid "&Cut Folder"
 msgstr "កាត់​ថត %1 ​"
 
-#: widgets/standardactionmanager.cpp:183
+#: widgets/standardactionmanager.cpp:180
 msgid "Create Resource"
 msgstr "បង្កើត​ធនធាន​"
 
-#: widgets/standardactionmanager.cpp:191
+#: widgets/standardactionmanager.cpp:188
 #, fuzzy
 #| msgid "Delete Resource"
 #| msgid_plural "Delete %1 Resources"
 msgid "Delete Resource"
 msgstr "​លុប​ធនធាន​​ %1 "
 
-#: widgets/standardactionmanager.cpp:199
+#: widgets/standardactionmanager.cpp:196
 msgid "&Resource Properties"
 msgstr "លក្ខណ​សម្បត្តិ​ធនធាន​"
 
-#: widgets/standardactionmanager.cpp:207
+#: widgets/standardactionmanager.cpp:204
 #, fuzzy
 #| msgid "Synchronize Resource"
 #| msgid_plural "Synchronize %1 Resources"
 msgid "Synchronize Resource"
 msgstr "ធ្វើ​សម​កាល​កម្ម​ធនធាន​​ %1"
 
-#: widgets/standardactionmanager.cpp:215
+#: widgets/standardactionmanager.cpp:212
 msgid "Work Offline"
 msgstr "កិច្ច​ការ​ក្រៅ​បណ្ដាញ"
 
-#: widgets/standardactionmanager.cpp:241
+#: widgets/standardactionmanager.cpp:238
 msgid "&Synchronize Folder Recursively"
 msgstr "ធ្វើ​សម​កាល​កម្ម​ថត​ដោយ​​សរសេរ​ជាន់​ឡើង​វិញ"
 
-#: widgets/standardactionmanager.cpp:242
+#: widgets/standardactionmanager.cpp:239
 msgid "Synchronize Recursively"
 msgstr "ធ្វើ​សម​កាល​កម្ម​ដោយ​សរសេរ​ជាន់​ឡើង​វិញ​"
 
-#: widgets/standardactionmanager.cpp:249
+#: widgets/standardactionmanager.cpp:246
 msgid "&Move Folder To Trash"
 msgstr "ផ្លាស់ទី​ទៅ​ធុងសំរាម"
 
-#: widgets/standardactionmanager.cpp:250
+#: widgets/standardactionmanager.cpp:247
 msgid "Move Folder To Trash"
 msgstr "ផ្លាស់ទី​ថត​ទៅ​ធុងសំរាម"
 
-#: widgets/standardactionmanager.cpp:257
+#: widgets/standardactionmanager.cpp:254
 msgid "&Move Item To Trash"
 msgstr "ផ្លាស់ទី​ធាតុ​ទៅ​ធុងសំរាម"
 
-#: widgets/standardactionmanager.cpp:258
+#: widgets/standardactionmanager.cpp:255
 msgid "Move Item To Trash"
 msgstr "ផ្លាស់ទី​ធាតុ​ទៅ​ធុងសំរាម"
 
-#: widgets/standardactionmanager.cpp:265 widgets/standardactionmanager.cpp:281
+#: widgets/standardactionmanager.cpp:262 widgets/standardactionmanager.cpp:278
 msgid "&Restore Folder From Trash"
 msgstr "ស្ដារ​ថត​ពី​ធុងសំរាម"
 
-#: widgets/standardactionmanager.cpp:266 widgets/standardactionmanager.cpp:282
+#: widgets/standardactionmanager.cpp:263 widgets/standardactionmanager.cpp:279
 msgid "Restore Folder From Trash"
 msgstr "ស្ដារ​ថត​ពី​ធុងសំរាម"
 
-#: widgets/standardactionmanager.cpp:273 widgets/standardactionmanager.cpp:297
-#: widgets/standardactionmanager.cpp:304
+#: widgets/standardactionmanager.cpp:270 widgets/standardactionmanager.cpp:294
+#: widgets/standardactionmanager.cpp:301
 msgid "&Restore Item From Trash"
 msgstr "ស្ដារ​ធាតុ​ពី​ធុងសំរាម"
 
-#: widgets/standardactionmanager.cpp:274 widgets/standardactionmanager.cpp:298
-#: widgets/standardactionmanager.cpp:304
+#: widgets/standardactionmanager.cpp:271 widgets/standardactionmanager.cpp:295
+#: widgets/standardactionmanager.cpp:301
 msgid "Restore Item From Trash"
 msgstr "ស្ដារ​ធាតុ​ពី​ធុងសំរាម"
 
-#: widgets/standardactionmanager.cpp:289
+#: widgets/standardactionmanager.cpp:286
 msgid "&Restore Collection From Trash"
 msgstr "ស្ដារ​សម្រាំង​ពី​ធុងសំរាម"
 
-#: widgets/standardactionmanager.cpp:290
+#: widgets/standardactionmanager.cpp:287
 msgid "Restore Collection From Trash"
 msgstr "ស្ដារ​សម្រាំង​ពី​ធុងសំរាម"
 
-#: widgets/standardactionmanager.cpp:306
+#: widgets/standardactionmanager.cpp:303
 msgid "&Synchronize Favorite Folders"
 msgstr "ធ្វើ​សមកាលកម្ម​ថត​សំណព្វ"
 
-#: widgets/standardactionmanager.cpp:307
+#: widgets/standardactionmanager.cpp:304
 msgid "Synchronize Favorite Folders"
 msgstr "ធ្វើ​សមកាលកម្ម​ថត​សំណព្វ"
 
-#: widgets/standardactionmanager.cpp:314
+#: widgets/standardactionmanager.cpp:311
 #, fuzzy
 #| msgid "Synchronize Folder"
 #| msgid_plural "Synchronize %1 Folders"
 msgid "Synchronize Folder Tree"
 msgstr "ធ្វើ​​សម​កាលកម្ម​ថត​​ %1"
 
-#: widgets/standardactionmanager.cpp:387
+#: widgets/standardactionmanager.cpp:384
 #, kde-format
 msgid "&Copy Folder"
 msgid_plural "&Copy %1 Folders"
 msgstr[0] "ចម្លង​ថត %1"
 
-#: widgets/standardactionmanager.cpp:388
+#: widgets/standardactionmanager.cpp:385
 #, kde-format
 msgid "&Copy Item"
 msgid_plural "&Copy %1 Items"
 msgstr[0] "ចម្លង​ធាតុ %1"
 
-#: widgets/standardactionmanager.cpp:389
+#: widgets/standardactionmanager.cpp:386
 #, fuzzy, kde-format
 #| msgid "&Cut Item"
 #| msgid_plural "&Cut %1 Items"
@@ -2293,7 +2293,7 @@ msgid "&Cut Item"
 msgid_plural "&Cut %1 Items"
 msgstr[0] "កាត់​ធាតុ %1 ​"
 
-#: widgets/standardactionmanager.cpp:390
+#: widgets/standardactionmanager.cpp:387
 #, fuzzy, kde-format
 #| msgid "&Cut Folder"
 #| msgid_plural "&Cut %1 Folders"
@@ -2302,13 +2302,13 @@ msgid "&Cut Folder"
 msgid_plural "&Cut %1 Folders"
 msgstr[0] "កាត់​ថត %1 ​"
 
-#: widgets/standardactionmanager.cpp:391
+#: widgets/standardactionmanager.cpp:388
 #, kde-format
 msgid "&Delete Item"
 msgid_plural "&Delete %1 Items"
 msgstr[0] "លុប​ធាតុ %1"
 
-#: widgets/standardactionmanager.cpp:392
+#: widgets/standardactionmanager.cpp:389
 #, fuzzy, kde-format
 #| msgid "&Delete Folder"
 #| msgid_plural "&Delete %1 Folders"
@@ -2317,7 +2317,7 @@ msgid "&Delete Folder"
 msgid_plural "&Delete %1 Folders"
 msgstr[0] "លុប​ថត​​ %1"
 
-#: widgets/standardactionmanager.cpp:393
+#: widgets/standardactionmanager.cpp:390
 #, fuzzy, kde-format
 #| msgid "&Synchronize Folder"
 #| msgid_plural "&Synchronize %1 Folders"
@@ -2326,61 +2326,61 @@ msgid "&Synchronize Folder"
 msgid_plural "&Synchronize %1 Folders"
 msgstr[0] "​ធ្វើ​សម​កាល​កម្ម​ថត​​ %1"
 
-#: widgets/standardactionmanager.cpp:394
+#: widgets/standardactionmanager.cpp:391
 #, kde-format
 msgid "&Delete Resource"
 msgid_plural "&Delete %1 Resources"
 msgstr[0] "លុប​ធនធាន​​ %1"
 
-#: widgets/standardactionmanager.cpp:395
+#: widgets/standardactionmanager.cpp:392
 #, kde-format
 msgid "&Synchronize Resource"
 msgid_plural "&Synchronize %1 Resources"
 msgstr[0] "ធ្វើ​សម​កាល​កម្ម​ធនធាន​​ %1"
 
-#: widgets/standardactionmanager.cpp:397
+#: widgets/standardactionmanager.cpp:394
 #, kde-format
 msgid "Copy Folder"
 msgid_plural "Copy %1 Folders"
 msgstr[0] "ចម្លង​ថត %1​"
 
-#: widgets/standardactionmanager.cpp:398
+#: widgets/standardactionmanager.cpp:395
 #, kde-format
 msgid "Copy Item"
 msgid_plural "Copy %1 Items"
 msgstr[0] "ចម្លង​ធាតុ %1​"
 
-#: widgets/standardactionmanager.cpp:399
+#: widgets/standardactionmanager.cpp:396
 #, kde-format
 msgid "Cut Item"
 msgid_plural "Cut %1 Items"
 msgstr[0] "កាត់​ធាតុ %1 ​"
 
-#: widgets/standardactionmanager.cpp:400
+#: widgets/standardactionmanager.cpp:397
 #, kde-format
 msgid "Cut Folder"
 msgid_plural "Cut %1 Folders"
 msgstr[0] "កាត់​ថត %1 ​"
 
-#: widgets/standardactionmanager.cpp:401
+#: widgets/standardactionmanager.cpp:398
 #, kde-format
 msgid "Delete Item"
 msgid_plural "Delete %1 Items"
 msgstr[0] "លុប​ធាតុ %1​"
 
-#: widgets/standardactionmanager.cpp:402
+#: widgets/standardactionmanager.cpp:399
 #, kde-format
 msgid "Delete Folder"
 msgid_plural "Delete %1 Folders"
 msgstr[0] "លុប​ថត​​ %1"
 
-#: widgets/standardactionmanager.cpp:403
+#: widgets/standardactionmanager.cpp:400
 #, kde-format
 msgid "Synchronize Folder"
 msgid_plural "Synchronize %1 Folders"
 msgstr[0] "ធ្វើ​​សម​កាលកម្ម​ថត​​ %1"
 
-#: widgets/standardactionmanager.cpp:404
+#: widgets/standardactionmanager.cpp:401
 #, fuzzy, kde-format
 #| msgid "Delete Resource"
 #| msgid_plural "Delete %1 Resources"
@@ -2389,7 +2389,7 @@ msgid "Delete Resource"
 msgid_plural "Delete %1 Resources"
 msgstr[0] "​លុប​ធនធាន​​ %1 "
 
-#: widgets/standardactionmanager.cpp:405
+#: widgets/standardactionmanager.cpp:402
 #, fuzzy, kde-format
 #| msgid "Synchronize Resource"
 #| msgid_plural "Synchronize %1 Resources"
@@ -2398,7 +2398,7 @@ msgid "Synchronize Resource"
 msgid_plural "Synchronize %1 Resources"
 msgstr[0] "ធ្វើ​សម​កាល​កម្ម​ធនធាន​​ %1"
 
-#: widgets/standardactionmanager.cpp:408
+#: widgets/standardactionmanager.cpp:405
 #, fuzzy, kde-format
 #| msgctxt "@title:column, name of a thing"
 #| msgid "Name"
@@ -2406,14 +2406,14 @@ msgctxt "@label:textbox name of Akonadi folder"
 msgid "Name"
 msgstr "ឈ្មោះ"
 
-#: widgets/standardactionmanager.cpp:415
+#: widgets/standardactionmanager.cpp:412
 #, kde-format
 msgid "Do you really want to delete this folder and all its sub-folders?"
 msgid_plural ""
 "Do you really want to delete %1 folders and all their sub-folders?"
 msgstr[0] "តើ​អ្នក​ពិត​ជា​ចង់​លុប​ថត '%1' និង​ថត​រង​របស់​វា​ទាំងអស់​ឬ ?​"
 
-#: widgets/standardactionmanager.cpp:418
+#: widgets/standardactionmanager.cpp:415
 #, fuzzy, kde-format
 #| msgid "Delete Folder"
 #| msgid_plural "Delete %1 Folders"
@@ -2422,31 +2422,31 @@ msgid "Delete Folder?"
 msgid_plural "Delete Folders?"
 msgstr[0] "លុប​ថត​​ %1"
 
-#: widgets/standardactionmanager.cpp:419
+#: widgets/standardactionmanager.cpp:416
 #, kde-format
 msgid "Could not delete folder: %1"
 msgstr "មិន​អាច​លុប​ថត ៖ %1"
 
-#: widgets/standardactionmanager.cpp:420
+#: widgets/standardactionmanager.cpp:417
 #, fuzzy, kde-format
 #| msgid "Folder deletion failed"
 msgctxt "@title:window"
 msgid "Folder Deletion Failed"
 msgstr "កា​រលុបថត​បាន​បរាជ័យ"
 
-#: widgets/standardactionmanager.cpp:422
+#: widgets/standardactionmanager.cpp:419
 #, kde-format
 msgctxt "@title:window"
 msgid "Properties of Folder %1"
 msgstr "លក្ខណ​សម្បត្តិ​នៃ​ថត​ %1​"
 
-#: widgets/standardactionmanager.cpp:426
+#: widgets/standardactionmanager.cpp:423
 #, kde-format
 msgid "Do you really want to delete the selected item?"
 msgid_plural "Do you really want to delete %1 items?"
 msgstr[0] "តើ​អ្នក​ពិត​ជា​ចង់​លុប​ធាតុ​​ %1 ឬ​ ?"
 
-#: widgets/standardactionmanager.cpp:427
+#: widgets/standardactionmanager.cpp:424
 #, fuzzy, kde-format
 #| msgid "Delete Item"
 #| msgid_plural "Delete %1 Items"
@@ -2455,92 +2455,92 @@ msgid "Delete Item?"
 msgid_plural "Delete Items?"
 msgstr[0] "លុប​ធាតុ %1​"
 
-#: widgets/standardactionmanager.cpp:428
+#: widgets/standardactionmanager.cpp:425
 #, kde-format
 msgid "Could not delete item: %1"
 msgstr "មិន​អាច​លុប​ថត ៖ %1​"
 
-#: widgets/standardactionmanager.cpp:429
+#: widgets/standardactionmanager.cpp:426
 #, fuzzy, kde-format
 #| msgid "Item deletion failed"
 msgctxt "@title:window"
 msgid "Item Deletion Failed"
 msgstr "បាន​បរាជ័យ​ការ​លុប​ធាតុ​"
 
-#: widgets/standardactionmanager.cpp:431
+#: widgets/standardactionmanager.cpp:428
 #, kde-format
 msgctxt "@title:window"
 msgid "Rename Favorite"
 msgstr "ប្ដូរ​ឈ្មោះ​សំណព្វ​"
 
-#: widgets/standardactionmanager.cpp:432
+#: widgets/standardactionmanager.cpp:429
 #, kde-format
 msgctxt "@label:textbox name of the folder"
 msgid "Name:"
 msgstr "ឈ្មោះ ៖​​"
 
-#: widgets/standardactionmanager.cpp:434
+#: widgets/standardactionmanager.cpp:431
 #, kde-format
 msgctxt "@title:window"
 msgid "New Resource"
 msgstr "ធនធាន​ថ្មី​"
 
-#: widgets/standardactionmanager.cpp:435
+#: widgets/standardactionmanager.cpp:432
 #, kde-format
 msgid "Could not create resource: %1"
 msgstr "មិន​អាច​បង្កើត​ធនធាន​ ៖​​ %1 បាន​ឡើយ​"
 
-#: widgets/standardactionmanager.cpp:436
+#: widgets/standardactionmanager.cpp:433
 #, fuzzy, kde-format
 #| msgid "Resource creation failed"
 msgctxt "@title:window"
 msgid "Resource Creation Failed"
 msgstr "បាន​បរាជ័យ​ការ​បង្កើត​ធនធាន​"
 
-#: widgets/standardactionmanager.cpp:440
+#: widgets/standardactionmanager.cpp:437
 #, kde-format
 msgid "Do you really want to delete this resource?"
 msgid_plural "Do you really want to delete %1 resources?"
 msgstr[0] "តើ​អ្នក​ពិតជា​ចង់​លុប​ធនធាន​​ %1 ឬ ?"
 
-#: widgets/standardactionmanager.cpp:443
+#: widgets/standardactionmanager.cpp:440
 #, kde-format
 msgctxt "@title:window"
 msgid "Delete Resource?"
 msgid_plural "Delete Resources?"
 msgstr[0] "លុប​ធនធាន​ឬ​ ?"
 
-#: widgets/standardactionmanager.cpp:445
+#: widgets/standardactionmanager.cpp:442
 #, kde-format
 msgid "Could not paste data: %1"
 msgstr "មិនអាច​បិទភ្ជាប់​​ទិន្នន័យ ៖ %1"
 
-#: widgets/standardactionmanager.cpp:446
+#: widgets/standardactionmanager.cpp:443
 #, fuzzy, kde-format
 #| msgid "Paste failed"
 msgctxt "@title:window"
 msgid "Paste Failed"
 msgstr "បាន​បរាជ័យ​ក្នុង​ការ​បិទភ្ជាប់"
 
-#: widgets/standardactionmanager.cpp:778
+#: widgets/standardactionmanager.cpp:775
 #, kde-format
 msgid "We can not add \"/\" in folder name."
 msgstr "យើង​មិន​អាច​បន្ថែម \"/\" ទៅ​ក្នុង​ឈ្មោះ​ថត​បាន​ទេ ។"
 
-#: widgets/standardactionmanager.cpp:778 widgets/standardactionmanager.cpp:782
+#: widgets/standardactionmanager.cpp:775 widgets/standardactionmanager.cpp:779
 #, fuzzy, kde-format
 #| msgid "Create new folder error"
 msgctxt "@title:window"
 msgid "Create New Folder Error"
 msgstr "បង្កើត​កំហុស​ថត​ថ្មី"
 
-#: widgets/standardactionmanager.cpp:782
+#: widgets/standardactionmanager.cpp:779
 #, fuzzy, kde-format
 #| msgid "We can not add \"/\" in folder name."
 msgid "We can not add \".\" at begin or end of folder name."
 msgstr "យើង​មិន​អាច​បន្ថែម \"/\" ទៅ​ក្នុង​ឈ្មោះ​ថត​បាន​ទេ ។"
 
-#: widgets/standardactionmanager.cpp:1026
+#: widgets/standardactionmanager.cpp:1023
 #, fuzzy, kde-format
 #| msgid ""
 #| "Before to sync folder \"%1\" it's necessary to have resource online. Do "
@@ -2552,24 +2552,24 @@ msgstr ""
 "មុន​នឹង​ធ្វើ​សមកាលកម្ម​ថត \"%1\" ចាំបាច់​ត្រូវតែ​មាន​ធនធាន​នៅ​លើ​បណ្ដាញ ។ តើ​អ្នក​ចង់​បង្កើត​ធនធាន​នៅ​លើ​"
 "បណ្ដាញ​ដែរ​ឬ​ទេ ?"
 
-#: widgets/standardactionmanager.cpp:1027
+#: widgets/standardactionmanager.cpp:1024
 #, kde-format
 msgid "Account \"%1\" is offline"
 msgstr "គណនី \"%1\" នៅ​ក្រៅបណ្ដាញ"
 
-#: widgets/standardactionmanager.cpp:1028
+#: widgets/standardactionmanager.cpp:1025
 #, fuzzy, kde-format
 #| msgid "Work Offline"
 msgctxt "@action:button"
 msgid "Go Online"
 msgstr "កិច្ច​ការ​ក្រៅ​បណ្ដាញ"
 
-#: widgets/standardactionmanager.cpp:1648
+#: widgets/standardactionmanager.cpp:1645
 #, kde-format
 msgid "Move to This Folder"
 msgstr "ផ្លាស់​ទី​​ទៅ​​ថត​នេះ "
 
-#: widgets/standardactionmanager.cpp:1648
+#: widgets/standardactionmanager.cpp:1645
 #, kde-format
 msgid "Copy to This Folder"
 msgstr "ចម្លង​ទៅ​ថត​នេះ​"

@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: libakonadi\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2026-11-12 01:02+0000\n"
+"POT-Creation-Date: 2026-11-14 01:04+0000\n"
 "PO-Revision-Date: 2010-02-26 23:20+0700\n"
 "Last-Translator: Thanomsub Noppaburana <donga.nb@gmail.com>\n"
 "Language-Team: Thai <thai-l10n@googlegroups.com>\n"
@@ -484,31 +484,31 @@ msgctxt "@title:column Name of a thing"
 msgid "Name"
 msgstr "ชื่อ"
 
-#: core/models/entitytreemodel_p.cpp:1374
+#: core/models/entitytreemodel_p.cpp:1375
 #, kde-format
 msgctxt "@info"
 msgid "Could not copy item: <message>%1</message>"
 msgstr ""
 
-#: core/models/entitytreemodel_p.cpp:1376
+#: core/models/entitytreemodel_p.cpp:1377
 #, kde-format
 msgctxt "@info"
 msgid "Could not copy collection: <message>%1</message>"
 msgstr ""
 
-#: core/models/entitytreemodel_p.cpp:1378
+#: core/models/entitytreemodel_p.cpp:1379
 #, kde-format
 msgctxt "@info"
 msgid "Could not move item: <message>%1</message>"
 msgstr ""
 
-#: core/models/entitytreemodel_p.cpp:1380
+#: core/models/entitytreemodel_p.cpp:1381
 #, kde-format
 msgctxt "@info"
 msgid "Could not move collection: <message>%1</message>"
 msgstr ""
 
-#: core/models/entitytreemodel_p.cpp:1382
+#: core/models/entitytreemodel_p.cpp:1383
 #, kde-format
 msgctxt "@info"
 msgid "Could not link entity: <message>%1</message>"
@@ -902,7 +902,7 @@ msgctxt "@info:tooltip"
 msgid "Create a new subfolder under the currently selected folder"
 msgstr ""
 
-#: widgets/collectiondialog.cpp:265 widgets/standardactionmanager.cpp:407
+#: widgets/collectiondialog.cpp:265 widgets/standardactionmanager.cpp:404
 #, kde-format
 msgctxt "@title:window"
 msgid "New Folder"
@@ -916,12 +916,12 @@ msgctxt "@label:textbox, name of a thing"
 msgid "Name"
 msgstr "ชื่อ"
 
-#: widgets/collectiondialog.cpp:286 widgets/standardactionmanager.cpp:409
+#: widgets/collectiondialog.cpp:286 widgets/standardactionmanager.cpp:406
 #, kde-format
 msgid "Could not create folder: %1"
 msgstr "ไม่สามารถสร้างโฟลเดอร์ต่อไปนี้ได้: %1"
 
-#: widgets/collectiondialog.cpp:286 widgets/standardactionmanager.cpp:410
+#: widgets/collectiondialog.cpp:286 widgets/standardactionmanager.cpp:407
 #, fuzzy, kde-format
 #| msgid "Folder creation failed"
 msgctxt "@title:window"
@@ -1099,47 +1099,47 @@ msgctxt "@title:window"
 msgid "Select a Collection"
 msgstr ""
 
-#: widgets/conflictresolvedialog.cpp:129
+#: widgets/conflictresolvedialog.cpp:131
 #, kde-format
 msgid "Modification Time"
 msgstr ""
 
-#: widgets/conflictresolvedialog.cpp:141
+#: widgets/conflictresolvedialog.cpp:143
 #, kde-format
 msgid "Flags"
 msgstr ""
 
-#: widgets/conflictresolvedialog.cpp:156 widgets/conflictresolvedialog.cpp:164
-#: widgets/conflictresolvedialog.cpp:174
+#: widgets/conflictresolvedialog.cpp:158 widgets/conflictresolvedialog.cpp:166
+#: widgets/conflictresolvedialog.cpp:176
 #, kde-format
 msgid "Attribute: %1"
 msgstr ""
 
-#: widgets/conflictresolvedialog.cpp:186
+#: widgets/conflictresolvedialog.cpp:188
 #, kde-format
 msgctxt "@title:window"
 msgid "Conflict Resolution"
 msgstr ""
 
-#: widgets/conflictresolvedialog.cpp:192
+#: widgets/conflictresolvedialog.cpp:194
 #, kde-format
 msgctxt "@action:button"
 msgid "Take my version"
 msgstr ""
 
-#: widgets/conflictresolvedialog.cpp:198
+#: widgets/conflictresolvedialog.cpp:200
 #, kde-format
 msgctxt "@action:button"
 msgid "Take their version"
 msgstr ""
 
-#: widgets/conflictresolvedialog.cpp:204
+#: widgets/conflictresolvedialog.cpp:206
 #, kde-format
 msgctxt "@action:button"
 msgid "Keep both versions"
 msgstr ""
 
-#: widgets/conflictresolvedialog.cpp:217
+#: widgets/conflictresolvedialog.cpp:219
 #, kde-format
 msgctxt "@label:textbox"
 msgid ""
@@ -1150,7 +1150,7 @@ msgid ""
 "correct, then re-open it and modify it again to add what's missing."
 msgstr ""
 
-#: widgets/conflictresolvedialog.cpp:266
+#: widgets/conflictresolvedialog.cpp:268
 #, kde-format
 msgid "Data"
 msgstr ""
@@ -1935,280 +1935,280 @@ msgid ""
 "kde.org/Akonadi\">userbase.kde.org/Akonadi</a>.</p>"
 msgstr ""
 
-#: widgets/standardactionmanager.cpp:80
+#: widgets/standardactionmanager.cpp:77
 msgid "&New Folder..."
 msgstr "โ&ฟลเดอร์ใหม่..."
 
-#: widgets/standardactionmanager.cpp:80
+#: widgets/standardactionmanager.cpp:77
 msgid "New"
 msgstr ""
 
-#: widgets/standardactionmanager.cpp:90
+#: widgets/standardactionmanager.cpp:87
 #, fuzzy
 #| msgid "&Delete Folder"
 msgid "&Delete Folder"
 msgstr "&ลบโฟลเดอร์"
 
-#: widgets/standardactionmanager.cpp:91
+#: widgets/standardactionmanager.cpp:88
 #, fuzzy
 #| msgid "Delete?"
 msgid "Delete"
 msgstr "ลบหรือไม่ ?"
 
-#: widgets/standardactionmanager.cpp:98
+#: widgets/standardactionmanager.cpp:95
 #, fuzzy
 #| msgid "&Synchronize Folder"
 msgid "&Synchronize Folder"
 msgstr "&ปรับเทียบโฟลเดอร์"
 
-#: widgets/standardactionmanager.cpp:99 widgets/standardactionmanager.cpp:208
-#: widgets/standardactionmanager.cpp:315
+#: widgets/standardactionmanager.cpp:96 widgets/standardactionmanager.cpp:205
+#: widgets/standardactionmanager.cpp:312
 #, fuzzy
 #| msgid "&Synchronize Folder"
 msgid "Synchronize"
 msgstr "&ปรับเทียบโฟลเดอร์"
 
-#: widgets/standardactionmanager.cpp:106
+#: widgets/standardactionmanager.cpp:103
 msgid "Folder &Properties"
 msgstr "&คุณสมบัติของโฟลเดอร์"
 
-#: widgets/standardactionmanager.cpp:107 widgets/standardactionmanager.cpp:200
+#: widgets/standardactionmanager.cpp:104 widgets/standardactionmanager.cpp:197
 #, fuzzy
 #| msgid "Folder &Properties"
 msgid "Properties"
 msgstr "&คุณสมบัติของโฟลเดอร์"
 
-#: widgets/standardactionmanager.cpp:114
+#: widgets/standardactionmanager.cpp:111
 msgid "&Paste"
 msgstr "&วาง"
 
-#: widgets/standardactionmanager.cpp:114
+#: widgets/standardactionmanager.cpp:111
 #, fuzzy
 #| msgid "&Paste"
 msgid "Paste"
 msgstr "&วาง"
 
-#: widgets/standardactionmanager.cpp:117
+#: widgets/standardactionmanager.cpp:114
 msgid "Manage Local &Subscriptions..."
 msgstr ""
 
-#: widgets/standardactionmanager.cpp:118
+#: widgets/standardactionmanager.cpp:115
 msgid "Manage Local Subscriptions"
 msgstr ""
 
-#: widgets/standardactionmanager.cpp:125
+#: widgets/standardactionmanager.cpp:122
 msgid "Add to Favorite Folders"
 msgstr "เพิ่มไปยังโฟลเดอร์โปรด"
 
-#: widgets/standardactionmanager.cpp:126
+#: widgets/standardactionmanager.cpp:123
 #, fuzzy
 #| msgid "Add to Favorite Folders"
 msgid "Add to Favorite"
 msgstr "เพิ่มไปยังโฟลเดอร์โปรด"
 
-#: widgets/standardactionmanager.cpp:133
+#: widgets/standardactionmanager.cpp:130
 msgid "Remove from Favorite Folders"
 msgstr "เอาออกจากโฟลเดอร์โปรด"
 
-#: widgets/standardactionmanager.cpp:134
+#: widgets/standardactionmanager.cpp:131
 #, fuzzy
 #| msgid "Remove from Favorite Folders"
 msgid "Remove from Favorite"
 msgstr "เอาออกจากโฟลเดอร์โปรด"
 
-#: widgets/standardactionmanager.cpp:141
+#: widgets/standardactionmanager.cpp:138
 msgid "Rename Favorite..."
 msgstr "เปลี่ยนชื่อรายการโปรด..."
 
-#: widgets/standardactionmanager.cpp:142
+#: widgets/standardactionmanager.cpp:139
 msgid "Rename"
 msgstr ""
 
-#: widgets/standardactionmanager.cpp:149 widgets/standardactionmanager.cpp:223
+#: widgets/standardactionmanager.cpp:146 widgets/standardactionmanager.cpp:220
 msgid "Copy Folder To..."
 msgstr "คัดลอกโฟลเดอร์ไปยัง..."
 
-#: widgets/standardactionmanager.cpp:150 widgets/standardactionmanager.cpp:158
-#: widgets/standardactionmanager.cpp:224 widgets/standardactionmanager.cpp:238
+#: widgets/standardactionmanager.cpp:147 widgets/standardactionmanager.cpp:155
+#: widgets/standardactionmanager.cpp:221 widgets/standardactionmanager.cpp:235
 #, fuzzy
 #| msgid "&Copy Folder"
 #| msgid_plural "&Copy %1 Folders"
 msgid "Copy To"
 msgstr "&คัดลอก %1 โฟลเดอร์"
 
-#: widgets/standardactionmanager.cpp:157 widgets/standardactionmanager.cpp:238
+#: widgets/standardactionmanager.cpp:154 widgets/standardactionmanager.cpp:235
 msgid "Copy Item To..."
 msgstr "คัดลอกรายการไปยัง..."
 
-#: widgets/standardactionmanager.cpp:165 widgets/standardactionmanager.cpp:239
+#: widgets/standardactionmanager.cpp:162 widgets/standardactionmanager.cpp:236
 msgid "Move Item To..."
 msgstr "ย้ายรายการไปยัง..."
 
-#: widgets/standardactionmanager.cpp:166 widgets/standardactionmanager.cpp:174
-#: widgets/standardactionmanager.cpp:232 widgets/standardactionmanager.cpp:239
+#: widgets/standardactionmanager.cpp:163 widgets/standardactionmanager.cpp:171
+#: widgets/standardactionmanager.cpp:229 widgets/standardactionmanager.cpp:236
 #, fuzzy
 #| msgid "Move Item To..."
 msgid "Move To"
 msgstr "ย้ายรายการไปยัง..."
 
-#: widgets/standardactionmanager.cpp:173 widgets/standardactionmanager.cpp:231
+#: widgets/standardactionmanager.cpp:170 widgets/standardactionmanager.cpp:228
 msgid "Move Folder To..."
 msgstr "ย้ายโฟลเดอร์ไปยัง..."
 
-#: widgets/standardactionmanager.cpp:180
+#: widgets/standardactionmanager.cpp:177
 #, fuzzy
 #| msgid "&Cut Item"
 #| msgid_plural "&Cut %1 Items"
 msgid "&Cut Item"
 msgstr "&ตัด %1 รายการ"
 
-#: widgets/standardactionmanager.cpp:180 widgets/standardactionmanager.cpp:181
+#: widgets/standardactionmanager.cpp:177 widgets/standardactionmanager.cpp:178
 msgid "Cut"
 msgstr ""
 
-#: widgets/standardactionmanager.cpp:181
+#: widgets/standardactionmanager.cpp:178
 #, fuzzy
 #| msgid "&Cut Folder"
 #| msgid_plural "&Cut %1 Folders"
 msgid "&Cut Folder"
 msgstr "&ตัด %1 โฟลเดอร์"
 
-#: widgets/standardactionmanager.cpp:183
+#: widgets/standardactionmanager.cpp:180
 #, fuzzy
 #| msgid "&Delete Folder"
 msgid "Create Resource"
 msgstr "&ลบโฟลเดอร์"
 
-#: widgets/standardactionmanager.cpp:191
+#: widgets/standardactionmanager.cpp:188
 #, fuzzy
 #| msgid "&Delete Folder"
 msgid "Delete Resource"
 msgstr "&ลบโฟลเดอร์"
 
-#: widgets/standardactionmanager.cpp:199
+#: widgets/standardactionmanager.cpp:196
 #, fuzzy
 #| msgid "Folder &Properties"
 msgid "&Resource Properties"
 msgstr "&คุณสมบัติของโฟลเดอร์"
 
-#: widgets/standardactionmanager.cpp:207
+#: widgets/standardactionmanager.cpp:204
 #, fuzzy
 #| msgid "&Synchronize Folder"
 msgid "Synchronize Resource"
 msgstr "&ปรับเทียบโฟลเดอร์"
 
-#: widgets/standardactionmanager.cpp:215
+#: widgets/standardactionmanager.cpp:212
 #, fuzzy
 #| msgctxt "@info:status"
 #| msgid "Offline"
 msgid "Work Offline"
 msgstr "ออฟไลน์"
 
-#: widgets/standardactionmanager.cpp:241
+#: widgets/standardactionmanager.cpp:238
 #, fuzzy
 #| msgid "&Synchronize Folder"
 msgid "&Synchronize Folder Recursively"
 msgstr "&ปรับเทียบโฟลเดอร์"
 
-#: widgets/standardactionmanager.cpp:242
+#: widgets/standardactionmanager.cpp:239
 #, fuzzy
 #| msgid "&Synchronize Folder"
 msgid "Synchronize Recursively"
 msgstr "&ปรับเทียบโฟลเดอร์"
 
-#: widgets/standardactionmanager.cpp:249
+#: widgets/standardactionmanager.cpp:246
 #, fuzzy
 #| msgid "Move Item To..."
 msgid "&Move Folder To Trash"
 msgstr "ย้ายรายการไปยัง..."
 
-#: widgets/standardactionmanager.cpp:250
+#: widgets/standardactionmanager.cpp:247
 #, fuzzy
 #| msgid "Move Item To..."
 msgid "Move Folder To Trash"
 msgstr "ย้ายรายการไปยัง..."
 
-#: widgets/standardactionmanager.cpp:257
+#: widgets/standardactionmanager.cpp:254
 #, fuzzy
 #| msgid "Move Item To..."
 msgid "&Move Item To Trash"
 msgstr "ย้ายรายการไปยัง..."
 
-#: widgets/standardactionmanager.cpp:258
+#: widgets/standardactionmanager.cpp:255
 #, fuzzy
 #| msgid "Move Item To..."
 msgid "Move Item To Trash"
 msgstr "ย้ายรายการไปยัง..."
 
-#: widgets/standardactionmanager.cpp:265 widgets/standardactionmanager.cpp:281
+#: widgets/standardactionmanager.cpp:262 widgets/standardactionmanager.cpp:278
 #, fuzzy
 #| msgid "Folder &Properties"
 msgid "&Restore Folder From Trash"
 msgstr "&คุณสมบัติของโฟลเดอร์"
 
-#: widgets/standardactionmanager.cpp:266 widgets/standardactionmanager.cpp:282
+#: widgets/standardactionmanager.cpp:263 widgets/standardactionmanager.cpp:279
 #, fuzzy
 #| msgid "Folder &Properties"
 msgid "Restore Folder From Trash"
 msgstr "&คุณสมบัติของโฟลเดอร์"
 
-#: widgets/standardactionmanager.cpp:273 widgets/standardactionmanager.cpp:297
-#: widgets/standardactionmanager.cpp:304
+#: widgets/standardactionmanager.cpp:270 widgets/standardactionmanager.cpp:294
+#: widgets/standardactionmanager.cpp:301
 #, fuzzy
 #| msgid "Folder &Properties"
 msgid "&Restore Item From Trash"
 msgstr "&คุณสมบัติของโฟลเดอร์"
 
-#: widgets/standardactionmanager.cpp:274 widgets/standardactionmanager.cpp:298
-#: widgets/standardactionmanager.cpp:304
+#: widgets/standardactionmanager.cpp:271 widgets/standardactionmanager.cpp:295
+#: widgets/standardactionmanager.cpp:301
 #, fuzzy
 #| msgid "Folder &Properties"
 msgid "Restore Item From Trash"
 msgstr "&คุณสมบัติของโฟลเดอร์"
 
-#: widgets/standardactionmanager.cpp:289
+#: widgets/standardactionmanager.cpp:286
 #, fuzzy
 #| msgid "Folder &Properties"
 msgid "&Restore Collection From Trash"
 msgstr "&คุณสมบัติของโฟลเดอร์"
 
-#: widgets/standardactionmanager.cpp:290
+#: widgets/standardactionmanager.cpp:287
 #, fuzzy
 #| msgid "Folder &Properties"
 msgid "Restore Collection From Trash"
 msgstr "&คุณสมบัติของโฟลเดอร์"
 
-#: widgets/standardactionmanager.cpp:306
+#: widgets/standardactionmanager.cpp:303
 #, fuzzy
 #| msgid "&Synchronize Folder"
 msgid "&Synchronize Favorite Folders"
 msgstr "&ปรับเทียบโฟลเดอร์"
 
-#: widgets/standardactionmanager.cpp:307
+#: widgets/standardactionmanager.cpp:304
 #, fuzzy
 #| msgid "&Synchronize Folder"
 msgid "Synchronize Favorite Folders"
 msgstr "&ปรับเทียบโฟลเดอร์"
 
-#: widgets/standardactionmanager.cpp:314
+#: widgets/standardactionmanager.cpp:311
 #, fuzzy
 #| msgid "&Synchronize Folder"
 msgid "Synchronize Folder Tree"
 msgstr "&ปรับเทียบโฟลเดอร์"
 
-#: widgets/standardactionmanager.cpp:387
+#: widgets/standardactionmanager.cpp:384
 #, kde-format
 msgid "&Copy Folder"
 msgid_plural "&Copy %1 Folders"
 msgstr[0] "&คัดลอก %1 โฟลเดอร์"
 
-#: widgets/standardactionmanager.cpp:388
+#: widgets/standardactionmanager.cpp:385
 #, kde-format
 msgid "&Copy Item"
 msgid_plural "&Copy %1 Items"
 msgstr[0] "&คัดลอก %1 รายการ"
 
-#: widgets/standardactionmanager.cpp:389
+#: widgets/standardactionmanager.cpp:386
 #, fuzzy, kde-format
 #| msgid "&Cut Item"
 #| msgid_plural "&Cut %1 Items"
@@ -2217,7 +2217,7 @@ msgid "&Cut Item"
 msgid_plural "&Cut %1 Items"
 msgstr[0] "&ตัด %1 รายการ"
 
-#: widgets/standardactionmanager.cpp:390
+#: widgets/standardactionmanager.cpp:387
 #, fuzzy, kde-format
 #| msgid "&Cut Folder"
 #| msgid_plural "&Cut %1 Folders"
@@ -2226,13 +2226,13 @@ msgid "&Cut Folder"
 msgid_plural "&Cut %1 Folders"
 msgstr[0] "&ตัด %1 โฟลเดอร์"
 
-#: widgets/standardactionmanager.cpp:391
+#: widgets/standardactionmanager.cpp:388
 #, kde-format
 msgid "&Delete Item"
 msgid_plural "&Delete %1 Items"
 msgstr[0] "&ลบ %1 รายการ"
 
-#: widgets/standardactionmanager.cpp:392
+#: widgets/standardactionmanager.cpp:389
 #, fuzzy, kde-format
 #| msgid "&Delete Folder"
 msgctxt "@action"
@@ -2240,7 +2240,7 @@ msgid "&Delete Folder"
 msgid_plural "&Delete %1 Folders"
 msgstr[0] "&ลบโฟลเดอร์"
 
-#: widgets/standardactionmanager.cpp:393
+#: widgets/standardactionmanager.cpp:390
 #, fuzzy, kde-format
 #| msgid "&Synchronize Folder"
 msgctxt "@action"
@@ -2248,21 +2248,21 @@ msgid "&Synchronize Folder"
 msgid_plural "&Synchronize %1 Folders"
 msgstr[0] "&ปรับเทียบโฟลเดอร์"
 
-#: widgets/standardactionmanager.cpp:394
+#: widgets/standardactionmanager.cpp:391
 #, fuzzy, kde-format
 #| msgid "&Delete Folder"
 msgid "&Delete Resource"
 msgid_plural "&Delete %1 Resources"
 msgstr[0] "&ลบโฟลเดอร์"
 
-#: widgets/standardactionmanager.cpp:395
+#: widgets/standardactionmanager.cpp:392
 #, fuzzy, kde-format
 #| msgid "&Synchronize Folder"
 msgid "&Synchronize Resource"
 msgid_plural "&Synchronize %1 Resources"
 msgstr[0] "&ปรับเทียบโฟลเดอร์"
 
-#: widgets/standardactionmanager.cpp:397
+#: widgets/standardactionmanager.cpp:394
 #, fuzzy, kde-format
 #| msgid "&Copy Folder"
 #| msgid_plural "&Copy %1 Folders"
@@ -2270,7 +2270,7 @@ msgid "Copy Folder"
 msgid_plural "Copy %1 Folders"
 msgstr[0] "&คัดลอก %1 โฟลเดอร์"
 
-#: widgets/standardactionmanager.cpp:398
+#: widgets/standardactionmanager.cpp:395
 #, fuzzy, kde-format
 #| msgid "&Copy Item"
 #| msgid_plural "&Copy %1 Items"
@@ -2278,7 +2278,7 @@ msgid "Copy Item"
 msgid_plural "Copy %1 Items"
 msgstr[0] "&คัดลอก %1 รายการ"
 
-#: widgets/standardactionmanager.cpp:399
+#: widgets/standardactionmanager.cpp:396
 #, fuzzy, kde-format
 #| msgid "&Cut Item"
 #| msgid_plural "&Cut %1 Items"
@@ -2286,7 +2286,7 @@ msgid "Cut Item"
 msgid_plural "Cut %1 Items"
 msgstr[0] "&ตัด %1 รายการ"
 
-#: widgets/standardactionmanager.cpp:400
+#: widgets/standardactionmanager.cpp:397
 #, fuzzy, kde-format
 #| msgid "&Cut Folder"
 #| msgid_plural "&Cut %1 Folders"
@@ -2294,7 +2294,7 @@ msgid "Cut Folder"
 msgid_plural "Cut %1 Folders"
 msgstr[0] "&ตัด %1 โฟลเดอร์"
 
-#: widgets/standardactionmanager.cpp:401
+#: widgets/standardactionmanager.cpp:398
 #, fuzzy, kde-format
 #| msgid "&Delete Item"
 #| msgid_plural "&Delete %1 Items"
@@ -2302,21 +2302,21 @@ msgid "Delete Item"
 msgid_plural "Delete %1 Items"
 msgstr[0] "&ลบ %1 รายการ"
 
-#: widgets/standardactionmanager.cpp:402
+#: widgets/standardactionmanager.cpp:399
 #, fuzzy, kde-format
 #| msgid "&Delete Folder"
 msgid "Delete Folder"
 msgid_plural "Delete %1 Folders"
 msgstr[0] "&ลบโฟลเดอร์"
 
-#: widgets/standardactionmanager.cpp:403
+#: widgets/standardactionmanager.cpp:400
 #, fuzzy, kde-format
 #| msgid "&Synchronize Folder"
 msgid "Synchronize Folder"
 msgid_plural "Synchronize %1 Folders"
 msgstr[0] "&ปรับเทียบโฟลเดอร์"
 
-#: widgets/standardactionmanager.cpp:404
+#: widgets/standardactionmanager.cpp:401
 #, fuzzy, kde-format
 #| msgid "&Delete Folder"
 msgctxt "@action"
@@ -2324,7 +2324,7 @@ msgid "Delete Resource"
 msgid_plural "Delete %1 Resources"
 msgstr[0] "&ลบโฟลเดอร์"
 
-#: widgets/standardactionmanager.cpp:405
+#: widgets/standardactionmanager.cpp:402
 #, fuzzy, kde-format
 #| msgid "&Synchronize Folder"
 msgctxt "@action"
@@ -2332,7 +2332,7 @@ msgid "Synchronize Resource"
 msgid_plural "Synchronize %1 Resources"
 msgstr[0] "&ปรับเทียบโฟลเดอร์"
 
-#: widgets/standardactionmanager.cpp:408
+#: widgets/standardactionmanager.cpp:405
 #, fuzzy, kde-format
 #| msgctxt "@title:column, name of a thing"
 #| msgid "Name"
@@ -2340,7 +2340,7 @@ msgctxt "@label:textbox name of Akonadi folder"
 msgid "Name"
 msgstr "ชื่อ"
 
-#: widgets/standardactionmanager.cpp:415
+#: widgets/standardactionmanager.cpp:412
 #, fuzzy, kde-format
 #| msgid "Do you really want to delete folder '%1' and all its sub-folders?"
 msgid "Do you really want to delete this folder and all its sub-folders?"
@@ -2348,7 +2348,7 @@ msgid_plural ""
 "Do you really want to delete %1 folders and all their sub-folders?"
 msgstr[0] "คุณต้องการจะลบโฟลเดอร์ '%1' รวมทั้งโฟลเดอร์ย่อยทั้งหมดของมันจริงหรือไม่ ?"
 
-#: widgets/standardactionmanager.cpp:418
+#: widgets/standardactionmanager.cpp:415
 #, fuzzy, kde-format
 #| msgid "&Delete Folder"
 msgctxt "@title:window"
@@ -2356,33 +2356,33 @@ msgid "Delete Folder?"
 msgid_plural "Delete Folders?"
 msgstr[0] "&ลบโฟลเดอร์"
 
-#: widgets/standardactionmanager.cpp:419
+#: widgets/standardactionmanager.cpp:416
 #, kde-format
 msgid "Could not delete folder: %1"
 msgstr "ไม่สามารถลบโฟลเดอร์ต่อไปนี้ได้: %1"
 
-#: widgets/standardactionmanager.cpp:420
+#: widgets/standardactionmanager.cpp:417
 #, fuzzy, kde-format
 #| msgid "Folder deletion failed"
 msgctxt "@title:window"
 msgid "Folder Deletion Failed"
 msgstr "ล้มเหลวในการลบโฟลเดอร์"
 
-#: widgets/standardactionmanager.cpp:422
+#: widgets/standardactionmanager.cpp:419
 #, fuzzy, kde-format
 #| msgid "Properties of Folder %1"
 msgctxt "@title:window"
 msgid "Properties of Folder %1"
 msgstr "คุณสมบัติของโฟลเดอร์ %1"
 
-#: widgets/standardactionmanager.cpp:426
+#: widgets/standardactionmanager.cpp:423
 #, fuzzy, kde-format
 #| msgid "Do you really want to delete all selected items?"
 msgid "Do you really want to delete the selected item?"
 msgid_plural "Do you really want to delete %1 items?"
 msgstr[0] "คุณต้องการจะลบรายการทั้งหมดที่เลือกไว้จริงหรือไม่ ?"
 
-#: widgets/standardactionmanager.cpp:427
+#: widgets/standardactionmanager.cpp:424
 #, fuzzy, kde-format
 #| msgid "&Delete Item"
 #| msgid_plural "&Delete %1 Items"
@@ -2391,27 +2391,27 @@ msgid "Delete Item?"
 msgid_plural "Delete Items?"
 msgstr[0] "&ลบ %1 รายการ"
 
-#: widgets/standardactionmanager.cpp:428
+#: widgets/standardactionmanager.cpp:425
 #, fuzzy, kde-format
 #| msgid "Could not delete folder: %1"
 msgid "Could not delete item: %1"
 msgstr "ไม่สามารถลบโฟลเดอร์ต่อไปนี้ได้: %1"
 
-#: widgets/standardactionmanager.cpp:429
+#: widgets/standardactionmanager.cpp:426
 #, fuzzy, kde-format
 #| msgid "Folder deletion failed"
 msgctxt "@title:window"
 msgid "Item Deletion Failed"
 msgstr "ล้มเหลวในการลบโฟลเดอร์"
 
-#: widgets/standardactionmanager.cpp:431
+#: widgets/standardactionmanager.cpp:428
 #, fuzzy, kde-format
 #| msgid "Rename Favorite"
 msgctxt "@title:window"
 msgid "Rename Favorite"
 msgstr "เปลี่ยนชื่อรายการโปรด"
 
-#: widgets/standardactionmanager.cpp:432
+#: widgets/standardactionmanager.cpp:429
 #, fuzzy, kde-format
 #| msgctxt "@label:textbox New name of the folder."
 #| msgid "Name:"
@@ -2419,34 +2419,34 @@ msgctxt "@label:textbox name of the folder"
 msgid "Name:"
 msgstr "ชื่อ:"
 
-#: widgets/standardactionmanager.cpp:434
+#: widgets/standardactionmanager.cpp:431
 #, fuzzy, kde-format
 #| msgid "&Delete Folder"
 msgctxt "@title:window"
 msgid "New Resource"
 msgstr "&ลบโฟลเดอร์"
 
-#: widgets/standardactionmanager.cpp:435
+#: widgets/standardactionmanager.cpp:432
 #, fuzzy, kde-format
 #| msgid "Could not create folder: %1"
 msgid "Could not create resource: %1"
 msgstr "ไม่สามารถสร้างโฟลเดอร์ต่อไปนี้ได้: %1"
 
-#: widgets/standardactionmanager.cpp:436
+#: widgets/standardactionmanager.cpp:433
 #, fuzzy, kde-format
 #| msgid "Folder creation failed"
 msgctxt "@title:window"
 msgid "Resource Creation Failed"
 msgstr "ล้มเหลวในการสร้างโฟลเดอร์"
 
-#: widgets/standardactionmanager.cpp:440
+#: widgets/standardactionmanager.cpp:437
 #, fuzzy, kde-format
 #| msgid "Do you really want to delete all selected items?"
 msgid "Do you really want to delete this resource?"
 msgid_plural "Do you really want to delete %1 resources?"
 msgstr[0] "คุณต้องการจะลบรายการทั้งหมดที่เลือกไว้จริงหรือไม่ ?"
 
-#: widgets/standardactionmanager.cpp:443
+#: widgets/standardactionmanager.cpp:440
 #, fuzzy, kde-format
 #| msgid "Delete folder?"
 msgctxt "@title:window"
@@ -2454,24 +2454,24 @@ msgid "Delete Resource?"
 msgid_plural "Delete Resources?"
 msgstr[0] "ลบโฟลเดอร์หรือไม่ ?"
 
-#: widgets/standardactionmanager.cpp:445
+#: widgets/standardactionmanager.cpp:442
 #, kde-format
 msgid "Could not paste data: %1"
 msgstr "ไม่สามารถวางข้อมูลต่อไปนี้ได้: %1"
 
-#: widgets/standardactionmanager.cpp:446
+#: widgets/standardactionmanager.cpp:443
 #, fuzzy, kde-format
 #| msgid "Paste failed"
 msgctxt "@title:window"
 msgid "Paste Failed"
 msgstr "ล้มเหลวในการวาง"
 
-#: widgets/standardactionmanager.cpp:778
+#: widgets/standardactionmanager.cpp:775
 #, kde-format
 msgid "We can not add \"/\" in folder name."
 msgstr ""
 
-#: widgets/standardactionmanager.cpp:778 widgets/standardactionmanager.cpp:782
+#: widgets/standardactionmanager.cpp:775 widgets/standardactionmanager.cpp:779
 #, fuzzy, kde-format
 #| msgctxt "@title:window"
 #| msgid "New Folder"
@@ -2479,24 +2479,24 @@ msgctxt "@title:window"
 msgid "Create New Folder Error"
 msgstr "โฟลเดอร์ใหม่"
 
-#: widgets/standardactionmanager.cpp:782
+#: widgets/standardactionmanager.cpp:779
 #, kde-format
 msgid "We can not add \".\" at begin or end of folder name."
 msgstr ""
 
-#: widgets/standardactionmanager.cpp:1026
+#: widgets/standardactionmanager.cpp:1023
 #, kde-format
 msgid ""
 "Before syncing folder \"%1\" it is necessary to have the resource online. Do "
 "you want to make it online?"
 msgstr ""
 
-#: widgets/standardactionmanager.cpp:1027
+#: widgets/standardactionmanager.cpp:1024
 #, kde-format
 msgid "Account \"%1\" is offline"
 msgstr ""
 
-#: widgets/standardactionmanager.cpp:1028
+#: widgets/standardactionmanager.cpp:1025
 #, fuzzy, kde-format
 #| msgctxt "@info:status"
 #| msgid "Offline"
@@ -2504,12 +2504,12 @@ msgctxt "@action:button"
 msgid "Go Online"
 msgstr "ออฟไลน์"
 
-#: widgets/standardactionmanager.cpp:1648
+#: widgets/standardactionmanager.cpp:1645
 #, kde-format
 msgid "Move to This Folder"
 msgstr "ย้ายมายังโฟลเดอร์นี้"
 
-#: widgets/standardactionmanager.cpp:1648
+#: widgets/standardactionmanager.cpp:1645
 #, kde-format
 msgid "Copy to This Folder"
 msgstr "คัดลอกมายังโฟลเดอร์นี้"
