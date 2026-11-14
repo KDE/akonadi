@@ -40,6 +40,7 @@
 #include "shared/akranges.h"
 #include <algorithm>
 #include <cstdlib>
+#include <utility>
 
 #include <KLocalizedString>
 
@@ -205,6 +206,7 @@ public Q_SLOTS:
 
     Q_SCRIPTABLE void clear()
     {
+        mCurrentCollectionFetchJob = nullptr;
         scheduler->clear();
     }
 
@@ -452,7 +454,7 @@ ResourceBase::ResourceBase(const QString &id)
 
     new Akonadi__ResourceAdaptor(this);
 
-    d->scheduler = new ResourceScheduler(this);
+    d->scheduler = new ResourceScheduler(d);
 
     d->mChangeRecorder->setChangeRecordingEnabled(true);
     d->mChangeRecorder->setCollectionMoveTranslationEnabled(false); // we deal with this ourselves
@@ -945,6 +947,9 @@ void ResourceBasePrivate::slotSynchronizeCollection(const Collection &col)
 void ResourceBasePrivate::slotItemRetrievalCollectionFetchDone(KJob *job)
 {
     Q_Q(ResourceBase);
+    if (job != mCurrentCollectionFetchJob) {
+        return;
+    }
     mCurrentCollectionFetchJob = nullptr;
     if (job->error()) {
         qCWarning(AKONADIAGENTBASE_LOG) << "Failed to retrieve collection for sync: " << job->errorString();
@@ -997,6 +1002,9 @@ void ResourceBasePrivate::slotSynchronizeCollectionAttributes(const Collection &
 
 void ResourceBasePrivate::slotAttributeRetrievalCollectionFetchDone(KJob *job)
 {
+    if (job != mCurrentCollectionFetchJob) {
+        return;
+    }
     mCurrentCollectionFetchJob = nullptr;
     Q_Q(ResourceBase);
     if (job->error()) {
@@ -1197,9 +1205,8 @@ void ResourceBase::synchronizeTags()
 void ResourceBase::cancelTask()
 {
     Q_D(ResourceBase);
-    if (d->mCurrentCollectionFetchJob) {
-        d->mCurrentCollectionFetchJob->kill();
-        d->mCurrentCollectionFetchJob = nullptr;
+    if (auto *job = std::exchange(d->mCurrentCollectionFetchJob, nullptr)) {
+        job->kill();
     }
     switch (d->scheduler->currentTask().type) {
     case ResourceScheduler::FetchItem:
@@ -1246,12 +1253,28 @@ void ResourceBase::deferTask()
     // Deferring a CollectionSync is just not implemented.
     // We'd need to d->mItemSyncer->rollback() but also to NOT call taskDone in slotItemSyncDone() here...
     Q_ASSERT(!d->mItemSyncer);
+    d->mCurrentCollectionFetchJob = nullptr;
     d->scheduler->deferTask();
 }
 
 void ResourceBase::doSetOnline(bool state)
 {
-    d_func()->scheduler->setOnline(state);
+    Q_D(ResourceBase);
+    if (state) {
+        d->scheduler->setOnline(true);
+        return;
+    }
+
+    d->mCurrentCollectionFetchJob = nullptr;
+    auto *interruptedSync = std::exchange(d->mItemSyncer, nullptr);
+    if (interruptedSync) {
+        QObject::disconnect(interruptedSync, nullptr, d, nullptr);
+        QObject::disconnect(interruptedSync, nullptr, this, nullptr);
+    }
+    d->scheduler->setOnline(false);
+    if (interruptedSync) {
+        interruptedSync->rollback();
+    }
 }
 
 void ResourceBase::synchronizeCollection(qint64 collectionId)
