@@ -202,8 +202,13 @@ AccountActivitiesAbstract *AgentInstanceFilterProxyModel::accountActivitiesAbstr
 void AgentInstanceFilterProxyModel::setAccountActivitiesAbstract(AccountActivitiesAbstract *abstract)
 {
     if (d->accountActivitiesAbstract != abstract) {
+        if (d->accountActivitiesAbstract) {
+            disconnect(d->accountActivitiesAbstract, &AccountActivitiesAbstract::activitiesChanged, this, &AgentInstanceFilterProxyModel::slotInvalidateFilter);
+        }
         d->accountActivitiesAbstract = abstract;
-        connect(d->accountActivitiesAbstract, &AccountActivitiesAbstract::activitiesChanged, this, &AgentInstanceFilterProxyModel::slotInvalidateFilter);
+        if (d->accountActivitiesAbstract) {
+            connect(d->accountActivitiesAbstract, &AccountActivitiesAbstract::activitiesChanged, this, &AgentInstanceFilterProxyModel::slotInvalidateFilter);
+        }
         slotInvalidateFilter();
     }
 }
