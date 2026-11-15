@@ -55,6 +55,9 @@ ManageAccountWidget::ManageAccountWidget(QWidget *parent)
     d->ui.mAccountList->view()->setSelectionMode(QAbstractItemView::SingleSelection);
 
     connect(d->ui.mFilterAccount, &QLineEdit::textChanged, this, &ManageAccountWidget::slotSearchAgentType);
+    connect(d->ui.accountOnCurrentActivity, &QCheckBox::toggled, this, [this](bool clicked) {
+        d->ui.mAccountList->setEnablePlasmaActivities(clicked);
+    });
 
     d->ui.mFilterAccount->installEventFilter(this);
     d->ui.accountOnCurrentActivity->setVisible(false);
@@ -81,6 +84,7 @@ bool ManageAccountWidget::enablePlasmaActivities() const
 void ManageAccountWidget::setEnablePlasmaActivities(bool newEnablePlasmaActivities)
 {
     d->ui.accountOnCurrentActivity->setVisible(newEnablePlasmaActivities);
+    d->ui.accountOnCurrentActivity->setChecked(newEnablePlasmaActivities);
     d->ui.mAccountList->setEnablePlasmaActivities(newEnablePlasmaActivities);
 }
 
