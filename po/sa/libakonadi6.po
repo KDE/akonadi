@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: akonadi\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2026-11-14 01:04+0000\n"
+"POT-Creation-Date: 2026-11-15 01:07+0000\n"
 "PO-Revision-Date: 2024-12-25 19:45+0530\n"
 "Last-Translator: kali <shreekantkalwar@gmail.com>\n"
 "Language-Team: Sanskrit <kde-i18n-doc@kde.org>\n"
@@ -51,7 +51,7 @@ msgstr "एजेण्ट् परिचयकः"
 msgid "Akonadi Agent"
 msgstr "अकोनाडी एजेण्ट"
 
-#: agentbase/agentbase_p.h:50 agentbase/resourcescheduler.cpp:216
+#: agentbase/agentbase_p.h:50 agentbase/resourcescheduler.cpp:219
 #, kde-format
 msgctxt "@info:status Application ready for work"
 msgid "Ready"
@@ -81,87 +81,87 @@ msgctxt "@info:status"
 msgid "Not configured"
 msgstr "न विन्यस्तम्"
 
-#: agentbase/resourcebase.cpp:519
+#: agentbase/resourcebase.cpp:521
 #, kde-format
 msgctxt "@label command line option"
 msgid "Resource identifier"
 msgstr "संसाधनपरिचयः"
 
-#: agentbase/resourcebase.cpp:525
+#: agentbase/resourcebase.cpp:527
 #, kde-format
 msgid "Akonadi Resource"
 msgstr "अकोनाडी संसाधन"
 
-#: agentbase/resourcebase.cpp:569
+#: agentbase/resourcebase.cpp:571
 #, kde-format
 msgctxt "@info"
 msgid "Invalid item retrieved"
 msgstr "अमान्य मदं पुनः प्राप्तम्"
 
-#: agentbase/resourcebase.cpp:593
+#: agentbase/resourcebase.cpp:595
 #, kde-format
 msgctxt "@info"
 msgid "Error while creating item: %1"
 msgstr "मदं निर्माय त्रुटिः: %1"
 
-#: agentbase/resourcebase.cpp:624
+#: agentbase/resourcebase.cpp:626
 #, kde-format
 msgctxt "@info"
 msgid "Error while updating collection: %1"
 msgstr "संग्रहस्य अद्यतनीकरणकाले त्रुटिः: %1"
 
-#: agentbase/resourcebase.cpp:716
+#: agentbase/resourcebase.cpp:718
 #, kde-format
 msgctxt "@info"
 msgid "Updating local collection failed: %1."
 msgstr "स्थानीयसङ्ग्रहस्य अद्यतनीकरणं विफलम्: %1."
 
-#: agentbase/resourcebase.cpp:721
+#: agentbase/resourcebase.cpp:723
 #, kde-format
 msgctxt "@info"
 msgid "Updating local items failed: %1."
 msgstr "स्थानीयवस्तूनाम् अद्यतनीकरणं विफलम्: %1."
 
-#: agentbase/resourcebase.cpp:747
+#: agentbase/resourcebase.cpp:749
 #, kde-format
 msgctxt "@info"
 msgid "Cannot fetch item in offline mode."
 msgstr "अफलाइन मोड् मध्ये द्रव्यं आनेतुं न शक्यते ।"
 
-#: agentbase/resourcebase.cpp:930
+#: agentbase/resourcebase.cpp:932
 #, kde-format
 msgctxt "@info:status"
 msgid "Syncing folder '%1'"
 msgstr "'%1' पुटस्य समन्वयनम् ।"
 
-#: agentbase/resourcebase.cpp:951 agentbase/resourcebase.cpp:958
+#: agentbase/resourcebase.cpp:956 agentbase/resourcebase.cpp:963
 #, kde-format
 msgid "Failed to retrieve collection for sync."
 msgstr "समन्वयनार्थं संग्रहं पुनः प्राप्तुं असफलम् ।"
 
-#: agentbase/resourcebase.cpp:1004
+#: agentbase/resourcebase.cpp:1012
 #, kde-format
 msgid "Failed to retrieve collection for attribute sync."
 msgstr "विशेषतासमन्वयनार्थं संग्रहं पुनः प्राप्तुं असफलम् ।"
 
-#: agentbase/resourcebase.cpp:1056
+#: agentbase/resourcebase.cpp:1064
 #, kde-format
 msgid "The requested item no longer exists"
 msgstr "अनुरोधितं द्रव्यं पुनः नास्ति"
 
-#: agentbase/resourcebase.cpp:1277
+#: agentbase/resourcebase.cpp:1300
 #, fuzzy, kde-format
 #| msgid "Failed to retrieve collection for sync."
 msgid "Failed to fetch collection for collection sync."
 msgstr "समन्वयनार्थं संग्रहं पुनः प्राप्तुं असफलम् ।"
 
-#: agentbase/resourcebase.cpp:1313
+#: agentbase/resourcebase.cpp:1336
 #, fuzzy, kde-format
 #| msgid "Failed to retrieve collection for attribute sync."
 msgid "Failed to fetch collection for collection attributes sync."
 msgstr "विशेषतासमन्वयनार्थं संग्रहं पुनः प्राप्तुं असफलम् ।"
 
-#: agentbase/resourcescheduler.cpp:433 agentbase/resourcescheduler.cpp:439
+#: agentbase/resourcescheduler.cpp:436 agentbase/resourcescheduler.cpp:442
 #, kde-format
 msgctxt "@info"
 msgid "Job canceled."

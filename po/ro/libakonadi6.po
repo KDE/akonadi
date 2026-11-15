@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: libakonadi\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2026-11-14 01:04+0000\n"
+"POT-Creation-Date: 2026-11-15 01:07+0000\n"
 "PO-Revision-Date: 2013-01-13 00:43+0200\n"
 "Last-Translator: Sergiu Bivol <sergiu@cip.md>\n"
 "Language-Team: Romanian <kde-i18n-ro@kde.org>\n"
@@ -52,7 +52,7 @@ msgstr "Identificator agent"
 msgid "Akonadi Agent"
 msgstr "Agent Akonadi"
 
-#: agentbase/agentbase_p.h:50 agentbase/resourcescheduler.cpp:216
+#: agentbase/agentbase_p.h:50 agentbase/resourcescheduler.cpp:219
 #, kde-format
 msgctxt "@info:status Application ready for work"
 msgid "Ready"
@@ -82,7 +82,7 @@ msgctxt "@info:status"
 msgid "Not configured"
 msgstr ""
 
-#: agentbase/resourcebase.cpp:519
+#: agentbase/resourcebase.cpp:521
 #, fuzzy, kde-format
 #| msgctxt "@label commandline option"
 #| msgid "Resource identifier"
@@ -90,38 +90,38 @@ msgctxt "@label command line option"
 msgid "Resource identifier"
 msgstr "Identificator de resursă"
 
-#: agentbase/resourcebase.cpp:525
+#: agentbase/resourcebase.cpp:527
 #, fuzzy, kde-format
 #| msgctxt "@title application name"
 #| msgid "Akonadi Resource"
 msgid "Akonadi Resource"
 msgstr "Resursă Akonadi"
 
-#: agentbase/resourcebase.cpp:569
+#: agentbase/resourcebase.cpp:571
 #, kde-format
 msgctxt "@info"
 msgid "Invalid item retrieved"
 msgstr "S-a preluat un element nevalid"
 
-#: agentbase/resourcebase.cpp:593
+#: agentbase/resourcebase.cpp:595
 #, kde-format
 msgctxt "@info"
 msgid "Error while creating item: %1"
 msgstr "Eroare la crearea elementului: %1"
 
-#: agentbase/resourcebase.cpp:624
+#: agentbase/resourcebase.cpp:626
 #, kde-format
 msgctxt "@info"
 msgid "Error while updating collection: %1"
 msgstr "Eroare la actualizarea colecției: %1"
 
-#: agentbase/resourcebase.cpp:716
+#: agentbase/resourcebase.cpp:718
 #, kde-format
 msgctxt "@info"
 msgid "Updating local collection failed: %1."
 msgstr "Actualizarea colecției locale a eșuat: %1."
 
-#: agentbase/resourcebase.cpp:721
+#: agentbase/resourcebase.cpp:723
 #, fuzzy, kde-format
 #| msgctxt "@info"
 #| msgid "Updating local collection failed: %1."
@@ -129,48 +129,48 @@ msgctxt "@info"
 msgid "Updating local items failed: %1."
 msgstr "Actualizarea colecției locale a eșuat: %1."
 
-#: agentbase/resourcebase.cpp:747
+#: agentbase/resourcebase.cpp:749
 #, kde-format
 msgctxt "@info"
 msgid "Cannot fetch item in offline mode."
 msgstr "Elementul nu poate fi obținut în regim deconectat."
 
-#: agentbase/resourcebase.cpp:930
+#: agentbase/resourcebase.cpp:932
 #, kde-format
 msgctxt "@info:status"
 msgid "Syncing folder '%1'"
 msgstr "Se sincronizează dosarul „%1”"
 
-#: agentbase/resourcebase.cpp:951 agentbase/resourcebase.cpp:958
+#: agentbase/resourcebase.cpp:956 agentbase/resourcebase.cpp:963
 #, fuzzy, kde-format
 #| msgid "Failed to fetch the resource collection."
 msgid "Failed to retrieve collection for sync."
 msgstr "Preluarea colecției de resurse a eșuat."
 
-#: agentbase/resourcebase.cpp:1004
+#: agentbase/resourcebase.cpp:1012
 #, fuzzy, kde-format
 #| msgid "Failed to fetch the resource collection."
 msgid "Failed to retrieve collection for attribute sync."
 msgstr "Preluarea colecției de resurse a eșuat."
 
-#: agentbase/resourcebase.cpp:1056
+#: agentbase/resourcebase.cpp:1064
 #, kde-format
 msgid "The requested item no longer exists"
 msgstr "Elementul cerut nu mai există"
 
-#: agentbase/resourcebase.cpp:1277
+#: agentbase/resourcebase.cpp:1300
 #, fuzzy, kde-format
 #| msgid "Failed to fetch the resource collection."
 msgid "Failed to fetch collection for collection sync."
 msgstr "Preluarea colecției de resurse a eșuat."
 
-#: agentbase/resourcebase.cpp:1313
+#: agentbase/resourcebase.cpp:1336
 #, fuzzy, kde-format
 #| msgid "Failed to fetch the resource collection."
 msgid "Failed to fetch collection for collection attributes sync."
 msgstr "Preluarea colecției de resurse a eșuat."
 
-#: agentbase/resourcescheduler.cpp:433 agentbase/resourcescheduler.cpp:439
+#: agentbase/resourcescheduler.cpp:436 agentbase/resourcescheduler.cpp:442
 #, kde-format
 msgctxt "@info"
 msgid "Job canceled."
