@@ -5,9 +5,11 @@
 */
 
 #include "agentconfigurationbase.h"
+#include "agentinstance.h"
+#include "agentmanager.h"
 #include "akonadicore_debug.h"
 
-#include <KConfigGroup>
+#include <QVariant>
 
 namespace Akonadi
 {
@@ -73,17 +75,22 @@ QWidget *AgentConfigurationBase::parentWidget() const
 
 void AgentConfigurationBase::saveActivitiesSettings(const ActivitySettings &activities) const
 {
-    KConfigGroup activitiesGroup = d->config->group(QStringLiteral("Agent"));
-    activitiesGroup.writeEntry(QStringLiteral("ActivitiesEnabled"), activities.enabled);
-    activitiesGroup.writeEntry(QStringLiteral("Activities"), activities.activities);
+    AgentInstance instance = AgentManager::self()->instance(identifier());
+    if (!instance.isValid()) {
+        return;
+    }
+    instance.setActivitiesEnabled(activities.enabled);
+    instance.setActivities(activities.activities);
 }
 
 AgentConfigurationBase::ActivitySettings AgentConfigurationBase::restoreActivitiesSettings() const
 {
-    AgentConfigurationBase::ActivitySettings settings;
-    const KConfigGroup activitiesGroup = d->config->group(QStringLiteral("Agent"));
-    settings.enabled = activitiesGroup.readEntry(QStringLiteral("ActivitiesEnabled"), false);
-    settings.activities = activitiesGroup.readEntry(QStringLiteral("Activities"), QStringList());
+    ActivitySettings settings;
+    const AgentInstance instance = AgentManager::self()->instance(identifier());
+    if (instance.isValid()) {
+        settings.enabled = instance.activitiesEnabled();
+        settings.activities = instance.activities();
+    }
     return settings;
 }
 
