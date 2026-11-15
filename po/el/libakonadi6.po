@@ -13,7 +13,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: libakonadi\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2026-11-08 00:14+0000\n"
+"POT-Creation-Date: 2026-11-15 03:15+0000\n"
 "PO-Revision-Date: 2024-09-19 14:56+0300\n"
 "Last-Translator: Antonis Geralis <capoiosct@gmail.com>\n"
 "Language-Team: Greek <kde-i18n-el@kde.org>\n"
@@ -56,7 +56,7 @@ msgstr "Αναγνωριστικό πράκτορα"
 msgid "Akonadi Agent"
 msgstr "Πράκτορας του Akonadi"
 
-#: agentbase/agentbase_p.h:50 agentbase/resourcescheduler.cpp:216
+#: agentbase/agentbase_p.h:50 agentbase/resourcescheduler.cpp:219
 #, kde-format
 msgctxt "@info:status Application ready for work"
 msgid "Ready"
@@ -86,87 +86,87 @@ msgctxt "@info:status"
 msgid "Not configured"
 msgstr "Δεν έχει διαμορφωθεί"
 
-#: agentbase/resourcebase.cpp:519
+#: agentbase/resourcebase.cpp:521
 #, kde-format
 msgctxt "@label command line option"
 msgid "Resource identifier"
 msgstr "Αναγνωριστικό πόρου"
 
-#: agentbase/resourcebase.cpp:525
+#: agentbase/resourcebase.cpp:527
 #, kde-format
 msgid "Akonadi Resource"
 msgstr "Πόρος του Akonadi"
 
-#: agentbase/resourcebase.cpp:567
+#: agentbase/resourcebase.cpp:569
 #, kde-format
 msgctxt "@info"
 msgid "Invalid item retrieved"
 msgstr "Ανακτήθηκε μη έγκυρο αντικείμενο"
 
-#: agentbase/resourcebase.cpp:591
+#: agentbase/resourcebase.cpp:593
 #, kde-format
 msgctxt "@info"
 msgid "Error while creating item: %1"
 msgstr "Σφάλμα κατά τη δημιουργία αντικειμένου: %1"
 
-#: agentbase/resourcebase.cpp:622
+#: agentbase/resourcebase.cpp:624
 #, kde-format
 msgctxt "@info"
 msgid "Error while updating collection: %1"
 msgstr "Σφάλμα κατά την ενημέρωση της συλλογής: %1"
 
-#: agentbase/resourcebase.cpp:714
+#: agentbase/resourcebase.cpp:716
 #, kde-format
 msgctxt "@info"
 msgid "Updating local collection failed: %1."
 msgstr "Αποτυχία ενημέρωσης τοπικής συλλογής: %1."
 
-#: agentbase/resourcebase.cpp:719
+#: agentbase/resourcebase.cpp:721
 #, kde-format
 msgctxt "@info"
 msgid "Updating local items failed: %1."
 msgstr "Αποτυχία ενημέρωσης τοπικών αντικειμένων: %1."
 
-#: agentbase/resourcebase.cpp:745
+#: agentbase/resourcebase.cpp:747
 #, kde-format
 msgctxt "@info"
 msgid "Cannot fetch item in offline mode."
 msgstr "Αδυναμία λήψης του αντικειμένου σε λειτουργία χωρίς σύνδεση."
 
-#: agentbase/resourcebase.cpp:928
+#: agentbase/resourcebase.cpp:930
 #, kde-format
 msgctxt "@info:status"
 msgid "Syncing folder '%1'"
 msgstr "Συγχρονισμός φακέλου '%1'"
 
-#: agentbase/resourcebase.cpp:949 agentbase/resourcebase.cpp:956
+#: agentbase/resourcebase.cpp:954 agentbase/resourcebase.cpp:961
 #, kde-format
 msgid "Failed to retrieve collection for sync."
 msgstr "Αποτυχία ανάκτησης συλλογής για συγχρονισμό."
 
-#: agentbase/resourcebase.cpp:1002
+#: agentbase/resourcebase.cpp:1010
 #, kde-format
 msgid "Failed to retrieve collection for attribute sync."
 msgstr "Αποτυχία ανάκτησης συλλογής για συγχρονισμό ιδιοτήτων."
 
-#: agentbase/resourcebase.cpp:1054
+#: agentbase/resourcebase.cpp:1062
 #, kde-format
 msgid "The requested item no longer exists"
 msgstr "Το ζητούμενο αντικείμενο δεν υπάρχει πλέον."
 
-#: agentbase/resourcebase.cpp:1275
+#: agentbase/resourcebase.cpp:1298
 #, fuzzy, kde-format
 #| msgid "Failed to retrieve collection for sync."
 msgid "Failed to fetch collection for collection sync."
 msgstr "Αποτυχία ανάκτησης συλλογής για συγχρονισμό."
 
-#: agentbase/resourcebase.cpp:1311
+#: agentbase/resourcebase.cpp:1334
 #, fuzzy, kde-format
 #| msgid "Failed to retrieve collection for attribute sync."
 msgid "Failed to fetch collection for collection attributes sync."
 msgstr "Αποτυχία ανάκτησης συλλογής για συγχρονισμό ιδιοτήτων."
 
-#: agentbase/resourcescheduler.cpp:433 agentbase/resourcescheduler.cpp:439
+#: agentbase/resourcescheduler.cpp:436 agentbase/resourcescheduler.cpp:442
 #, kde-format
 msgctxt "@info"
 msgid "Job canceled."

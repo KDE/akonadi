@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: akonadi\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2026-11-08 00:14+0000\n"
+"POT-Creation-Date: 2026-11-15 03:15+0000\n"
 "PO-Revision-Date: 2026-11-03 20:18+0200\n"
 "Last-Translator: Yaron Shahrabani <sh.yaron@gmail.com>\n"
 "Language-Team: צוות התרגום של KDE ישראל\n"
@@ -50,7 +50,7 @@ msgstr "מזהה סוכן"
 msgid "Akonadi Agent"
 msgstr "סוכן Akonadi"
 
-#: agentbase/agentbase_p.h:50 agentbase/resourcescheduler.cpp:216
+#: agentbase/agentbase_p.h:50 agentbase/resourcescheduler.cpp:219
 #, kde-format
 msgctxt "@info:status Application ready for work"
 msgid "Ready"
@@ -80,85 +80,85 @@ msgctxt "@info:status"
 msgid "Not configured"
 msgstr "לא מוגדר"
 
-#: agentbase/resourcebase.cpp:519
+#: agentbase/resourcebase.cpp:521
 #, kde-format
 msgctxt "@label command line option"
 msgid "Resource identifier"
 msgstr "מזהה משאב"
 
-#: agentbase/resourcebase.cpp:525
+#: agentbase/resourcebase.cpp:527
 #, kde-format
 msgid "Akonadi Resource"
 msgstr "משאב Akonadi"
 
-#: agentbase/resourcebase.cpp:567
+#: agentbase/resourcebase.cpp:569
 #, kde-format
 msgctxt "@info"
 msgid "Invalid item retrieved"
 msgstr "הפריט שנמשך שגוי"
 
-#: agentbase/resourcebase.cpp:591
+#: agentbase/resourcebase.cpp:593
 #, kde-format
 msgctxt "@info"
 msgid "Error while creating item: %1"
 msgstr "שגיאה ביצירת פריט: %1"
 
-#: agentbase/resourcebase.cpp:622
+#: agentbase/resourcebase.cpp:624
 #, kde-format
 msgctxt "@info"
 msgid "Error while updating collection: %1"
 msgstr "שגיאה בעדכון אוסף: %1"
 
-#: agentbase/resourcebase.cpp:714
+#: agentbase/resourcebase.cpp:716
 #, kde-format
 msgctxt "@info"
 msgid "Updating local collection failed: %1."
 msgstr "עדכון אוסף מקומי נכשל: %1."
 
-#: agentbase/resourcebase.cpp:719
+#: agentbase/resourcebase.cpp:721
 #, kde-format
 msgctxt "@info"
 msgid "Updating local items failed: %1."
 msgstr "עדכון פריטים מקומיים נכשל: %1."
 
-#: agentbase/resourcebase.cpp:745
+#: agentbase/resourcebase.cpp:747
 #, kde-format
 msgctxt "@info"
 msgid "Cannot fetch item in offline mode."
 msgstr "לא ניתן למשוך פריט במצב מנותק."
 
-#: agentbase/resourcebase.cpp:928
+#: agentbase/resourcebase.cpp:930
 #, kde-format
 msgctxt "@info:status"
 msgid "Syncing folder '%1'"
 msgstr "התיקייה ‚%1’ מסונכרנת"
 
-#: agentbase/resourcebase.cpp:949 agentbase/resourcebase.cpp:956
+#: agentbase/resourcebase.cpp:954 agentbase/resourcebase.cpp:961
 #, kde-format
 msgid "Failed to retrieve collection for sync."
 msgstr "משיכת האוסף לסנכרון נכשל."
 
-#: agentbase/resourcebase.cpp:1002
+#: agentbase/resourcebase.cpp:1010
 #, kde-format
 msgid "Failed to retrieve collection for attribute sync."
 msgstr "משיכת האוסף לסנכרון מאפיינים נכשל."
 
-#: agentbase/resourcebase.cpp:1054
+#: agentbase/resourcebase.cpp:1062
 #, kde-format
 msgid "The requested item no longer exists"
 msgstr "הפריט המבוקש לא קיים יותר"
 
-#: agentbase/resourcebase.cpp:1275
+#: agentbase/resourcebase.cpp:1298
 #, kde-format
 msgid "Failed to fetch collection for collection sync."
 msgstr "משיכת האוסף לסנכרון אוספים נכשלה."
 
-#: agentbase/resourcebase.cpp:1311
+#: agentbase/resourcebase.cpp:1334
 #, kde-format
 msgid "Failed to fetch collection for collection attributes sync."
 msgstr "משיכת האוסף לסנכרון מאפייני אוספים נכשלה."
 
-#: agentbase/resourcescheduler.cpp:433 agentbase/resourcescheduler.cpp:439
+#: agentbase/resourcescheduler.cpp:436 agentbase/resourcescheduler.cpp:442
 #, kde-format
 msgctxt "@info"
 msgid "Job canceled."
