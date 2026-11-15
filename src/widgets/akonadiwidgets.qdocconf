@@ -7,7 +7,35 @@ description = PIM Storage Framework.
 
 documentationinheaders = true
 
-headerdirs += .
+headers += \
+    agentconfigurationdialog.h \
+    agentconfigurationwidget.h \
+    agentinstancewidget.h \
+    agenttypedialog.h \
+    agenttypewidget.h \
+    akonadiwidgets_qdocmoduleheader.h \
+    clearcachefoldersjob.h \
+    collectioncombobox.h \
+    collectiondialog.h \
+    collectionmaintenancepage.h \
+    collectionpropertiesdialog.h \
+    collectionpropertiespage.h \
+    collectionrequester.h \
+    collectionstatisticsdelegate.h \
+    controlgui.h \
+    dbaccess.h \
+    entitylistview.h \
+    entitytreeview.h \
+    etmviewstatesaver.h \
+    manageaccountwidget.h \
+    standardactionmanager.h \
+    subscriptiondialog.h \
+    tageditwidget.h \
+    tagmanagementdialog.h \
+    tagselectioncombobox.h \
+    tagselectiondialog.h \
+    tagselectwidget.h \
+    tagwidget.h
 sourcedirs += .
 
 outputformats = HTML
