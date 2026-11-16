@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: akonadi\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2026-11-15 01:07+0000\n"
+"POT-Creation-Date: 2026-11-16 01:07+0000\n"
 "PO-Revision-Date: 2024-12-25 19:45+0530\n"
 "Last-Translator: kali <shreekantkalwar@gmail.com>\n"
 "Language-Team: Sanskrit <kde-i18n-doc@kde.org>\n"
@@ -1309,12 +1309,12 @@ msgstr ""
 msgid "Details..."
 msgstr "वर्णन..."
 
-#: widgets/manageaccountwidget.cpp:232
+#: widgets/manageaccountwidget.cpp:236
 #, kde-format
 msgid "Do you want to remove account '%1'?"
 msgstr "किं भवान् '%1' खातं हर्तुं इच्छति?"
 
-#: widgets/manageaccountwidget.cpp:233
+#: widgets/manageaccountwidget.cpp:237
 #, kde-format
 msgctxt "@title:window"
 msgid "Remove account?"

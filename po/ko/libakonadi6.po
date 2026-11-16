@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2026-11-15 01:07+0000\n"
+"POT-Creation-Date: 2026-11-16 01:07+0000\n"
 "PO-Revision-Date: 2026-09-21 15:02+0200\n"
 "Last-Translator: Shinjo Park <peremen@gmail.com>\n"
 "Language-Team: Korean\n"
@@ -1288,12 +1288,12 @@ msgstr ""
 msgid "Details..."
 msgstr "자세히..."
 
-#: widgets/manageaccountwidget.cpp:232
+#: widgets/manageaccountwidget.cpp:236
 #, kde-format
 msgid "Do you want to remove account '%1'?"
 msgstr "'%1' 계정을 삭제하시겠습니까?"
 
-#: widgets/manageaccountwidget.cpp:233
+#: widgets/manageaccountwidget.cpp:237
 #, kde-format
 msgctxt "@title:window"
 msgid "Remove account?"
