@@ -2,8 +2,8 @@
     \module AkonadiAgentBase
     \title Akonadi Agent Base C++ Classes
     \ingroup modules
-    \cmakepackage KPim6
-    \cmakecomponent AkonadiAgentBase
+    \cmakepackage KPim6Akonadi
+    \cmaketargetitem KPim6::AkonadiAgentBase
 
     \brief PIM Storage Framework.
 */

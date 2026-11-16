@@ -2,8 +2,8 @@
     \module AkonadiCore
     \title Akonadi Core C++ Classes
     \ingroup modules
-    \cmakepackage KPim6
-    \cmakecomponent AkonadiCore
+    \cmakepackage KPim6Akonadi
+    \cmaketargetitem KPim6::AkonadiCore
 
     \brief PIM Storage Framework.
 */

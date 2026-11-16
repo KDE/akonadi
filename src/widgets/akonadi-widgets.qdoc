@@ -2,8 +2,8 @@
     \module AkonadiWidgets
     \title Akonadi Widgets C++ Classes
     \ingroup modules
-    \cmakepackage KPim6
-    \cmakecomponent AkonadiWidgets
+    \cmakepackage KPim6Akonadi
+    \cmaketargetitem KPim6::AkonadiWidgets
 
     \brief PIM Storage Framework.
 */
