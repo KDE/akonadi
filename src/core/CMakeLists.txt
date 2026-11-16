@@ -482,13 +482,17 @@ set_target_properties(
 
 install(TARGETS KPim6AkonadiCore EXPORT KPim6AkonadiTargets ${KDE_INSTALL_TARGETS_DEFAULT_ARGS})
 
+set(AKONADICORE_FILES
+    ${AkonadiCore_base_HEADERS}
+    ${AkonadiCore_attributes_HEADERS}
+    ${AkonadiCore_models_HEADERS}
+    ${AkonadiCore_jobs_HEADERS}
+)
+
 install(
     FILES
         ${CMAKE_CURRENT_BINARY_DIR}/akonadicore_export.h
-        ${AkonadiCore_base_HEADERS}
-        ${AkonadiCore_attributes_HEADERS}
-        ${AkonadiCore_models_HEADERS}
-        ${AkonadiCore_jobs_HEADERS}
+        ${AKONADICORE_FILES}
         qtest_akonadi.h
         itempayloadinternals_p.h
         ${Akonadi_BINARY_DIR}/config-akonadi.h
@@ -517,10 +521,7 @@ ecm_add_installed_library_check(KPim6AkonadiCore
 
 ecm_installed_library_check_include_strings(KPim6AkonadiCore
     HEADERS
-    ${AkonadiCore_base_HEADERS}
-    ${AkonadiCore_attributes_HEADERS}
-    ${AkonadiCore_models_HEADERS}
-    ${AkonadiCore_jobs_HEADERS}
+    ${AKONADICORE_FILES}
     PREFIX akonadi
 )
 
