@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: akonadi\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2026-11-15 03:15+0000\n"
+"POT-Creation-Date: 2026-11-16 04:01+0000\n"
 "PO-Revision-Date: 2024-03-27 21:45+0100\n"
 "Last-Translator: Enol P. <enolp@softastur.org>\n"
 "Language-Team: Asturian <alministradores@softastur.org>\n"
@@ -1248,12 +1248,12 @@ msgstr ""
 msgid "Details..."
 msgstr ""
 
-#: widgets/manageaccountwidget.cpp:232
+#: widgets/manageaccountwidget.cpp:236
 #, kde-format
 msgid "Do you want to remove account '%1'?"
 msgstr ""
 
-#: widgets/manageaccountwidget.cpp:233
+#: widgets/manageaccountwidget.cpp:237
 #, kde-format
 msgctxt "@title:window"
 msgid "Remove account?"

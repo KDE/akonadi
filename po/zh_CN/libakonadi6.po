@@ -2,7 +2,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kdeorg\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2026-11-15 03:15+0000\n"
+"POT-Creation-Date: 2026-11-16 04:01+0000\n"
 "PO-Revision-Date: 2024-04-22 15:58\n"
 "Last-Translator: \n"
 "Language-Team: Chinese Simplified\n"
@@ -1275,12 +1275,12 @@ msgstr ""
 msgid "Details..."
 msgstr "详情..."
 
-#: widgets/manageaccountwidget.cpp:232
+#: widgets/manageaccountwidget.cpp:236
 #, kde-format
 msgid "Do you want to remove account '%1'?"
 msgstr "您真的要删除账户“%1”吗？"
 
-#: widgets/manageaccountwidget.cpp:233
+#: widgets/manageaccountwidget.cpp:237
 #, kde-format
 msgctxt "@title:window"
 msgid "Remove account?"
