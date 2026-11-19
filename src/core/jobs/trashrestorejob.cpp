@@ -243,9 +243,7 @@ void TrashRestoreJobPrivate::collectionsReceived(const Akonadi::Collection::List
 void TrashRestoreJobPrivate::removeAttribute(const Akonadi::Collection::List &list)
 {
     Q_Q(TrashRestoreJob);
-    QListIterator<Collection> i(list);
-    while (i.hasNext()) {
-        Collection col = i.next();
+    for (Collection col : list) {
         col.removeAttribute<EntityDeletedAttribute>();
 
         auto job = new CollectionModifyJob(col, q);
@@ -268,9 +266,7 @@ void TrashRestoreJobPrivate::removeAttribute(const Akonadi::Item::List &list)
 {
     Q_Q(TrashRestoreJob);
     Item::List items = list;
-    QMutableListIterator<Item> i(items);
-    while (i.hasNext()) {
-        Item &item = i.next();
+    for (Item &item : items) {
         item.removeAttribute<EntityDeletedAttribute>();
         auto job = new ItemModifyJob(item, q);
         job->setIgnorePayload(true);

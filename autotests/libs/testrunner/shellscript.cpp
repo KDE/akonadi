@@ -10,7 +10,6 @@
 
 #include <QCoreApplication>
 #include <QFile>
-#include <QHashIterator>
 
 ShellScript::ShellScript()
 {

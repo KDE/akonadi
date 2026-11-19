@@ -1462,9 +1462,7 @@ void StandardActionManagerPrivate::pasteTo(QItemSelectionModel *selectionModel, 
 
 void StandardActionManagerPrivate::addRecentCollection(Akonadi::Collection::Id id) const
 {
-    QMapIterator<StandardActionManager::Type, QPointer<RecentCollectionAction>> item(mRecentCollectionsMenu);
-    while (item.hasNext()) {
-        item.next();
+    for (auto item = mRecentCollectionsMenu.cbegin(), end = mRecentCollectionsMenu.cend(); item != end; ++item) {
         if (item.value().data()) {
             item.value().data()->addRecentCollection(item.key(), id);
         }

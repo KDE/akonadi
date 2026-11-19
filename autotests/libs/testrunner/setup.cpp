@@ -286,9 +286,8 @@ SetupTest::SetupTest()
 
     setEnvironmentVariable("KIO_DISABLE_CACHE_CLEANER", QStringLiteral("yes"));
 
-    QHashIterator<QString, QString> iter(Config::instance()->envVars());
-    while (iter.hasNext()) {
-        iter.next();
+    const QHash<QString, QString> envVars = Config::instance()->envVars();
+    for (auto iter = envVars.cbegin(), end = envVars.cend(); iter != end; ++iter) {
         qCDebug(AKONADITEST_LOG) << "Setting environment variable" << iter.key() << "=" << iter.value();
         setEnvironmentVariable(iter.key().toLocal8Bit(), iter.value());
     }

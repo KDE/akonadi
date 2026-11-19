@@ -85,9 +85,7 @@ void TrashJobPrivate::selectResult(KJob *job)
 void TrashJobPrivate::setAttribute(const Akonadi::Collection::List &list)
 {
     Q_Q(TrashJob);
-    QListIterator<Collection> i(list);
-    while (i.hasNext()) {
-        const Collection &col = i.next();
+    for (const Collection &col : list) {
         auto eda = new EntityDeletedAttribute();
         if (mSetRestoreCollection) {
             Q_ASSERT(mRestoreCollection.isValid());
@@ -116,10 +114,7 @@ void TrashJobPrivate::setAttribute(const Akonadi::Collection::List &list)
 void TrashJobPrivate::setAttribute(const Akonadi::Item::List &list)
 {
     Q_Q(TrashJob);
-    Item::List items = list;
-    QMutableListIterator<Item> i(items);
-    while (i.hasNext()) {
-        const Item &item = i.next();
+    for (const Item &item : list) {
         auto eda = new EntityDeletedAttribute();
         if (mSetRestoreCollection) {
             // When deleting a collection, we want to restore the deleted collection's items restored to the deleted collection's parent, not the items parent
@@ -221,9 +216,7 @@ void TrashJobPrivate::itemsReceived(const Akonadi::Item::List &items)
     }
 
     Item::List toDelete;
-    QListIterator<Item> i(items);
-    while (i.hasNext()) {
-        const Item &item = i.next();
+    for (const Item &item : items) {
         if (item.hasAttribute<EntityDeletedAttribute>()) {
             toDelete.append(item);
             continue;

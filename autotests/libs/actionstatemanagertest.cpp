@@ -557,9 +557,7 @@ private Q_SLOTS:
 
         QCOMPARE(stateMap.count(), mStateMap.count());
 
-        QHashIterator<StandardActionManager::Type, bool> it(stateMap);
-        while (it.hasNext()) {
-            it.next();
+        for (auto it = stateMap.cbegin(), end = stateMap.cend(); it != end; ++it) {
             // qDebug() << it.key();
             QVERIFY(mStateMap.contains(it.key()));
             const bool expected = mStateMap.value(it.key());

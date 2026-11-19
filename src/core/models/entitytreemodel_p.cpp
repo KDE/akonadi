@@ -334,12 +334,9 @@ void EntityTreeModelPrivate::collectionsFetched(const Akonadi::Collection::List 
     QElapsedTimer t;
     t.start();
 
-    QListIterator<Akonadi::Collection> it(collections);
-
     QHash<Collection::Id, Collection> collectionsToInsert;
 
-    while (it.hasNext()) {
-        const Collection collection = it.next();
+    for (const Collection &collection : collections) {
         const Collection::Id collectionId = collection.id();
         if (isHidden(collection)) {
             continue;

@@ -82,13 +82,13 @@ void SpecialCollectionsPrivate::collectionRemoved(const Collection &collection)
         // Retrieve the list of special folders for the resource the collection belongs to
         QHash<QByteArray, Collection> &folders = mFoldersForResource[collection.resource()];
         {
-            QMutableHashIterator<QByteArray, Collection> it(folders);
-            while (it.hasNext()) {
-                it.next();
+            for (auto it = folders.begin(); it != folders.end();) {
                 if (it.value() == collection) {
                     // The collection to be removed is a special folder
-                    it.remove();
+                    it = folders.erase(it);
                     emitChanged(collection.resource());
+                } else {
+                    ++it;
                 }
             }
         }

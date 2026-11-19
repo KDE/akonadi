@@ -210,10 +210,7 @@ void SpecialCollectionsRequestJobPrivate::createRequestedFolders(ResourceScanJob
     Q_ASSERT(mPendingCreateJobs == 0);
     Q_ASSERT(scanJob->rootResourceCollection().isValid());
 
-    QHashIterator<QByteArray, bool> it(requestedFolders);
-    while (it.hasNext()) {
-        it.next();
-
+    for (auto it = requestedFolders.cbegin(), end = requestedFolders.cend(); it != end; ++it) {
         if (it.value()) {
             Collection collection;
             collection.setParentCollection(scanJob->rootResourceCollection());
