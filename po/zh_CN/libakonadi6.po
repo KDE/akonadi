@@ -2,7 +2,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kdeorg\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2026-11-16 01:07+0000\n"
+"POT-Creation-Date: 2026-11-20 01:12+0000\n"
 "PO-Revision-Date: 2024-04-22 15:58\n"
 "Last-Translator: \n"
 "Language-Team: Chinese Simplified\n"
@@ -415,22 +415,22 @@ msgstr "尝试获得锁时超时。"
 msgid "Failed to create tag."
 msgstr "无法创建标签。"
 
-#: core/jobs/trashjob.cpp:155
+#: core/jobs/trashjob.cpp:150
 #, kde-format
 msgid "Failed to move to the trash collection; aborting the trash operation"
 msgstr "无法移动到回收站集合；正在中止移动到回收站操作"
 
-#: core/jobs/trashjob.cpp:218 core/jobs/trashrestorejob.cpp:151
+#: core/jobs/trashjob.cpp:213 core/jobs/trashrestorejob.cpp:151
 #, kde-format
 msgid "Invalid items passed"
 msgstr "传递了无效的项目"
 
-#: core/jobs/trashjob.cpp:258 core/jobs/trashrestorejob.cpp:201
+#: core/jobs/trashjob.cpp:251 core/jobs/trashrestorejob.cpp:201
 #, kde-format
 msgid "Invalid collection passed"
 msgstr "传递了无效的集合"
 
-#: core/jobs/trashjob.cpp:375 core/jobs/trashrestorejob.cpp:343
+#: core/jobs/trashjob.cpp:368 core/jobs/trashrestorejob.cpp:339
 #, kde-format
 msgid "No valid collection or empty itemlist"
 msgstr "无效的集合或者空项目列表"
@@ -479,31 +479,31 @@ msgctxt "@title:column Name of a thing"
 msgid "Name"
 msgstr "名称"
 
-#: core/models/entitytreemodel_p.cpp:1375
+#: core/models/entitytreemodel_p.cpp:1372
 #, kde-format
 msgctxt "@info"
 msgid "Could not copy item: <message>%1</message>"
 msgstr "无法复制项目: <message>%1</message>"
 
-#: core/models/entitytreemodel_p.cpp:1377
+#: core/models/entitytreemodel_p.cpp:1374
 #, kde-format
 msgctxt "@info"
 msgid "Could not copy collection: <message>%1</message>"
 msgstr "无法复制集合：<message>%1</message>"
 
-#: core/models/entitytreemodel_p.cpp:1379
+#: core/models/entitytreemodel_p.cpp:1376
 #, kde-format
 msgctxt "@info"
 msgid "Could not move item: <message>%1</message>"
 msgstr "无法移动项目: <message>%1</message>"
 
-#: core/models/entitytreemodel_p.cpp:1381
+#: core/models/entitytreemodel_p.cpp:1378
 #, kde-format
 msgctxt "@info"
 msgid "Could not move collection: <message>%1</message>"
 msgstr "无法移动集合：<message>%1</message>"
 
-#: core/models/entitytreemodel_p.cpp:1383
+#: core/models/entitytreemodel_p.cpp:1380
 #, kde-format
 msgctxt "@info"
 msgid "Could not link entity: <message>%1</message>"
@@ -2414,12 +2414,12 @@ msgctxt "@action:button"
 msgid "Go Online"
 msgstr "转为在线"
 
-#: widgets/standardactionmanager.cpp:1645
+#: widgets/standardactionmanager.cpp:1643
 #, kde-format
 msgid "Move to This Folder"
 msgstr "移动到此文件夹"
 
-#: widgets/standardactionmanager.cpp:1645
+#: widgets/standardactionmanager.cpp:1643
 #, kde-format
 msgid "Copy to This Folder"
 msgstr "复制到此文件夹"

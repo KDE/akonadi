@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: akonadi\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2026-11-16 01:07+0000\n"
+"POT-Creation-Date: 2026-11-20 01:12+0000\n"
 "PO-Revision-Date: 2024-12-25 19:45+0530\n"
 "Last-Translator: kali <shreekantkalwar@gmail.com>\n"
 "Language-Team: Sanskrit <kde-i18n-doc@kde.org>\n"
@@ -429,23 +429,23 @@ msgstr "तालं प्राप्तुं प्रयतमानो स
 msgid "Failed to create tag."
 msgstr "टैग् निर्मातुं असफलम्।"
 
-#: core/jobs/trashjob.cpp:155
+#: core/jobs/trashjob.cpp:150
 #, fuzzy, kde-format
 #| msgid "Move to trash collection failed, aborting trash operation"
 msgid "Failed to move to the trash collection; aborting the trash operation"
 msgstr "कचरासंग्रहणं प्रति गमनम् विफलम्, कचरासञ्चालनं निरस्तम्"
 
-#: core/jobs/trashjob.cpp:218 core/jobs/trashrestorejob.cpp:151
+#: core/jobs/trashjob.cpp:213 core/jobs/trashrestorejob.cpp:151
 #, kde-format
 msgid "Invalid items passed"
 msgstr "अमान्यवस्तूनि पारितानि"
 
-#: core/jobs/trashjob.cpp:258 core/jobs/trashrestorejob.cpp:201
+#: core/jobs/trashjob.cpp:251 core/jobs/trashrestorejob.cpp:201
 #, kde-format
 msgid "Invalid collection passed"
 msgstr "अमान्य संग्रह उत्तीर्ण"
 
-#: core/jobs/trashjob.cpp:375 core/jobs/trashrestorejob.cpp:343
+#: core/jobs/trashjob.cpp:368 core/jobs/trashrestorejob.cpp:339
 #, kde-format
 msgid "No valid collection or empty itemlist"
 msgstr "वैधः संग्रहः वा रिक्तः द्रव्यसूची वा नास्ति"
@@ -496,31 +496,31 @@ msgctxt "@title:column Name of a thing"
 msgid "Name"
 msgstr "नामः"
 
-#: core/models/entitytreemodel_p.cpp:1375
+#: core/models/entitytreemodel_p.cpp:1372
 #, kde-format
 msgctxt "@info"
 msgid "Could not copy item: <message>%1</message>"
 msgstr "द्रव्यस्य प्रतिलिपिं कर्तुं न शक्यते: <message>%1</message>"
 
-#: core/models/entitytreemodel_p.cpp:1377
+#: core/models/entitytreemodel_p.cpp:1374
 #, kde-format
 msgctxt "@info"
 msgid "Could not copy collection: <message>%1</message>"
 msgstr "संग्रहस्य प्रतिलिपिं कर्तुं न शक्यते: <message>%1</message>"
 
-#: core/models/entitytreemodel_p.cpp:1379
+#: core/models/entitytreemodel_p.cpp:1376
 #, kde-format
 msgctxt "@info"
 msgid "Could not move item: <message>%1</message>"
 msgstr "द्रव्यं स्थानान्तरयितुं न शक्तम्: <message>%1</message>"
 
-#: core/models/entitytreemodel_p.cpp:1381
+#: core/models/entitytreemodel_p.cpp:1378
 #, kde-format
 msgctxt "@info"
 msgid "Could not move collection: <message>%1</message>"
 msgstr "संग्रहं स्थानान्तरयितुं न शक्तम्: <message>%1</message>"
 
-#: core/models/entitytreemodel_p.cpp:1383
+#: core/models/entitytreemodel_p.cpp:1380
 #, kde-format
 msgctxt "@info"
 msgid "Could not link entity: <message>%1</message>"
@@ -2491,12 +2491,12 @@ msgctxt "@action:button"
 msgid "Go Online"
 msgstr "Online गच्छतु"
 
-#: widgets/standardactionmanager.cpp:1645
+#: widgets/standardactionmanager.cpp:1643
 #, kde-format
 msgid "Move to This Folder"
 msgstr "This Folder इत्यत्र गच्छन्तु"
 
-#: widgets/standardactionmanager.cpp:1645
+#: widgets/standardactionmanager.cpp:1643
 #, kde-format
 msgid "Copy to This Folder"
 msgstr "This Folder इत्यत्र प्रतिलिख्यताम्"

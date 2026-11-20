@@ -13,7 +13,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: libakonadi6\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2026-11-16 01:07+0000\n"
+"POT-Creation-Date: 2026-11-20 01:12+0000\n"
 "PO-Revision-Date: 2026-08-14 19:05+0200\n"
 "Last-Translator: Philipp Kiemle <l10n.daphipz@fastmail.de>\n"
 "Language-Team: German <kde-i18n-de@kde.org>\n"
@@ -432,24 +432,24 @@ msgstr "Zeitüberschreitung beim Erhalten der Sperre."
 msgid "Failed to create tag."
 msgstr "Erstellung des Stichworts ist fehlgeschlagen."
 
-#: core/jobs/trashjob.cpp:155
+#: core/jobs/trashjob.cpp:150
 #, kde-format
 msgid "Failed to move to the trash collection; aborting the trash operation"
 msgstr ""
 "Das Verschieben in die Papierkorb-Sammlung ist fehlgeschlagen. Die "
 "Papierkorb-Aktion wird abgebrochen."
 
-#: core/jobs/trashjob.cpp:218 core/jobs/trashrestorejob.cpp:151
+#: core/jobs/trashjob.cpp:213 core/jobs/trashrestorejob.cpp:151
 #, kde-format
 msgid "Invalid items passed"
 msgstr "Ungültiger Eintrag übergeben"
 
-#: core/jobs/trashjob.cpp:258 core/jobs/trashrestorejob.cpp:201
+#: core/jobs/trashjob.cpp:251 core/jobs/trashrestorejob.cpp:201
 #, kde-format
 msgid "Invalid collection passed"
 msgstr "Ungültige Sammlung übergeben"
 
-#: core/jobs/trashjob.cpp:375 core/jobs/trashrestorejob.cpp:343
+#: core/jobs/trashjob.cpp:368 core/jobs/trashrestorejob.cpp:339
 #, kde-format
 msgid "No valid collection or empty itemlist"
 msgstr "Keine gültige Sammlung oder leere Eintragsliste"
@@ -500,31 +500,31 @@ msgctxt "@title:column Name of a thing"
 msgid "Name"
 msgstr "Name"
 
-#: core/models/entitytreemodel_p.cpp:1375
+#: core/models/entitytreemodel_p.cpp:1372
 #, kde-format
 msgctxt "@info"
 msgid "Could not copy item: <message>%1</message>"
 msgstr "Eintrag lässt sich nicht kopieren: <message>%1</message>"
 
-#: core/models/entitytreemodel_p.cpp:1377
+#: core/models/entitytreemodel_p.cpp:1374
 #, kde-format
 msgctxt "@info"
 msgid "Could not copy collection: <message>%1</message>"
 msgstr "Sammlung lässt sich nicht kopieren: <message>%1</message>"
 
-#: core/models/entitytreemodel_p.cpp:1379
+#: core/models/entitytreemodel_p.cpp:1376
 #, kde-format
 msgctxt "@info"
 msgid "Could not move item: <message>%1</message>"
 msgstr "Eintrag lässt sich nicht verschieben: <message>%1</message>"
 
-#: core/models/entitytreemodel_p.cpp:1381
+#: core/models/entitytreemodel_p.cpp:1378
 #, kde-format
 msgctxt "@info"
 msgid "Could not move collection: <message>%1</message>"
 msgstr "Sammlung lässt sich nicht verschieben: <message>%1</message>"
 
-#: core/models/entitytreemodel_p.cpp:1383
+#: core/models/entitytreemodel_p.cpp:1380
 #, kde-format
 msgctxt "@info"
 msgid "Could not link entity: <message>%1</message>"
@@ -2549,12 +2549,12 @@ msgctxt "@action:button"
 msgid "Go Online"
 msgstr "Online gehen"
 
-#: widgets/standardactionmanager.cpp:1645
+#: widgets/standardactionmanager.cpp:1643
 #, kde-format
 msgid "Move to This Folder"
 msgstr "In diesen Ordner verschieben"
 
-#: widgets/standardactionmanager.cpp:1645
+#: widgets/standardactionmanager.cpp:1643
 #, kde-format
 msgid "Copy to This Folder"
 msgstr "In diesen Ordner kopieren"

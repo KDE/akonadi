@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: akonadi\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2026-11-16 01:07+0000\n"
+"POT-Creation-Date: 2026-11-20 01:12+0000\n"
 "PO-Revision-Date: 2026-11-03 20:18+0200\n"
 "Last-Translator: Yaron Shahrabani <sh.yaron@gmail.com>\n"
 "Language-Team: צוות התרגום של KDE ישראל\n"
@@ -418,22 +418,22 @@ msgstr "קבלת הנעילה ארכה זמן רב מדי"
 msgid "Failed to create tag."
 msgstr "יצירת תגית נכשלה"
 
-#: core/jobs/trashjob.cpp:155
+#: core/jobs/trashjob.cpp:150
 #, kde-format
 msgid "Failed to move to the trash collection; aborting the trash operation"
 msgstr "העברת האוסף לאשפה נכשלה, פעולת ההשלכה לאשפה מבוטלת"
 
-#: core/jobs/trashjob.cpp:218 core/jobs/trashrestorejob.cpp:151
+#: core/jobs/trashjob.cpp:213 core/jobs/trashrestorejob.cpp:151
 #, kde-format
 msgid "Invalid items passed"
 msgstr "הועברו פריטים שגויים"
 
-#: core/jobs/trashjob.cpp:258 core/jobs/trashrestorejob.cpp:201
+#: core/jobs/trashjob.cpp:251 core/jobs/trashrestorejob.cpp:201
 #, kde-format
 msgid "Invalid collection passed"
 msgstr "הועבר אוסף שגוי"
 
-#: core/jobs/trashjob.cpp:375 core/jobs/trashrestorejob.cpp:343
+#: core/jobs/trashjob.cpp:368 core/jobs/trashrestorejob.cpp:339
 #, kde-format
 msgid "No valid collection or empty itemlist"
 msgstr "אין אוסף תקף או שרשימת הפריטים ריקה"
@@ -482,31 +482,31 @@ msgctxt "@title:column Name of a thing"
 msgid "Name"
 msgstr "שם"
 
-#: core/models/entitytreemodel_p.cpp:1375
+#: core/models/entitytreemodel_p.cpp:1372
 #, kde-format
 msgctxt "@info"
 msgid "Could not copy item: <message>%1</message>"
 msgstr "לא ניתן להעתיק את הפריט: <message>%1</message>"
 
-#: core/models/entitytreemodel_p.cpp:1377
+#: core/models/entitytreemodel_p.cpp:1374
 #, kde-format
 msgctxt "@info"
 msgid "Could not copy collection: <message>%1</message>"
 msgstr "לא ניתן להעתיק את האוסף: <message>%1</message>"
 
-#: core/models/entitytreemodel_p.cpp:1379
+#: core/models/entitytreemodel_p.cpp:1376
 #, kde-format
 msgctxt "@info"
 msgid "Could not move item: <message>%1</message>"
 msgstr "לא ניתן להעביר את הפריט: <message>%1</message>"
 
-#: core/models/entitytreemodel_p.cpp:1381
+#: core/models/entitytreemodel_p.cpp:1378
 #, kde-format
 msgctxt "@info"
 msgid "Could not move collection: <message>%1</message>"
 msgstr "לא ניתן להעביר את האוסף: <message>%1</message>"
 
-#: core/models/entitytreemodel_p.cpp:1383
+#: core/models/entitytreemodel_p.cpp:1380
 #, kde-format
 msgctxt "@info"
 msgid "Could not link entity: <message>%1</message>"
@@ -2514,12 +2514,12 @@ msgctxt "@action:button"
 msgid "Go Online"
 msgstr "התחברות"
 
-#: widgets/standardactionmanager.cpp:1645
+#: widgets/standardactionmanager.cpp:1643
 #, kde-format
 msgid "Move to This Folder"
 msgstr "העברה לתיקייה הזאת"
 
-#: widgets/standardactionmanager.cpp:1645
+#: widgets/standardactionmanager.cpp:1643
 #, kde-format
 msgid "Copy to This Folder"
 msgstr "העתקה לתיקייה הזאת"

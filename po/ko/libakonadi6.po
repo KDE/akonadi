@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2026-11-16 01:07+0000\n"
+"POT-Creation-Date: 2026-11-20 01:12+0000\n"
 "PO-Revision-Date: 2026-09-21 15:02+0200\n"
 "Last-Translator: Shinjo Park <peremen@gmail.com>\n"
 "Language-Team: Korean\n"
@@ -418,22 +418,22 @@ msgstr "잠금을 시도하는 중 시간이 초과되었습니다."
 msgid "Failed to create tag."
 msgstr "태그를 만들 수 없습니다."
 
-#: core/jobs/trashjob.cpp:155
+#: core/jobs/trashjob.cpp:150
 #, kde-format
 msgid "Failed to move to the trash collection; aborting the trash operation"
 msgstr "휴지통으로 모음집을 옮길 수 없음, 휴지통 버리기를 중단함"
 
-#: core/jobs/trashjob.cpp:218 core/jobs/trashrestorejob.cpp:151
+#: core/jobs/trashjob.cpp:213 core/jobs/trashrestorejob.cpp:151
 #, kde-format
 msgid "Invalid items passed"
 msgstr "잘못된 항목이 전달됨"
 
-#: core/jobs/trashjob.cpp:258 core/jobs/trashrestorejob.cpp:201
+#: core/jobs/trashjob.cpp:251 core/jobs/trashrestorejob.cpp:201
 #, kde-format
 msgid "Invalid collection passed"
 msgstr "잘못된 모음집이 전달됨"
 
-#: core/jobs/trashjob.cpp:375 core/jobs/trashrestorejob.cpp:343
+#: core/jobs/trashjob.cpp:368 core/jobs/trashrestorejob.cpp:339
 #, kde-format
 msgid "No valid collection or empty itemlist"
 msgstr "올바른 모음집이 없거나 항목 목록이 비어 있음"
@@ -482,31 +482,31 @@ msgctxt "@title:column Name of a thing"
 msgid "Name"
 msgstr "이름"
 
-#: core/models/entitytreemodel_p.cpp:1375
+#: core/models/entitytreemodel_p.cpp:1372
 #, kde-format
 msgctxt "@info"
 msgid "Could not copy item: <message>%1</message>"
 msgstr "항목을 복사할 수 없음: <message>%1</message>"
 
-#: core/models/entitytreemodel_p.cpp:1377
+#: core/models/entitytreemodel_p.cpp:1374
 #, kde-format
 msgctxt "@info"
 msgid "Could not copy collection: <message>%1</message>"
 msgstr "모음집을 복사할 수 없음: <message>%1</message>"
 
-#: core/models/entitytreemodel_p.cpp:1379
+#: core/models/entitytreemodel_p.cpp:1376
 #, kde-format
 msgctxt "@info"
 msgid "Could not move item: <message>%1</message>"
 msgstr "항목을 이동할 수 없음: <message>%1</message>"
 
-#: core/models/entitytreemodel_p.cpp:1381
+#: core/models/entitytreemodel_p.cpp:1378
 #, kde-format
 msgctxt "@info"
 msgid "Could not move collection: <message>%1</message>"
 msgstr "모음집을 이동할 수 없음: <message>%1</message>"
 
-#: core/models/entitytreemodel_p.cpp:1383
+#: core/models/entitytreemodel_p.cpp:1380
 #, kde-format
 msgctxt "@info"
 msgid "Could not link entity: <message>%1</message>"
@@ -2443,12 +2443,12 @@ msgctxt "@action:button"
 msgid "Go Online"
 msgstr "온라인으로 전환"
 
-#: widgets/standardactionmanager.cpp:1645
+#: widgets/standardactionmanager.cpp:1643
 #, kde-format
 msgid "Move to This Folder"
 msgstr "이 폴더로 이동"
 
-#: widgets/standardactionmanager.cpp:1645
+#: widgets/standardactionmanager.cpp:1643
 #, kde-format
 msgid "Copy to This Folder"
 msgstr "이 폴더로 복사"

@@ -14,8 +14,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: libakonadi\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2026-11-16 01:07+0000\n"
-"PO-Revision-Date: 2026-11-03 21:12+0300\n"
+"POT-Creation-Date: 2026-11-20 01:12+0000\n"
+"PO-Revision-Date: 2026-11-19 19:32+0300\n"
 "Last-Translator: Emir SARI <emir_sari@icloud.com>\n"
 "Language-Team: Turkish <kde-l10n-tr@kde.org>\n"
 "Language: tr\n"
@@ -23,7 +23,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n > 1);\n"
-"X-Generator: Lokalize 26.08.0\n"
+"X-Generator: Lokalize 26.08.2\n"
 
 #, kde-format
 msgctxt "NAME OF TRANSLATORS"
@@ -426,22 +426,22 @@ msgstr "Kilitleme işlemi zaman aşımına uğradı."
 msgid "Failed to create tag."
 msgstr "Künye oluşturulamadı."
 
-#: core/jobs/trashjob.cpp:155
+#: core/jobs/trashjob.cpp:150
 #, kde-format
 msgid "Failed to move to the trash collection; aborting the trash operation"
 msgstr "Çöp kutusu koleksiyonuna taşınamadı; çöpe atma işlemi iptal ediliyor."
 
-#: core/jobs/trashjob.cpp:218 core/jobs/trashrestorejob.cpp:151
+#: core/jobs/trashjob.cpp:213 core/jobs/trashrestorejob.cpp:151
 #, kde-format
 msgid "Invalid items passed"
 msgstr "Geçersiz ögeler geçirildi"
 
-#: core/jobs/trashjob.cpp:258 core/jobs/trashrestorejob.cpp:201
+#: core/jobs/trashjob.cpp:251 core/jobs/trashrestorejob.cpp:201
 #, kde-format
 msgid "Invalid collection passed"
 msgstr "Geçersiz koleksiyon geçirildi"
 
-#: core/jobs/trashjob.cpp:375 core/jobs/trashrestorejob.cpp:343
+#: core/jobs/trashjob.cpp:368 core/jobs/trashrestorejob.cpp:339
 #, kde-format
 msgid "No valid collection or empty itemlist"
 msgstr "Geçerli koleksiyon yok veya boş liste"
@@ -491,31 +491,31 @@ msgctxt "@title:column Name of a thing"
 msgid "Name"
 msgstr "Ad"
 
-#: core/models/entitytreemodel_p.cpp:1375
+#: core/models/entitytreemodel_p.cpp:1372
 #, kde-format
 msgctxt "@info"
 msgid "Could not copy item: <message>%1</message>"
 msgstr "Öge kopyalanamadı: <message>%1</message>"
 
-#: core/models/entitytreemodel_p.cpp:1377
+#: core/models/entitytreemodel_p.cpp:1374
 #, kde-format
 msgctxt "@info"
 msgid "Could not copy collection: <message>%1</message>"
 msgstr "Koleksiyon kopyalanamadı: <message>%1</message>"
 
-#: core/models/entitytreemodel_p.cpp:1379
+#: core/models/entitytreemodel_p.cpp:1376
 #, kde-format
 msgctxt "@info"
 msgid "Could not move item: <message>%1</message>"
 msgstr "Öge taşınamadı: <message>%1</message>"
 
-#: core/models/entitytreemodel_p.cpp:1381
+#: core/models/entitytreemodel_p.cpp:1378
 #, kde-format
 msgctxt "@info"
 msgid "Could not move collection: <message>%1</message>"
 msgstr "Koleksiyon taşınamadı: <message>%1</message>"
 
-#: core/models/entitytreemodel_p.cpp:1383
+#: core/models/entitytreemodel_p.cpp:1380
 #, kde-format
 msgctxt "@info"
 msgid "Could not link entity: <message>%1</message>"
@@ -831,13 +831,13 @@ msgstr "dakika"
 #: widgets/cachepolicypage.ui:66
 #, kde-format
 msgid "Locally cached parts:"
-msgstr "Yerel olarak önbelleklenmiş bölümler:"
+msgstr "Yerel olarak ön belleğe alınmış bölümler:"
 
 #. i18n: ectx: property (title), widget (KEditListWidget, localParts)
 #: widgets/cachepolicypage.ui:87
 #, kde-format
 msgid "Locally Cached Parts"
-msgstr "Yerel Olarak Önbelleklenmiş Bölümler"
+msgstr "Yerel Olarak Ön Belleğe Alınmış Bölümler"
 
 #. i18n: ectx: property (text), widget (QLabel, retrievalOptionsLabel)
 #: widgets/cachepolicypage.ui:94
@@ -874,7 +874,7 @@ msgstr "Her Zaman"
 #, kde-format
 msgid "Collection cache cleared. You should restart Akonadi now."
 msgstr ""
-"Koleksiyon önbelleği temizlendi. Akonadi’yi şimdi yeniden başlatmalısınız."
+"Koleksiyon ön belleği temizlendi. Akonadi’yi şimdi yeniden başlatmalısınız."
 
 #: widgets/clearcachefoldersjob.cpp:69
 #, kde-format
@@ -2500,12 +2500,12 @@ msgctxt "@action:button"
 msgid "Go Online"
 msgstr "Çevrim İçi Ol"
 
-#: widgets/standardactionmanager.cpp:1645
+#: widgets/standardactionmanager.cpp:1643
 #, kde-format
 msgid "Move to This Folder"
 msgstr "Bu Klasöre Taşı"
 
-#: widgets/standardactionmanager.cpp:1645
+#: widgets/standardactionmanager.cpp:1643
 #, kde-format
 msgid "Copy to This Folder"
 msgstr "Bu Klasöre Kopyala"
