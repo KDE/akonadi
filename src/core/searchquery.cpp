@@ -9,6 +9,7 @@
 
 #include <QJsonDocument>
 #include <QJsonObject>
+#include <QMap>
 #include <QVariant>
 
 using namespace Akonadi;

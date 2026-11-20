@@ -14,6 +14,7 @@
 #include "collectioncreatejob.h"
 
 #include "akonadicore_debug.h"
+#include <QMap>
 
 using namespace Akonadi;
 

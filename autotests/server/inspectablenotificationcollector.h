@@ -8,6 +8,7 @@
 #pragma once
 
 #include "storage/notificationcollector.h"
+#include <QObject>
 
 namespace Akonadi
 {

@@ -14,6 +14,7 @@
 
 #include <QAbstractItemModel>
 #include <QItemSelectionModel>
+#include <QMap>
 #include <QTimer>
 
 namespace Akonadi

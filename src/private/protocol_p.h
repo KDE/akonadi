@@ -17,6 +17,7 @@
 #include <QJsonObject>
 #include <QList>
 #include <QMap>
+#include <QSet>
 #include <QSharedPointer>
 #include <QVariant>
 

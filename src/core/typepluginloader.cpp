@@ -15,6 +15,7 @@
 // Qt
 #include <QByteArray>
 #include <QHash>
+#include <QMap>
 #include <QMimeDatabase>
 #include <QMimeType>
 #include <QRegularExpression>
