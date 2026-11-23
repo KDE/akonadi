@@ -19,4 +19,5 @@ private Q_SLOTS:
     void testComparison_data();
     void testComparison();
     void testDetach();
+    void testApplyRestoresMissingMimeType();
 };

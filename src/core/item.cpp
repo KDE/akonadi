@@ -523,6 +523,14 @@ QString Item::payloadPath() const
 
 void Item::apply(const Item &other)
 {
+    // Change notifications can race with an item move and arrive with the
+    // cached item lacking its MIME type. Keep the type carried by the
+    // freshly fetched item so that ItemSerializer does not fall back to the
+    // generic QByteArray serializer for typed payloads.
+    if (mimeType().isEmpty() && !other.mimeType().isEmpty()) {
+        setMimeType(other.mimeType());
+    }
+
     if (mimeType() != other.mimeType() || id() != other.id()) {
         qCDebug(AKONADICORE_LOG) << "mimeType() = " << mimeType() << "; other.mimeType() = " << other.mimeType();
         qCDebug(AKONADICORE_LOG) << "id() = " << id() << "; other.id() = " << other.id();

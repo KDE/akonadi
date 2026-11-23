@@ -136,4 +136,18 @@ void ItemTest::testDetach()
     QVERIFY(attr != origAttr);
 }
 
+void ItemTest::testApplyRestoresMissingMimeType()
+{
+    Item cached(42);
+
+    Item update(42);
+    update.setMimeType(QStringLiteral("application/octet-stream"));
+    update.setPayload<QByteArray>(QByteArrayLiteral("payload"));
+
+    cached.apply(update);
+
+    QCOMPARE(cached.mimeType(), update.mimeType());
+    QCOMPARE(cached.payload<QByteArray>(), QByteArrayLiteral("payload"));
+}
+
 #include "moc_itemtest.cpp"
