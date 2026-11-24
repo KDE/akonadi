@@ -15,7 +15,7 @@ msgstr ""
 "Project-Id-Version: libakonadi\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
 "POT-Creation-Date: 2026-11-20 01:12+0000\n"
-"PO-Revision-Date: 2026-11-19 19:32+0300\n"
+"PO-Revision-Date: 2026-11-23 18:10+0300\n"
 "Last-Translator: Emir SARI <emir_sari@icloud.com>\n"
 "Language-Team: Turkish <kde-l10n-tr@kde.org>\n"
 "Language: tr\n"
@@ -409,7 +409,7 @@ msgstr "Geçersiz özkaynak tanımlayıcısı “%1”"
 #: core/jobs/specialcollectionshelperjobs.cpp:351
 #, kde-format
 msgid "Failed to configure default resource via D-Bus."
-msgstr "D-Bus aracılığıyla öntanımlı özkaynak yapılandırması başarısız oldu."
+msgstr "D-Bus aracılığıyla varsayılan özkaynak yapılandırması başarısız oldu."
 
 #: core/jobs/specialcollectionshelperjobs.cpp:416
 #, kde-format
@@ -468,7 +468,7 @@ msgstr "%1 (Çevrim dışı)"
 #, kde-format
 msgctxt "@item this is the default calendar"
 msgid "%1 (Default)"
-msgstr "%1 (Öntanımlı)"
+msgstr "%1 (Varsayılan)"
 
 #: core/models/entitytreemodel.cpp:206
 #, kde-format
@@ -898,7 +898,7 @@ msgstr "Ara"
 #, kde-format
 msgctxt "@option:check"
 msgid "Use folder by default"
-msgstr "Öntanımlı olarak klasör kullan"
+msgstr "Varsayılan olarak klasör kullan"
 
 #: widgets/collectiondialog.cpp:225
 #, kde-format
@@ -1558,7 +1558,7 @@ msgstr "MySQL sunucu yapılandırması denenmedi."
 #: widgets/selftestdialog.cpp:310
 #, kde-format
 msgid "MySQL server default configuration found."
-msgstr "MySQL sunucunun öntanımlı yapılandırması bulundu."
+msgstr "MySQL sunucunun varsayılan yapılandırması bulundu."
 
 #: widgets/selftestdialog.cpp:311
 #, kde-format
@@ -1566,13 +1566,13 @@ msgid ""
 "The default configuration for the MySQL server was found and is readable at "
 "%1."
 msgstr ""
-"MySQL öntanımlı sunucu yapılandırması %1 konumunda bulundu ve okunabilir "
+"MySQL varsayılan sunucu yapılandırması %1 konumunda bulundu ve okunabilir "
 "durumda."
 
 #: widgets/selftestdialog.cpp:315
 #, kde-format
 msgid "MySQL server default configuration not found."
-msgstr "MySQL sunucunun öntanımlı yapılandırması bulunamadı."
+msgstr "MySQL sunucunun varsayılan yapılandırması bulunamadı."
 
 #: widgets/selftestdialog.cpp:316
 #, kde-format
@@ -1581,9 +1581,9 @@ msgid ""
 "readable. Check your Akonadi installation is complete and you have all "
 "required access rights."
 msgstr ""
-"MySQL sunucusunun öntanımlı yapılandırması bulunamadı veya okunabilir değil. "
-"Akonadi kurulumunuzun eksiksiz olduğunu ve tüm gerekli erişim haklarına "
-"sahip olduğunuzu denetleyin."
+"MySQL sunucusunun varsayılan yapılandırması bulunamadı veya okunabilir "
+"değil. Akonadi kurulumunuzun eksiksiz olduğunu ve tüm gerekli erişim "
+"haklarına sahip olduğunuzu denetleyin."
 
 #: widgets/selftestdialog.cpp:324
 #, kde-format
