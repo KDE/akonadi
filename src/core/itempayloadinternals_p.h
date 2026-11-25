@@ -27,16 +27,8 @@
 
 namespace Akonadi
 {
-/*!
- * \namespace Akonadi::Internal
- * \inmodule AkonadiCore
- */
 namespace Internal
 {
-/*!
- * \class Akonadi::Internal::has_clone_method
- * \inmodule AkonadiCore
- */
 template<typename T>
 struct has_clone_method {
 private:
@@ -52,15 +44,9 @@ private:
     static Yes test(sfinae<S, &S::clone> *);
 
 public:
-    /*!
-     */
     static const bool value = sizeof(test<T>(nullptr)) == sizeof(Yes);
 };
 
-/*!
- * \class Akonadi::Internal::clone_traits_helper
- * \inmodule AkonadiCore
- */
 template<typename T, bool b>
 struct clone_traits_helper {
     // runtime error (commented in) or compile time error (commented out)?
@@ -73,53 +59,27 @@ struct clone_traits_helper {
     }
 };
 
-/*!
- * \class Akonadi::Internal::clone_traits_helper
- * \inmodule AkonadiCore
- */
 template<typename T>
 struct clone_traits_helper<T, true> {
-    /*!
-     */
     static T *clone(T *t)
     {
         return t ? t->clone() : nullptr;
     }
 };
 
-/*!
- * \class Akonadi::Internal::clone_traits
- * \inmodule AkonadiCore
- */
 template<typename T>
 struct clone_traits : clone_traits_helper<T, has_clone_method<T>::value> { };
 
-/*!
- * \class Akonadi::Internal::shared_pointer_traits
- * \inmodule AkonadiCore
- */
 template<typename T>
 struct shared_pointer_traits {
-    /*!
-     */
     static const bool defined = false;
 };
 
-/*!
- * \class Akonadi::Internal::shared_pointer_traits
- * \inmodule AkonadiCore
- */
 template<typename T>
 struct shared_pointer_traits<QSharedPointer<T>> {
-    /*!
-     */
     static const bool defined = true;
     using element_type = T;
 
-    /*!
-     * \class Akonadi::Internal::shared_pointer_traits::make
-     * \inmodule AkonadiCore
-     */
     template<typename S>
     struct make {
         using type = QSharedPointer<S>;
@@ -128,21 +88,11 @@ struct shared_pointer_traits<QSharedPointer<T>> {
     using next_shared_ptr = std::shared_ptr<T>;
 };
 
-/*!
- * \class Akonadi::Internal::shared_pointer_traits
- * \inmodule AkonadiCore
- */
 template<typename T>
 struct shared_pointer_traits<std::shared_ptr<T>> {
-    /*!
-     */
     static const bool defined = true;
     using element_type = T;
 
-    /*!
-     * \class Akonadi::Internal::shared_pointer_traits::make
-     * \inmodule AkonadiCore
-     */
     template<typename S>
     struct make {
         using type = std::shared_ptr<S>;
@@ -151,21 +101,11 @@ struct shared_pointer_traits<std::shared_ptr<T>> {
     using next_shared_ptr = QSharedPointer<T>;
 };
 
-/*!
- * \class Akonadi::Internal::is_shared_pointer
- * \inmodule AkonadiCore
- */
 template<typename T>
 struct is_shared_pointer {
-    /*!
-     */
     static const bool value = shared_pointer_traits<T>::defined;
 };
 
-/*!
- * \class Akonadi::Internal::identity
- * \inmodule AkonadiCore
- */
 template<typename T>
 struct identity {
     using type = T;
@@ -174,48 +114,26 @@ struct identity {
 template<typename T>
 struct get_hierarchy_root;
 
-/*!
- * \class Akonadi::Internal::get_hierarchy_root_recurse
- * \inmodule AkonadiCore
- */
 template<typename T, typename S>
 struct get_hierarchy_root_recurse : get_hierarchy_root<S> { };
 
-/*!
- * \class Akonadi::Internal::get_hierarchy_root_recurse
- * \inmodule AkonadiCore
- */
 template<typename T>
 struct get_hierarchy_root_recurse<T, T> : identity<T> { };
 
-/*!
- * \class Akonadi::Internal::get_hierarchy_root
- * \inmodule AkonadiCore
- */
 template<typename T>
 struct get_hierarchy_root : get_hierarchy_root_recurse<T, typename Akonadi::SuperClass<T>::Type> { };
 
-/*!
- * \class Akonadi::Internal::get_hierarchy_root
- * \inmodule AkonadiCore
- */
 template<typename T>
 struct get_hierarchy_root<QSharedPointer<T>> {
     using type = QSharedPointer<typename get_hierarchy_root<T>::type>;
 };
 
-/*!
- * \class Akonadi::Internal::get_hierarchy_root
- * \inmodule AkonadiCore
- */
 template<typename T>
 struct get_hierarchy_root<std::shared_ptr<T>> {
     using type = std::shared_ptr<typename get_hierarchy_root<T>::type>;
 };
 
-/*!
- * \class Akonadi::Internal::PayloadTrait
- * \inmodule AkonadiCore
+/**
   \internal
   Payload type traits. Implements specialized handling for polymorphic types and smart pointers.
   The default one is never used (as isPolymorphic is always false) and only contains safe dummy
@@ -227,8 +145,6 @@ struct PayloadTrait {
     using ElementType = T;
     // the metatype id for the element type, or for pointer-to-element
     // type, if in a shared pointer
-    /*!
-     */
     static int elementMetaTypeId()
     {
         return qMetaTypeId<T>();
@@ -244,12 +160,8 @@ struct PayloadTrait {
     using SuperType = typename Akonadi::SuperClass<T>::Type;
     /// indicates if this payload is polymorphic, that it is a shared pointer
     /// and has a known super class
-    /*!
-     */
     static const bool isPolymorphic = false;
     /// checks an object of this payload type for being \c null
-    /*!
-     */
     static inline bool isNull(const Type &p)
     {
         Q_UNUSED(p)
@@ -280,14 +192,10 @@ struct PayloadTrait {
         throw PayloadException("clone: you should never get here");
     }
     /// defines the type of shared pointer used (0: none, > 0: std::shared_ptr, QSharedPointer, ...)
-    /*!
-     */
     static const unsigned int sharedPointerId = 0;
 };
 
-/*!
- * \class Akonadi::Internal::PayloadTrait
- * \inmodule AkonadiCore
+/**
   \internal
   Payload type trait specialization for QSharedPointer
   for documentation of the various members, see above
@@ -295,8 +203,6 @@ struct PayloadTrait {
 template<typename T>
 struct PayloadTrait<QSharedPointer<T>> {
     using ElementType = std::remove_cv_t<T>;
-    /*!
-     */
     static int elementMetaTypeId()
     {
         return qMetaTypeId<ElementType *>();
@@ -304,11 +210,7 @@ struct PayloadTrait<QSharedPointer<T>> {
     using SuperElementType = typename Akonadi::SuperClass<ElementType>::Type;
     using Type = QSharedPointer<ElementType>;
     using SuperType = QSharedPointer<SuperElementType>;
-    /*!
-     */
     static const bool isPolymorphic = !std::is_same<ElementType, SuperElementType>::value;
-    /*!
-     */
     static inline bool isNull(const Type &p)
     {
         return p.isNull();
@@ -334,8 +236,6 @@ struct PayloadTrait<QSharedPointer<T>> {
         const QSharedPointer<U> sp = qSharedPointerDynamicCast<U, ElementType>(p);
         return sp;
     }
-    /*!
-     */
     static QSharedPointer<T> clone(const std::shared_ptr<T> &t)
     {
         if (T *nt = clone_traits<T>::clone(t.get())) {
@@ -344,14 +244,10 @@ struct PayloadTrait<QSharedPointer<T>> {
             return QSharedPointer<T>();
         }
     }
-    /*!
-     */
     static const unsigned int sharedPointerId = 2;
 };
 
-/*!
- * \class Akonadi::Internal::PayloadTrait
- * \inmodule AkonadiCore
+/**
   \internal
   Payload type trait specialization for std::shared_ptr
   for documentation of the various members, see above
@@ -359,8 +255,6 @@ struct PayloadTrait<QSharedPointer<T>> {
 template<typename T>
 struct PayloadTrait<std::shared_ptr<T>> {
     using ElementType = std::remove_cv_t<T>;
-    /*!
-     */
     static int elementMetaTypeId()
     {
         return qMetaTypeId<ElementType *>();
@@ -368,11 +262,7 @@ struct PayloadTrait<std::shared_ptr<T>> {
     using SuperElementType = typename Akonadi::SuperClass<ElementType>::Type;
     using Type = std::shared_ptr<ElementType>;
     using SuperType = std::shared_ptr<SuperElementType>;
-    /*!
-     */
     static const bool isPolymorphic = !std::is_same<ElementType, SuperElementType>::value;
-    /*!
-     */
     static inline bool isNull(const Type &p)
     {
         return p.get() == nullptr;
@@ -398,8 +288,6 @@ struct PayloadTrait<std::shared_ptr<T>> {
         const std::shared_ptr<U> sp = std::dynamic_pointer_cast<U, ElementType>(p);
         return sp;
     }
-    /*!
-     */
     static std::shared_ptr<T> clone(const QSharedPointer<T> &t)
     {
         if (T *nt = clone_traits<T>::clone(t.data())) {
@@ -408,81 +296,57 @@ struct PayloadTrait<std::shared_ptr<T>> {
             return std::shared_ptr<T>();
         }
     }
-    /*!
-     */
     static const unsigned int sharedPointerId = 3;
 };
 
-/*!
- * \class Akonadi::Internal::PayloadBase
- * \inmodule AkonadiCore
+/**
  * \internal
  * Non-template base class for the payload container.
  */
 struct PayloadBase {
-    /*!
-     */
     virtual ~PayloadBase() = default;
-    /*!
-     */
     virtual PayloadBase *clone() const = 0;
-    /*!
-     */
     virtual const char *typeName() const = 0;
 
 protected:
-    /*!
-     */
     PayloadBase() = default;
 
 private:
     Q_DISABLE_COPY_MOVE(PayloadBase)
 };
 
-/*!
- * \class Akonadi::Internal::Payload
- * \inmodule AkonadiCore
+/**
  * \internal
  * Container for the actual payload object.
  */
 template<typename T>
 struct Payload : public PayloadBase {
-    /*!
-     */
     Payload(const T &p)
         : payload(p)
     {
     }
 
-    /*!
-     */
     PayloadBase *clone() const override
     {
         return new Payload<T>(const_cast<Payload<T> *>(this)->payload);
     }
 
-    /*!
-     */
     const char *typeName() const override
     {
         return typeid(const_cast<Payload<T> *>(this)).name();
     }
 
-    /*!
-     */
     T payload;
 };
 
-/*!
- * \class Akonadi::Internal::Payload
- * \inmodule AkonadiCore
+/**
  * \internal
  * abstract, will therefore always fail to compile for pointer payloads
  */
 template<typename T>
 struct Payload<T *> : public PayloadBase { };
 
-/*!
+/**
   \internal
   Basically a dynamic_cast that also works across DSO boundaries.
 */
