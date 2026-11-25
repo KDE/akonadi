@@ -175,6 +175,8 @@ public:
     virtual CollectionPropertiesPage *createWidget(QWidget *parent = nullptr) const = 0;
 
 protected:
+    /*!
+     */
     explicit CollectionPropertiesPageFactory() = default;
 
 private:
@@ -182,6 +184,9 @@ private:
 };
 
 /*!
+ * \class Akonadi::factoryName
+ * \inmodule AkonadiWidgets
+ * \inheaderfile Akonadi/CollectionPropertiesPage
  * @def AKONADI_COLLECTION_PROPERTIES_PAGE_FACTORY
  *
  * The AKONADI_COLLECTION_PROPERTIES_PAGE_FACTORY macro can be used to

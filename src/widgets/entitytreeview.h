@@ -212,13 +212,25 @@ Q_SIGNALS:
 protected:
     using QTreeView::currentChanged;
 #ifndef QT_NO_DRAGANDDROP
+    /*!
+     */
     void startDrag(Qt::DropActions supportedActions) override;
+    /*!
+     */
     void dragMoveEvent(QDragMoveEvent *event) override;
+    /*!
+     */
     void dragLeaveEvent(QDragLeaveEvent *event) override;
+    /*!
+     */
     void dropEvent(QDropEvent *event) override;
 #endif
+    /*!
+     */
     void timerEvent(QTimerEvent *event) override;
 #ifndef QT_NO_CONTEXTMENU
+    /*!
+     */
     void contextMenuEvent(QContextMenuEvent *event) override;
 #endif
 

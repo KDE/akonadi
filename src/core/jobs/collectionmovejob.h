@@ -51,7 +51,11 @@ public:
     CollectionMoveJob(const Collection &collection, const Collection &destination, QObject *parent = nullptr);
 
 protected:
+    /*!
+     */
     void doStart() override;
+    /*!
+     */
     bool doHandleResponse(qint64 tag, const Protocol::CommandPtr &response) override;
 
 private:

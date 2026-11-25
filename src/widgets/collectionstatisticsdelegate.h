@@ -109,6 +109,8 @@ public:
      */
     void setProgressAnimationEnabled(bool enable);
 
+    /*!
+     */
     [[nodiscard]] bool progressAnimationEnabled() const;
 
 protected:

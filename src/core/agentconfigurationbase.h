@@ -114,8 +114,17 @@ public:
      */
     virtual bool save() const;
 
+    /*!
+     * \class Akonadi::AgentConfigurationBase::ActivitySettings
+     * \inmodule AkonadiCore
+     * \inheaderfile Akonadi/AgentConfigurationBase
+     */
     struct ActivitySettings {
+        /*!
+         */
         bool enabled = false;
+        /*!
+         */
         QStringList activities;
     };
 

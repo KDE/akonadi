@@ -112,7 +112,11 @@ Q_SIGNALS:
     void tagsReceived(const Akonadi::Tag::List &tags);
 
 protected:
+    /*!
+     */
     void doStart() override;
+    /*!
+     */
     bool doHandleResponse(qint64 tag, const Protocol::CommandPtr &response) override;
 
 private:

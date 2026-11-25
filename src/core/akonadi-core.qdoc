@@ -7,3 +7,9 @@
 
     \brief PIM Storage Framework.
 */
+
+/*!
+    \namespace Akonadi
+    \inmodule AkonadiCore
+    \brief The Akonadi namespace contains the classes of the AkonadiCore module.
+*/

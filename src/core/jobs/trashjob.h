@@ -91,6 +91,8 @@ public:
      */
     explicit TrashJob(const Collection &collection, QObject *parent = nullptr);
 
+    /*!
+     */
     ~TrashJob() override;
 
     /*!
@@ -113,6 +115,8 @@ public:
     [[nodiscard]] Item::List items() const;
 
 protected:
+    /*!
+     */
     void doStart() override;
 
 private:

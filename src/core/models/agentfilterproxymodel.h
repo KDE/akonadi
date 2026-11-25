@@ -89,6 +89,8 @@ public:
     void setIncludeSystemAccounts(bool includeSystemAccounts);
 
 protected:
+    /*!
+     */
     bool filterAcceptsRow(int row, const QModelIndex &parent) const override;
 
 private:

@@ -162,6 +162,8 @@ public:
      */
     static ServerManager *self();
 
+    /*!
+     */
     enum OpenMode {
         ReadOnly,
         ReadWrite,

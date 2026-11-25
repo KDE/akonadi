@@ -48,6 +48,8 @@ public:
     */
     explicit Exception(const QString &what);
 
+    /*!
+     */
     Exception(Exception &&) noexcept;
 
     /*!
@@ -72,26 +74,31 @@ private:
 #pragma warning(pop)
 #endif
 
-#define AKONADI_EXCEPTION_MAKE_TRIVIAL_INSTANCE(classname)                                                                                                     \
-    class AKONADICORE_EXPORT classname : public Akonadi::Exception                                                                                             \
-    {                                                                                                                                                          \
-    public:                                                                                                                                                    \
-        explicit classname(const char *what)                                                                                                                   \
-            : Akonadi::Exception(what)                                                                                                                         \
-        {                                                                                                                                                      \
-        }                                                                                                                                                      \
-        explicit classname(const QByteArray &what)                                                                                                             \
-            : Akonadi::Exception(what)                                                                                                                         \
-        {                                                                                                                                                      \
-        }                                                                                                                                                      \
-        explicit classname(const QString &what)                                                                                                                \
-            : Akonadi::Exception(what)                                                                                                                         \
-        {                                                                                                                                                      \
-        }                                                                                                                                                      \
-        classname(classname &&) = default;                                                                                                                     \
-        ~classname() override;                                                                                                                                 \
-        QByteArray type() const override;                                                                                                                      \
+#define AKONADI_EXCEPTION_MAKE_TRIVIAL_INSTANCE(classname)
+/*!
+ * \class Akonadi::classname
+ * \inmodule AkonadiCore
+ * \inheaderfile Akonadi/ExceptionBase
+ */
+class AKONADICORE_EXPORT classname : public Akonadi::Exception
+{
+public:
+    explicit classname(const char *what)
+        : Akonadi::Exception(what)
+    {
     }
+    explicit classname(const QByteArray &what)
+        : Akonadi::Exception(what)
+    {
+    }
+    explicit classname(const QString &what)
+        : Akonadi::Exception(what)
+    {
+    }
+    classname(classname &&) = default;
+    ~classname() override;
+    QByteArray type() const override;
+}
 
 AKONADI_EXCEPTION_MAKE_TRIVIAL_INSTANCE(PayloadException);
 

@@ -502,28 +502,60 @@ public:
      */
     [[nodiscard]] CollectionFetchStrategy collectionFetchStrategy() const;
 
+    /*!
+     */
     [[nodiscard]] QHash<int, QByteArray> roleNames() const override;
 
+    /*!
+     */
     [[nodiscard]] int columnCount(const QModelIndex &parent = QModelIndex()) const override;
+    /*!
+     */
     [[nodiscard]] int rowCount(const QModelIndex &parent = QModelIndex()) const override;
 
+    /*!
+     */
     [[nodiscard]] QVariant data(const QModelIndex &index, int role = Qt::DisplayRole) const override;
+    /*!
+     */
     [[nodiscard]] QVariant headerData(int section, Qt::Orientation orientation, int role = Qt::DisplayRole) const override;
 
+    /*!
+     */
     [[nodiscard]] Qt::ItemFlags flags(const QModelIndex &index) const override;
+    /*!
+     */
     [[nodiscard]] QStringList mimeTypes() const override;
 
+    /*!
+     */
     [[nodiscard]] Qt::DropActions supportedDropActions() const override;
+    /*!
+     */
     [[nodiscard]] QMimeData *mimeData(const QModelIndexList &indexes) const override;
+    /*!
+     */
     bool dropMimeData(const QMimeData *data, Qt::DropAction action, int row, int column, const QModelIndex &parent) override;
+    /*!
+     */
     bool setData(const QModelIndex &index, const QVariant &value, int role = Qt::EditRole) override;
 
+    /*!
+     */
     [[nodiscard]] QModelIndex index(int row, int column, const QModelIndex &parent = QModelIndex()) const override;
+    /*!
+     */
     [[nodiscard]] QModelIndex parent(const QModelIndex &index) const override;
 
     // TODO: Review the implementations of these. I think they could be better.
+    /*!
+     */
     [[nodiscard]] bool canFetchMore(const QModelIndex &parent) const override;
+    /*!
+     */
     void fetchMore(const QModelIndex &parent) override;
+    /*!
+     */
     [[nodiscard]] bool hasChildren(const QModelIndex &parent = QModelIndex()) const override;
 
     /*!
@@ -611,6 +643,8 @@ public:
      * by using modelIndexForCollection() and then querying for the index data.
      */
     static Collection updatedCollection(const QAbstractItemModel *model, qint64 collectionId);
+    /*!
+     */
     static Collection updatedCollection(const QAbstractItemModel *model, const Collection &col);
 
     /*!
@@ -710,11 +744,17 @@ protected:
      */
     virtual QVariant entityHeaderData(int section, Qt::Orientation orientation, int role, HeaderGroup headerGroup) const;
 
+    /*!
+     */
     virtual int entityColumnCount(HeaderGroup headerGroup) const;
 
 protected:
     Q_DECLARE_PRIVATE(EntityTreeModel)
+    /*!
+     */
     std::unique_ptr<EntityTreeModelPrivate> const d_ptr;
+    /*!
+     */
     EntityTreeModel(Monitor *monitor, EntityTreeModelPrivate *d, QObject *parent = nullptr);
 
 private:

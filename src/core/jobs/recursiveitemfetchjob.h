@@ -20,6 +20,9 @@ class ItemFetchScope;
 class RecursiveItemFetchJobPrivate;
 
 /*!
+ * \class Akonadi::RecursiveItemFetchJob
+ * \inmodule AkonadiCore
+ * \inheaderfile Akonadi/RecursiveItemFetchJob
  * \brief Job that fetches all items of a collection recursive.
  *
  * This job takes a collection as argument and returns a list of

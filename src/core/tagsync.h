@@ -22,13 +22,23 @@ class AKONADICORE_EXPORT TagSync : public Akonadi::Job
 {
     Q_OBJECT
 public:
+    /*!
+     */
     explicit TagSync(QObject *parent = nullptr);
+    /*!
+     */
     ~TagSync() override;
 
+    /*!
+     */
     void setFullTagList(const Akonadi::Tag::List &tags);
+    /*!
+     */
     void setTagMembers(const QHash<QString, Akonadi::Item::List> &ridMemberMap);
 
 protected:
+    /*!
+     */
     void doStart() override;
 
 private Q_SLOTS:

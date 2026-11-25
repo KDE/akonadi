@@ -61,7 +61,11 @@ public:
      */
     void saveOrder();
 
+    /*!
+     */
     void clearOrder(const QModelIndex &index);
+    /*!
+     */
     void clearTreeOrder();
 
     /*!
@@ -84,10 +88,18 @@ public:
                                         Qt::MatchFlags flags = Qt::MatchFlags(Qt::MatchStartsWith | Qt::MatchWrap)) const override;
 
 protected:
+    /*!
+     */
     std::unique_ptr<EntityOrderProxyModelPrivate> const d_ptr;
 
+    /*!
+     */
     virtual QString parentConfigString(const QModelIndex &index) const;
+    /*!
+     */
     virtual QString configString(const QModelIndex &index) const;
+    /*!
+     */
     virtual Akonadi::Collection parentCollection(const QModelIndex &index) const;
 
 private:

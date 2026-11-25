@@ -101,11 +101,21 @@ public:
      * Return associate label for collection
      */
     [[nodiscard]] QString favoriteLabel(const Akonadi::Collection &col);
+    /*!
+     */
     [[nodiscard]] QString defaultFavoriteLabel(const Akonadi::Collection &col);
 
+    /*!
+     */
     [[nodiscard]] QVariant data(const QModelIndex &index, int role = Qt::DisplayRole) const override;
+    /*!
+     */
     [[nodiscard]] bool setData(const QModelIndex &index, const QVariant &value, int role = Qt::EditRole) override;
+    /*!
+     */
     [[nodiscard]] QVariant headerData(int section, Qt::Orientation orientation, int role = Qt::DisplayRole) const override;
+    /*!
+     */
     [[nodiscard]] bool dropMimeData(const QMimeData *data, Qt::DropAction action, int row, int column, const QModelIndex &parent) override;
     /*!
      */

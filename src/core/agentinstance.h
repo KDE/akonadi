@@ -228,7 +228,7 @@ public:
      */
     void setActivitiesEnabled(bool enabled);
 
-    /**
+    /*!
      */
     [[nodiscard]] QString accountId() const;
 

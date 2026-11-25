@@ -106,10 +106,16 @@ public:
     void setAutomaticCommittingEnabled(bool enable);
 
 protected:
+    /*!
+     */
     bool addSubjob(KJob *job) override;
+    /*!
+     */
     void doStart() override;
 
 protected Q_SLOTS:
+    /*!
+     */
     void slotResult(KJob *job) override;
 
 private:

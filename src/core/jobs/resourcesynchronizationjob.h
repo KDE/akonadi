@@ -89,10 +89,14 @@ public:
     [[nodiscard]] AgentInstance resource() const;
 
     /* reimpl */
+    /*!
+     */
     void start() override;
 
     /*
      * \since 5.1
+     */
+    /*!
      */
     void setTimeoutCountLimit(int count);
     /*!

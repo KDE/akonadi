@@ -38,6 +38,8 @@ class ChangeNotificationPrivate;
 class AKONADICORE_EXPORT ChangeNotification
 {
 public:
+    /*!
+     */
     enum Type {
         Items,
         Collection,
@@ -46,24 +48,50 @@ public:
         Subscription,
     };
 
+    /*!
+     */
     explicit ChangeNotification();
+    /*!
+     */
     ChangeNotification(const ChangeNotification &other);
+    /*!
+     */
     ~ChangeNotification();
 
+    /*!
+     */
     ChangeNotification &operator=(const ChangeNotification &other);
 
+    /*!
+     */
     [[nodiscard]] bool isValid() const;
 
+    /*!
+     */
     [[nodiscard]] QDateTime timestamp() const;
+    /*!
+     */
     void setTimestamp(const QDateTime &timestamp);
 
+    /*!
+     */
     [[nodiscard]] QList<QByteArray> listeners() const;
+    /*!
+     */
     void setListeners(const QList<QByteArray> &listeners);
 
+    /*!
+     */
     [[nodiscard]] Type type() const;
+    /*!
+     */
     void setType(Type type);
 
+    /*!
+     */
     [[nodiscard]] Protocol::ChangeNotificationPtr notification() const;
+    /*!
+     */
     void setNotification(const Protocol::ChangeNotificationPtr &ntf);
 
 private:

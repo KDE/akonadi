@@ -135,6 +135,11 @@ class ResourceBasePrivate;
  * \inmodule AkonadiAgentBase
  */
 // FIXME_API: API dox need to be updated for Observer approach (kevin)
+/*!
+ * \class Akonadi::ResourceBase
+ * \inmodule AkonadiAgentBase
+ * \inheaderfile Akonadi/ResourceBase
+ */
 class AKONADIAGENTBASE_EXPORT ResourceBase : public AgentBase
 {
     Q_OBJECT
@@ -403,6 +408,8 @@ protected:
      */
     void collectionsRetrieved(const Collection::List &collections);
 
+    /*!
+     */
     void tagsRetrieved(const Tag::List &tags, const QHash<QString, Item::List> &tagMembers);
 
     /*!

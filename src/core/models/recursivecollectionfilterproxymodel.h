@@ -96,10 +96,16 @@ public:
     void setExcludeUnifiedMailBox(bool exclude);
 
 protected:
+    /*!
+     */
     int columnCount(const QModelIndex &index) const override;
+    /*!
+     */
     bool filterAcceptsRow(int sourceRow, const QModelIndex &sourceParent) const override;
 
 protected:
+    /*!
+     */
     std::unique_ptr<RecursiveCollectionFilterProxyModelPrivate> const d_ptr;
     Q_DECLARE_PRIVATE(RecursiveCollectionFilterProxyModel)
 };

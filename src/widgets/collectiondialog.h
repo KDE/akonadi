@@ -69,6 +69,8 @@ public:
     /*
      * \since 4.6
      */
+    /*!
+     */
     enum CollectionDialogOption {
         None = 0,
         AllowToCreateNewChildCollection = 1,

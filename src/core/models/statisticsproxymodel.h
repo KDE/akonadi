@@ -81,16 +81,26 @@ public:
      */
     [[nodiscard]] bool isExtraColumnsEnabled() const;
 
+    /*!
+     */
     [[nodiscard]] QVariant extraColumnData(const QModelIndex &parent, int row, int extraColumn, int role) const override;
+    /*!
+     */
     [[nodiscard]] QVariant data(const QModelIndex &index, int role = Qt::DisplayRole) const override;
+    /*!
+     */
     [[nodiscard]] Qt::ItemFlags flags(const QModelIndex &index) const override;
 
+    /*!
+     */
     [[nodiscard]] QModelIndexList match(const QModelIndex &start,
                                         int role,
                                         const QVariant &value,
                                         int hits = 1,
                                         Qt::MatchFlags flags = Qt::MatchFlags(Qt::MatchStartsWith | Qt::MatchWrap)) const override;
 
+    /*!
+     */
     void setSourceModel(QAbstractItemModel *model) override;
 
 private:

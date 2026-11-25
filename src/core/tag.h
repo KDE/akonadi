@@ -53,25 +53,45 @@ public:
      */
     static const char GENERIC[];
 
+    /*!
+     */
     Tag();
+    /*!
+     */
     explicit Tag(Id id);
     /*!
      * Creates a PLAIN tag
      */
     explicit Tag(const QString &name);
 
+    /*!
+     */
     Tag(const Tag &);
 
+    /*!
+     */
     Tag(Tag &&) noexcept;
 
+    /*!
+     */
     ~Tag();
 
+    /*!
+     */
     Tag &operator=(const Tag &);
+    /*!
+     */
     Tag &operator=(Tag &&) noexcept;
     // Avoid slicing
+    /*!
+     */
     bool operator==(const Tag &) const;
+    /*!
+     */
     bool operator!=(const Tag &) const;
 
+    /*!
+     */
     static Tag fromUrl(const QUrl &url);
 
     /*!
@@ -111,6 +131,8 @@ public:
      * Returns the attribute of the given type \a name if available, 0 otherwise.
      */
     const Attribute *attribute(const QByteArray &name) const;
+    /*!
+     */
     Attribute *attribute(const QByteArray &name);
 
     /*!
@@ -164,21 +186,43 @@ public:
      */
     Id id() const;
 
+    /*!
+     */
     void setGid(const QByteArray &gid);
+    /*!
+     */
     QByteArray gid() const;
 
+    /*!
+     */
     void setRemoteId(const QByteArray &remoteId);
+    /*!
+     */
     QByteArray remoteId() const;
 
+    /*!
+     */
     void setType(const QByteArray &type);
+    /*!
+     */
     QByteArray type() const;
 
+    /*!
+     */
     void setName(const QString &name);
+    /*!
+     */
     QString name() const;
 
+    /*!
+     */
     void setParent(const Tag &parent);
+    /*!
+     */
     Tag parent() const;
 
+    /*!
+     */
     bool isValid() const;
 
     /*!
@@ -203,6 +247,8 @@ private:
     QSharedDataPointer<TagPrivate> d_ptr;
 };
 
+/*!
+ */
 AKONADICORE_EXPORT size_t qHash(const Akonadi::Tag &, size_t sed = 0) noexcept;
 
 template<typename T>

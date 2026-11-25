@@ -78,6 +78,9 @@ class AKONADIAGENTBASE_EXPORT AgentBase : public QObject, protected QDBusContext
 
 public:
     /*!
+     * \class Akonadi::AgentBase::AKONADIAGENTBASE_DEPRECATED
+     * \inmodule AkonadiAgentBase
+     * \inheaderfile Akonadi/AgentBase
      * \short The interface for reacting on monitored or replayed changes.
      *
      * The Observer provides an interface to react on monitored or replayed changes.
@@ -367,7 +370,11 @@ public:
     class AKONADIAGENTBASE_EXPORT TagObserver
     {
     public:
+        /*!
+         */
         TagObserver();
+        /*!
+         */
         virtual ~TagObserver();
 
         /*!
@@ -545,6 +552,8 @@ public:
      * \param name name of the agent
      */
     // FIXME_API: make sure location is renamed to this by agentbase
+    /*!
+     */
     void setAgentName(const QString &name);
 
     /*!
@@ -792,9 +801,15 @@ protected:
     void setTemporaryOffline(int makeOnlineInSeconds = 300);
 
     /// @cond PRIVATE
+    /*!
+     */
     static void debugAgent(int argc, char **argv);
 
+    /*!
+     */
     std::unique_ptr<AgentBasePrivate> const d_ptr;
+    /*!
+     */
     explicit AgentBase(AgentBasePrivate *d, const QString &id);
     friend class ObserverV2;
     /// @endcond
@@ -806,6 +821,8 @@ protected:
      */
     virtual void doSetOnline(bool online);
 
+    /*!
+     */
     virtual KAboutData aboutData() const;
 
 private:

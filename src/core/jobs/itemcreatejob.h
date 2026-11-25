@@ -86,6 +86,8 @@ public:
      */
     [[nodiscard]] Item item() const;
 
+    /*!
+     */
     enum MergeOption {
         NoMerge = 0, ///< Don't merge
         RID = 1, ///< Merge by remote id
@@ -115,7 +117,11 @@ public:
     void setMerge(MergeOptions options);
 
 protected:
+    /*!
+     */
     void doStart() override;
+    /*!
+     */
     bool doHandleResponse(qint64 tag, const Protocol::CommandPtr &response) override;
 
 private:

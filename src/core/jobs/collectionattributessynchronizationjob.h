@@ -62,6 +62,8 @@ public:
     ~CollectionAttributesSynchronizationJob() override;
 
     /* reimpl */
+    /*!
+     */
     void start() override;
 
 private:

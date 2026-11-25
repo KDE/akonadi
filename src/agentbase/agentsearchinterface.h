@@ -33,6 +33,8 @@ class AgentSearchInterfacePrivate;
 class AKONADIAGENTBASE_EXPORT AgentSearchInterface
 {
 public:
+    /*!
+     */
     enum ResultScope {
         Uid,
         Rid,
@@ -73,7 +75,11 @@ public:
      */
     virtual void search(const QString &query, const Collection &collection) = 0;
 
+    /*!
+     */
     void searchFinished(const QList<qint64> &result, ResultScope scope);
+    /*!
+     */
     void searchFinished(const QList<QByteArray> &result);
 
 private:

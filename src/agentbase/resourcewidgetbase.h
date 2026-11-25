@@ -18,6 +18,11 @@
 namespace Akonadi
 {
 
+/*!
+ * \class Akonadi::ResourceWidgetBase
+ * \inmodule AkonadiAgentBase
+ * \inheaderfile Akonadi/ResourceWidgetBase
+ */
 class AKONADIAGENTWIDGETBASE_EXPORT ResourceWidgetBase : public ResourceBase
 {
 public:
@@ -67,6 +72,8 @@ public:
     }
 
 protected:
+    /*!
+     */
     ResourceWidgetBase(const QString &id);
 
 private:

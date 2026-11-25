@@ -12,13 +12,21 @@ namespace Akonadi
 {
 namespace Internal
 {
+/*!
+ * \class Akonadi::Internal::check_type
+ * \inmodule AkonadiCore
+ * \inheaderfile Akonadi/Supertrait
+ */
 template<typename T>
 struct check_type {
     using type = void;
 };
 }
 
-/**
+/*!
+ * \class Akonadi::SuperClassTrait
+ * \inmodule AkonadiCore
+ * \inheaderfile Akonadi/Supertrait
   \internal
   \see SuperClass
 */
@@ -27,12 +35,20 @@ struct SuperClassTrait {
     using Type = Super;
 };
 
+/*!
+ * \class Akonadi::SuperClassTrait
+ * \inmodule AkonadiCore
+ * \inheaderfile Akonadi/Supertrait
+ */
 template<typename Class>
 struct SuperClassTrait<Class, typename Internal::check_type<typename Class::SuperClass>::type> {
     using Type = typename Class::SuperClass;
 };
 
-/**
+/*!
+ * \class Akonadi::SuperClass
+ * \inmodule AkonadiCore
+ * \inheaderfile Akonadi/Supertrait
   Type trait to provide information about a base class for a given class.
   Used eg. for the Akonadi payload mechanism.
 

@@ -42,7 +42,11 @@ public:
     [[nodiscard]] Tag tag() const;
 
 protected:
+    /*!
+     */
     void doStart() override;
+    /*!
+     */
     bool doHandleResponse(qint64 tag, const Protocol::CommandPtr &response) override;
 
 private:

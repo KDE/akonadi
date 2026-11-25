@@ -22,6 +22,8 @@ class AKONADICORE_EXPORT ColorProxyModel : public Akonadi::CollectionFilterProxy
     Q_OBJECT
 
 public:
+    /*!
+     */
     enum Roles {
         IsResourceRole = Akonadi::EntityTreeModel::UserRole + 1,
     };

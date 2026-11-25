@@ -46,6 +46,8 @@ class AKONADICORE_EXPORT ItemSync : public Job
     Q_OBJECT
 
 public:
+    /*!
+     */
     enum MergeMode {
         RIDMerge,
         GIDMerge,
@@ -219,7 +221,11 @@ Q_SIGNALS:
     void transactionCommitted();
 
 protected:
+    /*!
+     */
     void doStart() override;
+    /*!
+     */
     void slotResult(KJob *job) override;
 
 private:

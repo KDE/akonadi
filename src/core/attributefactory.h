@@ -43,6 +43,8 @@ class AttributeFactoryPrivate;
 class AKONADICORE_EXPORT AttributeFactory
 {
 public:
+    /*!
+     */
     ~AttributeFactory();
 
     /*!
@@ -65,6 +67,8 @@ public:
     static Attribute *createAttribute(const QByteArray &type);
 
 protected:
+    /*!
+     */
     explicit AttributeFactory();
 
 private:

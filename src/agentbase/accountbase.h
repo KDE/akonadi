@@ -32,6 +32,8 @@ public:
      *
      */
     explicit AccountBase(AgentBase *agent);
+    /*!
+     */
     virtual ~AccountBase();
 
     /*!

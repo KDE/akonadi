@@ -279,6 +279,8 @@ public:
      * Returns the attribute of the given type \a name if available, 0 otherwise.
      */
     Attribute *attribute(const QByteArray &name);
+    /*!
+     */
     const Attribute *attribute(const QByteArray &name) const;
 
     /*!
@@ -553,6 +555,8 @@ private:
     friend class CollectionPrivate;
 };
 
+/*!
+ */
 AKONADICORE_EXPORT size_t qHash(const Akonadi::Collection &collection, size_t seed = 0) noexcept;
 
 template<typename T>

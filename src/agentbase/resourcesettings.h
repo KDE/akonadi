@@ -20,6 +20,8 @@ class AKONADIAGENTBASE_EXPORT ResourceSettings : public Akonadi::ResourceBaseSet
 {
     Q_OBJECT
 public:
+    /*!
+     */
     static ResourceSettings *self();
 
 private:

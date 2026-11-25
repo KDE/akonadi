@@ -102,9 +102,17 @@ public:
     void setBackgroundColor(const QColor &color);
 
     /* reimpl */
+    /*!
+     */
     [[nodiscard]] QByteArray type() const override;
+    /*!
+     */
     EntityDisplayAttribute *clone() const override;
+    /*!
+     */
     [[nodiscard]] QByteArray serialized() const override;
+    /*!
+     */
     void deserialize(const QByteArray &data) override;
 
 private:

@@ -53,6 +53,8 @@ public:
     [[nodiscard]] QByteArray collectionType() const;
 
     /* reimpl */
+    /*!
+     */
     SpecialCollectionAttribute *clone() const override;
     /*!
      */

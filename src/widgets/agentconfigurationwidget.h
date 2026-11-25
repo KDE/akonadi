@@ -57,6 +57,8 @@ Q_SIGNALS:
     void enableOkButton(bool enabled);
 
 protected:
+    /*!
+     */
     void childEvent(QChildEvent *event) override;
 
 private:

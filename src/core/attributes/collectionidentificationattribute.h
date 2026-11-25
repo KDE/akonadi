@@ -30,11 +30,15 @@ class CollectionIdentificationAttributePrivate;
 class AKONADICORE_EXPORT CollectionIdentificationAttribute : public Akonadi::Attribute
 {
 public:
+    /*!
+     */
     explicit CollectionIdentificationAttribute(const QByteArray &identifier = QByteArray(),
                                                const QByteArray &folderNamespace = QByteArray(),
                                                const QByteArray &name = QByteArray(),
                                                const QByteArray &organizationUnit = QByteArray(),
                                                const QByteArray &mail = QByteArray());
+    /*!
+     */
     ~CollectionIdentificationAttribute() override;
 
     /*!

@@ -13,6 +13,9 @@
 namespace Akonadi
 {
 /*!
+ * \class Akonadi::Attribute
+ * \inmodule AkonadiCore
+ * \inheaderfile Akonadi/Attribute
  * \brief Provides interface for custom attributes for Entity.
  *
  * This class is an interface for custom attributes, that can be stored
@@ -166,7 +169,11 @@ public:
     virtual void deserialize(const QByteArray &data) = 0;
 
 protected:
+    /*!
+     */
     explicit Attribute() = default;
+    /*!
+     */
     Attribute(const Attribute &) = default;
 };
 

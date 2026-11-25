@@ -210,6 +210,8 @@ public:
     virtual QSet<QByteArray> allowedForeignParts(const Item &item) const;
 
 protected:
+    /*!
+     */
     explicit ItemSerializerPlugin() = default;
 
 private:

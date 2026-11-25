@@ -298,6 +298,8 @@ public:
      * Returns the attribute of the given type \a name if available, 0 otherwise.
      */
     Attribute *attribute(const QByteArray &name);
+    /*!
+     */
     const Attribute *attribute(const QByteArray &name) const;
 
     /*!
@@ -382,16 +384,28 @@ public:
      */
     void clearFlags();
 
+    /*!
+     */
     void setTags(const Tag::List &list);
 
+    /*!
+     */
     void setTag(const Tag &tag);
 
+    /*!
+     */
     Tag::List tags() const;
 
+    /*!
+     */
     bool hasTag(const Tag &tag) const;
 
+    /*!
+     */
     void clearTag(const Tag &tag);
 
+    /*!
+     */
     void clearTags();
 
     /*!
@@ -644,6 +658,8 @@ public:
      */
     void apply(const Item &other);
 
+    /*!
+     */
     void setCachedPayloadParts(const QSet<QByteArray> &cachedParts);
 
 private:
@@ -701,6 +717,8 @@ private:
     friend class ItemPrivate;
 };
 
+/*!
+ */
 AKONADICORE_EXPORT size_t qHash(const Akonadi::Item &item, size_t seed = 0) noexcept;
 
 template<typename T>

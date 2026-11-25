@@ -22,7 +22,7 @@
 #include <QTest>
 #include <QTimer>
 
-/**
+/*!
  * \short Akonadi Replacement for QTEST_MAIN from QTestLib
  *
  * This macro should be used for classes that run inside the Akonadi Testrunner.
@@ -60,7 +60,7 @@
         return result;                                                                                                                                         \
     }
 
-/**
+/*!
  * \short Akonadi Replacement for QTEST_MAIN from QTestLib
  *
  * Same as QTEST_AKONADIMAIN but guiless.
@@ -89,7 +89,7 @@
 
 namespace AkonadiTest
 {
-/**
+/*!
  * Checks that the test is running in the proper test environment
  */
 void checkTestIsIsolated()
@@ -100,7 +100,7 @@ void checkTestIsIsolated()
         qFatal("Did you forget to run the test using QTEST_AKONADIMAIN?");
 }
 
-/**
+/*!
  * Switch all resources offline to reduce interference from them
  */
 void setAllResourcesOffline()
@@ -202,7 +202,7 @@ std::unique_ptr<Akonadi::Monitor> getTestMonitor()
 
 } // namespace
 
-/**
+/*!
  * Runs an Akonadi::Job synchronously and aborts if the job failed.
  * Similar to QVERIFY( job->exec() ) but includes the job error message
  * in the output in case of a failure.

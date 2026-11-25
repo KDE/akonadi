@@ -180,12 +180,20 @@ Q_SIGNALS:
 protected:
     using QListView::currentChanged;
 #ifndef QT_NO_DRAGANDDROP
+    /*!
+     */
     void startDrag(Qt::DropActions supportedActions) override;
+    /*!
+     */
     void dropEvent(QDropEvent *event) override;
+    /*!
+     */
     void dragMoveEvent(QDragMoveEvent *event) override;
 #endif
 
 #ifndef QT_NO_CONTEXTMENU
+    /*!
+     */
     void contextMenuEvent(QContextMenuEvent *event) override;
 #endif
 

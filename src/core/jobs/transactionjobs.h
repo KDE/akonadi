@@ -23,12 +23,20 @@ class AKONADICORE_EXPORT TransactionJob : public Job
     Q_OBJECT
 
 public:
+    /*!
+     */
     ~TransactionJob() override;
 
 protected:
+    /*!
+     */
     explicit TransactionJob(QObject *parent);
 
+    /*!
+     */
     void doStart() override;
+    /*!
+     */
     bool doHandleResponse(qint64 tag, const Protocol::CommandPtr &response) override;
 
 private:
@@ -36,6 +44,9 @@ private:
 };
 
 /*!
+ * \class Akonadi::TransactionBeginJob
+ * \inmodule AkonadiCore
+ * \inheaderfile Akonadi/TransactionJobs
  * \brief Job that begins a session-global transaction.
  *
  * Sometimes you want to execute a sequence of commands in
@@ -67,6 +78,9 @@ public:
 };
 
 /*!
+ * \class Akonadi::TransactionRollbackJob
+ * \inmodule AkonadiCore
+ * \inheaderfile Akonadi/TransactionJobs
  * \brief Job that aborts a session-global transaction.
  *
  * If a job inside a TransactionBeginJob has been failed,
@@ -97,6 +111,9 @@ public:
 };
 
 /*!
+ * \class Akonadi::TransactionCommitJob
+ * \inmodule AkonadiCore
+ * \inheaderfile Akonadi/TransactionJobs
  * \brief Job that commits a session-global transaction.
  *
  * This job commits all changes of this transaction.

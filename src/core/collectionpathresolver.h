@@ -89,6 +89,8 @@ public:
     [[nodiscard]] static QString pathDelimiter();
 
 protected:
+    /*!
+     */
     void doStart() override;
 
 private:

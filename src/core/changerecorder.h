@@ -99,6 +99,8 @@ Q_SIGNALS:
     void nothingToReplay();
 
 protected:
+    /*!
+     */
     explicit ChangeRecorder(ChangeRecorderPrivate *d, QObject *parent = nullptr);
 
 private:

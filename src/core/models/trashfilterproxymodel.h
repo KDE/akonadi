@@ -51,10 +51,18 @@ class AKONADICORE_EXPORT TrashFilterProxyModel : public QSortFilterProxyModel
     Q_OBJECT
 
 public:
+    /*!
+     */
     explicit TrashFilterProxyModel(QObject *parent = nullptr);
+    /*!
+     */
     ~TrashFilterProxyModel() override;
 
+    /*!
+     */
     void showTrash(bool enable);
+    /*!
+     */
     [[nodiscard]] bool trashIsShown() const;
 
 protected:

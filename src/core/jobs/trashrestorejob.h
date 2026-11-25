@@ -49,10 +49,16 @@ public:
      */
     explicit TrashRestoreJob(const Item &item, QObject *parent = nullptr);
 
+    /*!
+     */
     explicit TrashRestoreJob(const Item::List &items, QObject *parent = nullptr);
 
+    /*!
+     */
     explicit TrashRestoreJob(const Collection &collection, QObject *parent = nullptr);
 
+    /*!
+     */
     ~TrashRestoreJob() override;
 
     /*!
@@ -67,6 +73,8 @@ public:
     [[nodiscard]] Item::List items() const;
 
 protected:
+    /*!
+     */
     void doStart() override;
 
 private:

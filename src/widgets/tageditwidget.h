@@ -93,6 +93,8 @@ public:
     [[nodiscard]] QListView *listView();
 
 protected:
+    /*!
+     */
     bool eventFilter(QObject *watched, QEvent *event) override;
 
 private:

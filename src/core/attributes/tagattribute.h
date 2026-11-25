@@ -30,8 +30,12 @@ class TagAttributePrivate;
 class AKONADICORE_EXPORT TagAttribute : public Attribute
 {
 public:
+    /*!
+     */
     explicit TagAttribute();
 
+    /*!
+     */
     ~TagAttribute() override;
 
     /*!
@@ -101,9 +105,17 @@ public:
     [[nodiscard]] int priority() const;
 
     /* reimpl */
+    /*!
+     */
     [[nodiscard]] QByteArray type() const override;
+    /*!
+     */
     TagAttribute *clone() const override;
+    /*!
+     */
     [[nodiscard]] QByteArray serialized() const override;
+    /*!
+     */
     void deserialize(const QByteArray &data) override;
 
 private:

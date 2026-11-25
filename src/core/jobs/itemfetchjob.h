@@ -194,6 +194,8 @@ public:
      */
     void setCollection(const Collection &collection);
 
+    /*!
+     */
     enum DeliveryOption {
         ItemGetter = 0x1, ///< items available through items()
         EmitItemsIndividually = 0x2, ///< emitted via signal upon reception
@@ -247,7 +249,11 @@ Q_SIGNALS:
     void itemsReceived(const Akonadi::Item::List &items);
 
 protected:
+    /*!
+     */
     void doStart() override;
+    /*!
+     */
     bool doHandleResponse(qint64 tag, const Protocol::CommandPtr &response) override;
 
 private:

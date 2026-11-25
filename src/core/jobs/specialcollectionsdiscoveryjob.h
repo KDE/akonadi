@@ -42,6 +42,8 @@ public:
      */
     ~SpecialCollectionsDiscoveryJob() override;
 
+    /*!
+     */
     void start() override;
 
 protected:
@@ -54,6 +56,8 @@ protected:
     explicit SpecialCollectionsDiscoveryJob(SpecialCollections *collections, const QStringList &mimeTypes, QObject *parent = nullptr);
 
     /* reimpl */
+    /*!
+     */
     void slotResult(KJob *job) override;
 
 private:

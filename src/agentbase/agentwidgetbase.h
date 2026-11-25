@@ -18,6 +18,11 @@
 namespace Akonadi
 {
 
+/*!
+ * \class Akonadi::AgentWidgetBase
+ * \inmodule AkonadiAgentBase
+ * \inheaderfile Akonadi/AgentWidgetBase
+ */
 class AKONADIAGENTWIDGETBASE_EXPORT AgentWidgetBase : public AgentBase
 {
 public:
@@ -67,6 +72,8 @@ public:
     }
 
 protected:
+    /*!
+     */
     AgentWidgetBase(const QString &id);
 
 private:

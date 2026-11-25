@@ -33,11 +33,15 @@ class SearchTermPrivate;
 class AKONADICORE_EXPORT SearchTerm
 {
 public:
+    /*!
+     */
     enum Relation {
         RelAnd,
         RelOr,
     };
 
+    /*!
+     */
     enum Condition {
         CondEqual,
         CondGreaterThan,
@@ -57,12 +61,22 @@ public:
      */
     SearchTerm(const QString &key, const QVariant &value, SearchTerm::Condition condition = SearchTerm::CondEqual);
 
+    /*!
+     */
     SearchTerm(const SearchTerm &other);
+    /*!
+     */
     ~SearchTerm();
 
+    /*!
+     */
     SearchTerm &operator=(const SearchTerm &other);
+    /*!
+     */
     [[nodiscard]] bool operator==(const SearchTerm &other) const;
 
+    /*!
+     */
     [[nodiscard]] bool isNull() const;
 
     /*!
@@ -132,11 +146,21 @@ public:
      */
     explicit SearchQuery(SearchTerm::Relation rel = SearchTerm::RelAnd);
 
+    /*!
+     */
     ~SearchQuery();
+    /*!
+     */
     SearchQuery(const SearchQuery &other);
+    /*!
+     */
     SearchQuery &operator=(const SearchQuery &other);
+    /*!
+     */
     bool operator==(const SearchQuery &other) const;
 
+    /*!
+     */
     bool isNull() const;
 
     /*!
@@ -174,7 +198,11 @@ public:
      */
     int limit() const;
 
+    /*!
+     */
     QByteArray toJSON() const;
+    /*!
+     */
     static SearchQuery fromJSON(const QByteArray &json);
 
 private:
@@ -253,6 +281,8 @@ public:
 class AKONADICORE_EXPORT ContactSearchTerm : public SearchTerm
 {
 public:
+    /*!
+     */
     enum ContactSearchField {
         Unknown,
         Name,
@@ -262,6 +292,8 @@ public:
         All // Special field: matches all contacts.
     };
 
+    /*!
+     */
     ContactSearchTerm(ContactSearchField field, const QVariant &value, SearchTerm::Condition condition = SearchTerm::CondEqual);
 
     /*!
@@ -289,6 +321,8 @@ public:
 class AKONADICORE_EXPORT IncidenceSearchTerm : public SearchTerm
 {
 public:
+    /*!
+     */
     enum IncidenceSearchField {
         Unknown,
         All,
@@ -298,6 +332,8 @@ public:
         Location
     };
 
+    /*!
+     */
     IncidenceSearchTerm(IncidenceSearchField field, const QVariant &value, SearchTerm::Condition condition = SearchTerm::CondEqual);
 
     /*!

@@ -91,6 +91,8 @@ public:
     /*
      * \since 4.12
      */
+    /*!
+     */
     [[nodiscard]] bool excludeVirtualCollections() const;
 
     /*!
@@ -98,9 +100,13 @@ public:
      */
     void clearFilters();
 
+    /*!
+     */
     [[nodiscard]] Qt::ItemFlags flags(const QModelIndex &index) const override;
 
 protected:
+    /*!
+     */
     bool filterAcceptsRow(int sourceRow, const QModelIndex &sourceParent) const override;
 
 private:

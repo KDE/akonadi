@@ -70,6 +70,8 @@ class AKONADICORE_EXPORT Monitor : public QObject
     Q_OBJECT
 
 public:
+    /*!
+     */
     enum Type {
         /*!
          * \internal This must be kept in sync with Akonadi::NotificationMessageV2::Type
@@ -196,7 +198,11 @@ public:
      */
     void setAllMonitored(bool monitored = true);
 
+    /*!
+     */
     void setExclusive(bool exclusive = true);
+    /*!
+     */
     [[nodiscard]] bool exclusive() const;
 
     /*!
@@ -748,16 +754,26 @@ Q_SIGNALS:
      */
     void typeMonitored(const Akonadi::Monitor::Type type, bool monitored);
 
+    /*!
+     */
     void monitorReady();
 
 protected:
+    /*!
+     */
     void connectNotify(const QMetaMethod &signal) override;
+    /*!
+     */
     void disconnectNotify(const QMetaMethod &signal) override;
 
     friend class ChangeMediator;
     friend class EntityTreeModel;
     friend class EntityTreeModelPrivate;
+    /*!
+     */
     std::unique_ptr<MonitorPrivate> const d_ptr;
+    /*!
+     */
     explicit Monitor(MonitorPrivate *d, QObject *parent = nullptr);
 
 private:

@@ -16,23 +16,26 @@ namespace Akonadi
 class AbstractDifferencesReporter;
 class Item;
 
-/**
+/*!
+ * \class Akonadi::DifferencesAlgorithmInterface
+ * \inmodule AkonadiCore
+ * \inheaderfile Akonadi/DifferencesAlgorithmInterface
  * \short An interface to find out differences between two Akonadi objects.
  *
- * @author Tobias Koenig <tokoe@kde.org>
+ * \author Tobias Koenig <tokoe@kde.org>
  * \since 4.6
  */
 class DifferencesAlgorithmInterface
 {
 public:
-    /**
+    /*!
      * Destroys the differences algorithm interface.
      */
     virtual ~DifferencesAlgorithmInterface()
     {
     }
 
-    /**
+    /*!
      * Calculates the differences between two Akonadi objects and reports
      * them to a reporter object.
      *

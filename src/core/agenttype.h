@@ -132,6 +132,8 @@ private:
     QSharedDataPointer<AgentTypePrivate> d;
 };
 
+/*!
+ */
 AKONADICORE_EXPORT size_t qHash(const Akonadi::AgentType &type, size_t seed = 0) noexcept;
 }
 

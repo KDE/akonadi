@@ -15,7 +15,10 @@ class QString;
 
 namespace Akonadi
 {
-/**
+/*!
+ * \class Akonadi::AbstractDifferencesReporter
+ * \inmodule AkonadiCore
+ * \inheaderfile Akonadi/AbstractDifferencesReporter
  * \short An interface to report differences between two arbitrary objects.
  *
  * This interface can be used to report differences between two arbitrary objects
@@ -24,10 +27,10 @@ namespace Akonadi
  * object and the third column the property of the other object.
  *
  * The rows of this table can have different modes:
- *   @li NormalMode The left and right columns show the same property values.
- *   @li ConflictMode The left and right columns show conflicting property values.
- *   @li AdditionalLeftMode The left column contains a property value that is not available in the right column.
- *   @li AdditionalRightMode The right column contains a property value that is not available in the left column.
+ *   \li NormalMode The left and right columns show the same property values.
+ *   \li ConflictMode The left and right columns show conflicting property values.
+ *   \li AdditionalLeftMode The left column contains a property value that is not available in the right column.
+ *   \li AdditionalRightMode The right column contains a property value that is not available in the left column.
  *
  * Example:
  *
@@ -78,13 +81,13 @@ namespace Akonadi
  *
  * \endcode
  *
- * @author Tobias Koenig <tokoe@kde.org>
+ * \author Tobias Koenig <tokoe@kde.org>
  * \since 4.6
  */
 class AbstractDifferencesReporter
 {
 public:
-    /**
+    /*!
      * Describes the property modes.
      */
     enum Mode {
@@ -94,29 +97,29 @@ public:
         AdditionalRightMode ///< The right column contains a property value that is not available in the left column.
     };
 
-    /**
+    /*!
      * Destroys the abstract differences reporter.
      */
     virtual ~AbstractDifferencesReporter() = default;
 
-    /**
+    /*!
      * Sets the \p title of the property name column.
      */
     virtual void setPropertyNameTitle(const QString &title) = 0;
 
-    /**
+    /*!
      * Sets the \p title of the column that shows the property values
      * of the left object.
      */
     virtual void setLeftPropertyValueTitle(const QString &title) = 0;
 
-    /**
+    /*!
      * Sets the \p title of the column that shows the property values
      * of the right object.
      */
     virtual void setRightPropertyValueTitle(const QString &title) = 0;
 
-    /**
+    /*!
      * Adds a new property entry to the table.
      *
      * \param mode Describes the mode of the property. If mode is AdditionalLeftMode or AdditionalRightMode, rightValue resp. leftValue
@@ -128,6 +131,8 @@ public:
     virtual void addProperty(Mode mode, const QString &name, const QString &leftValue, const QString &rightValue) = 0;
 
 protected:
+    /*!
+     */
     explicit AbstractDifferencesReporter() = default;
 
 private:

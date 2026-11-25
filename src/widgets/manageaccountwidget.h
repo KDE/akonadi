@@ -120,6 +120,8 @@ public:
     void setAccountActivitiesAbstract(AccountActivitiesAbstract *abstract);
 
 protected:
+    /*!
+     */
     bool eventFilter(QObject *obj, QEvent *event) override;
 
 public Q_SLOTS:

@@ -29,6 +29,9 @@ class Session;
 class SessionPrivate;
 
 /*!
+ * \class Akonadi::Job
+ * \inmodule AkonadiCore
+ * \inheaderfile Akonadi/Job
  * \brief Base class for all actions in the Akonadi storage.
  *
  * This class encapsulates a request to the pim storage service,
@@ -198,10 +201,16 @@ protected:
     void emitWriteFinished();
 
 protected Q_SLOTS:
+    /*!
+     */
     void slotResult(KJob *job) override;
 
 protected:
+    /*!
+     */
     Job(JobPrivate *dd, QObject *parent);
+    /*!
+     */
     std::unique_ptr<JobPrivate> const d_ptr;
 
 private:

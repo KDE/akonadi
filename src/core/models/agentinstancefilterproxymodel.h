@@ -96,6 +96,8 @@ public:
     void setAccountActivitiesAbstract(AccountActivitiesAbstract *abstract);
 
 protected:
+    /*!
+     */
     bool filterAcceptsRow(int row, const QModelIndex &parent) const override;
 
 private:
